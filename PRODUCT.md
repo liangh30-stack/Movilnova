@@ -1,213 +1,213 @@
-# Technova 产品定位文档
+# Documento de Posicionamiento del Producto MovilNova
 
-## 一句话定位
+## Posicionamiento en Una Frase
 
-**Technova** 是面向现代维修店的智能管理平台，通过 AI 提升维修效率和客户体验。
-
----
-
-## 产品愿景
-
-让每一家维修店都能提供专业、透明、高效的服务体验。
+**MovilNova** es una plataforma de gestión inteligente para talleres de reparación modernos que mejora la eficiencia de las reparaciones y la experiencia del cliente a través de IA.
 
 ---
 
-## 目标用户
+## Visión del Producto
 
-### 主要用户
-
-#### 1. 维修店老板 (Owner)
-**画像**:
-- 年龄: 30-50 岁
-- 经营 1-5 家门店
-- 技术水平: 基础
-- 痛点: 管理混乱、效率低、客户流失
-
-**需求**:
-- 一站式管理所有业务
-- 清晰的数据报表
-- 减少人工错误
-- 提高客户满意度
-
-#### 2. 维修技师 (Technician)
-**画像**:
-- 年龄: 20-40 岁
-- 专业技术人员
-- 每天处理 5-20 个工单
-- 痛点: 信息分散、沟通低效
-
-**需求**:
-- 清晰的任务列表
-- 快速记录维修信息
-- AI 辅助诊断
-- 减少重复劳动
-
-#### 3. 客户 (End Customer)
-**画像**:
-- 需要维修服务的个人/企业
-- 期望透明、快速、可追踪
-
-**需求**:
-- 方便预约
-- 实时查看维修进度
-- 清晰的报价
-- 快速沟通
+Permitir que cada taller de reparación ofrezca una experiencia de servicio profesional, transparente y eficiente.
 
 ---
 
-## 核心价值主张
+## Usuarios Objetivo
 
-### 对维修店
-| 价值 | 描述 |
-|-----|-----|
-| **效率提升** | AI 辅助诊断，减少 30% 诊断时间 |
-| **管理简化** | 一个平台管理工单、库存、员工 |
-| **客户留存** | 透明服务流程提升客户满意度 |
-| **数据洞察** | 业务数据可视化，支持决策 |
+### Usuarios Principales
 
-### 对客户
-| 价值 | 描述 |
-|-----|-----|
-| **便捷预约** | 在线预约，无需电话 |
-| **透明追踪** | 实时了解维修进度 |
-| **专业服务** | AI 辅助确保诊断准确 |
+#### 1. Propietario del Taller (Owner)
+**Perfil**:
+- Edad: 30-50 años
+- Opera 1-5 tiendas
+- Nivel técnico: Básico
+- Puntos de dolor: Gestión caótica, baja eficiencia, pérdida de clientes
 
----
+**Necesidades**:
+- Gestión todo-en-uno de todas las operaciones
+- Reportes de datos claros
+- Reducir errores humanos
+- Mejorar satisfacción del cliente
 
-## 产品功能
+#### 2. Técnico de Reparación (Technician)
+**Perfil**:
+- Edad: 20-40 años
+- Personal técnico profesional
+- Maneja 5-20 órdenes de trabajo diarias
+- Puntos de dolor: Información dispersa, comunicación ineficiente
 
-### MVP 功能 (已实现)
+**Necesidades**:
+- Lista clara de tareas
+- Registro rápido de información de reparación
+- Diagnóstico asistido por IA
+- Reducir trabajo repetitivo
 
-#### 客户门户 (Storefront)
-- [x] 服务浏览
-- [x] 在线预约
-- [x] 订单查询
-- [x] 进度追踪
+#### 3. Cliente (End Customer)
+**Perfil**:
+- Individuos/empresas que necesitan servicios de reparación
+- Esperan transparencia, rapidez y seguimiento
 
-#### 员工门户 (Employee Portal)
-- [x] 任务看板
-- [x] 工单管理
-- [x] 考勤打卡
-- [x] 消息通知
-
-#### 管理后台 (Dashboard)
-- [x] 数据概览
-- [x] 员工管理
-- [x] 产品管理
-- [x] 工单统计
-
-#### AI 功能
-- [x] 智能问答
-- [x] 诊断建议
-- [x] 工单摘要
-
-### 规划功能 (待开发)
-
-#### Phase 2
-- [ ] 库存管理
-- [ ] 供应商对接
-- [ ] 财务报表
-- [ ] 客户 CRM
-
-#### Phase 3
-- [ ] 多门店管理
-- [ ] 加盟系统
-- [ ] API 开放平台
-- [ ] 移动 App
+**Necesidades**:
+- Reservas convenientes
+- Ver progreso de reparación en tiempo real
+- Cotizaciones claras
+- Comunicación rápida
 
 ---
 
-## 竞争优势
+## Propuesta de Valor Central
 
-| 我们 | 传统方案 | 竞品 SaaS |
-|-----|---------|----------|
-| AI 辅助诊断 | 纯人工 | 无或基础 |
-| 现代 UI/UX | 老旧界面 | 中等 |
-| 客户自助门户 | 电话/到店 | 部分支持 |
-| 一体化平台 | 多个系统 | 功能分散 |
+### Para Talleres de Reparación
+| Valor | Descripción |
+|-------|-------------|
+| **Mejora de Eficiencia** | Diagnóstico asistido por IA, reduce 30% el tiempo de diagnóstico |
+| **Gestión Simplificada** | Una plataforma para gestionar órdenes de trabajo, inventario, empleados |
+| **Retención de Clientes** | Proceso de servicio transparente mejora satisfacción del cliente |
+| **Insights de Datos** | Visualización de datos de negocio para apoyar decisiones |
 
----
-
-## 定价策略 (参考)
-
-| 套餐 | 价格 | 适合 |
-|-----|-----|-----|
-| **Starter** | ¥299/月 | 单店，<3 员工 |
-| **Pro** | ¥699/月 | 单店，不限员工 |
-| **Business** | ¥1499/月 | 多店，高级功能 |
-| **Enterprise** | 定制 | 大型连锁 |
+### Para Clientes
+| Valor | Descripción |
+|-------|-------------|
+| **Reserva Conveniente** | Reservar online, sin necesidad de llamar |
+| **Seguimiento Transparente** | Conocer progreso de reparación en tiempo real |
+| **Servicio Profesional** | Asistencia IA asegura diagnóstico preciso |
 
 ---
 
-## 品牌调性
+## Funcionalidades del Producto
 
-### 关键词
-- 专业 (Professional)
-- 智能 (Intelligent)
-- 高效 (Efficient)
-- 可信赖 (Trustworthy)
+### Funcionalidades MVP (Implementadas)
 
-### 视觉风格
-- 科技感
-- 简洁现代
-- 深色 + 亮色点缀
-- 参考: Linear, Vercel, Stripe
+#### Portal del Cliente (Storefront)
+- [x] Navegación de servicios
+- [x] Reserva online
+- [x] Consulta de órdenes
+- [x] Seguimiento de progreso
 
-### 语言风格
-- 简洁有力
-- 避免营销废话
-- 专业但不冷淡
-- 英文优先，支持中文
+#### Portal de Empleados (Employee Portal)
+- [x] Tablero Kanban de tareas
+- [x] Gestión de órdenes de trabajo
+- [x] Control de asistencia
+- [x] Notificaciones de mensajes
+
+#### Panel de Administración (Dashboard)
+- [x] Vista general de datos
+- [x] Gestión de empleados
+- [x] Gestión de productos
+- [x] Estadísticas de órdenes de trabajo
+
+#### Funcionalidad IA
+- [x] Q&A inteligente
+- [x] Sugerencias de diagnóstico
+- [x] Resumen de órdenes de trabajo
+
+### Funcionalidades Planificadas (Por Desarrollar)
+
+#### Fase 2
+- [ ] Gestión de inventario
+- [ ] Integración con proveedores
+- [ ] Reportes financieros
+- [ ] CRM de clientes
+
+#### Fase 3
+- [ ] Gestión multi-tienda
+- [ ] Sistema de franquicias
+- [ ] Plataforma API abierta
+- [ ] App móvil
 
 ---
 
-## 成功指标
+## Ventaja Competitiva
 
-### 北极星指标
-**月活跃工单数** (Monthly Active Repair Orders)
-
-### 关键指标
-| 指标 | 目标 |
-|-----|-----|
-| 客户注册转化率 | > 5% |
-| 工单完成率 | > 95% |
-| 客户满意度 (CSAT) | > 4.5/5 |
-| 月留存率 | > 80% |
-| AI 诊断采纳率 | > 60% |
+| Nosotros | Solución Tradicional | SaaS Competidor |
+|----------|---------------------|-----------------|
+| Diagnóstico asistido por IA | Puramente manual | Ninguno o básico |
+| UI/UX moderno | Interfaz anticuada | Medio |
+| Portal de autoservicio del cliente | Teléfono/visita a tienda | Soporte parcial |
+| Plataforma integrada | Múltiples sistemas | Funcionalidad dispersa |
 
 ---
 
-## 用户旅程
+## Estrategia de Precios (Referencia)
 
-### 维修店老板
+| Plan | Precio | Adecuado Para |
+|------|--------|---------------|
+| **Starter** | €299/mes | Tienda única, <3 empleados |
+| **Pro** | €699/mes | Tienda única, empleados ilimitados |
+| **Business** | €1499/mes | Multi-tienda, funcionalidades avanzadas |
+| **Enterprise** | Personalizado | Cadenas grandes |
+
+---
+
+## Tono de Marca
+
+### Palabras Clave
+- Profesional (Professional)
+- Inteligente (Intelligent)
+- Eficiente (Efficient)
+- Confiable (Trustworthy)
+
+### Estilo Visual
+- Tecnológico
+- Moderno minimalista
+- Oscuro + acentos brillantes
+- Referencias: Linear, Vercel, Stripe
+
+### Estilo de Lenguaje
+- Conciso y potente
+- Evitar palabrería de marketing
+- Profesional pero no frío
+- Prioridad inglés, soporte español
+
+---
+
+## Métricas de Éxito
+
+### Métrica Estrella del Norte
+**Órdenes de Reparación Activas Mensuales** (Monthly Active Repair Orders)
+
+### Métricas Clave
+| Métrica | Objetivo |
+|---------|----------|
+| Tasa de conversión de registro de clientes | > 5% |
+| Tasa de completación de órdenes de trabajo | > 95% |
+| Satisfacción del cliente (CSAT) | > 4.5/5 |
+| Tasa de retención mensual | > 80% |
+| Tasa de adopción de diagnóstico IA | > 60% |
+
+---
+
+## Viaje del Usuario
+
+### Propietario del Taller
 ```
-发现 → 试用 → 配置门店 → 添加员工 → 接单 → 查看报表 → 续费/升级
-```
-
-### 客户
-```
-搜索维修 → 访问门店页 → 预约 → 收到确认 → 查看进度 → 完成 → 评价
+Descubrimiento → Prueba → Configurar tienda → Agregar empleados → Recibir órdenes → Ver reportes → Renovar/Actualizar
 ```
 
----
-
-## 常见问题 (FAQ)
-
-**Q: Technova 适合什么类型的维修店?**
-A: 手机维修、电脑维修、家电维修、汽车维修等各类维修服务。
-
-**Q: 需要技术背景才能使用吗?**
-A: 不需要，界面设计简洁直观，5 分钟即可上手。
-
-**Q: 数据安全如何保障?**
-A: 使用 Firebase 云服务，数据加密存储，符合行业安全标准。
-
-**Q: 支持定制开发吗?**
-A: Enterprise 套餐支持定制需求，请联系销售。
+### Cliente
+```
+Buscar reparación → Visitar página de tienda → Reservar → Recibir confirmación → Ver progreso → Completar → Evaluar
+```
 
 ---
 
-## 相关文档
+## Preguntas Frecuentes (FAQ)
 
-- [CONTEXT.md](./CONTEXT.md) - 技术上下文
-- [AGENTS.md](./AGENTS.md) - Agent 定义
+**P: ¿Para qué tipo de talleres es adecuado MovilNova?**
+R: Reparación de móviles, ordenadores, electrodomésticos, automóviles y varios tipos de servicios de reparación.
+
+**P: ¿Se necesita experiencia técnica para usarlo?**
+R: No, la interfaz es simple e intuitiva, se puede dominar en 5 minutos.
+
+**P: ¿Cómo se garantiza la seguridad de los datos?**
+R: Usa servicios en la nube de Firebase, datos almacenados con encriptación, cumple estándares de seguridad de la industria.
+
+**P: ¿Se admite desarrollo personalizado?**
+R: El plan Enterprise admite necesidades personalizadas, contactar con ventas.
+
+---
+
+## Documentación Relacionada
+
+- [CONTEXT.md](./CONTEXT.md) - Contexto técnico
+- [AGENTS.md](./AGENTS.md) - Definición de agentes

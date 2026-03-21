@@ -11,6 +11,8 @@ vi.mock('firebase/firestore', () => ({
   deleteDoc: vi.fn(),
   query: vi.fn(),
   orderBy: vi.fn(),
+  limit: vi.fn(),
+  onSnapshot: vi.fn(),
   Timestamp: {
     now: () => ({ seconds: Math.floor(Date.now() / 1000) }),
   },
@@ -19,6 +21,10 @@ vi.mock('firebase/firestore', () => ({
 vi.mock('@/services/firebase', () => ({
   db: {},
   storage: {},
+}));
+
+vi.mock('@/services/inventoryService', () => ({
+  logInventoryChange: vi.fn(),
 }));
 
 import {

@@ -12,7 +12,7 @@
 ## 需要的上下文
 
 ```
-/technova/
+/movilnova/
 ├── tailwind.config.js    # Tailwind 配置（如有）
 ├── index.html            # 全局样式引用
 ├── components/*.tsx      # 现有组件样式参考

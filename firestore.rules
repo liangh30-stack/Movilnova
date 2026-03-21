@@ -1,0 +1,255 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'superadmin'];
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'superadmin';
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // ============================================
+    // PRODUCTS COLLECTION
+    // ============================================
+    // Read: Everyone
+    // Write: Admins only
+
+    match /products/{productId} {
+      // Anyone can read products
+      allow read: if true;
+
+      // Only admins can create, update, or delete products
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ============================================
+    // ORDERS COLLECTION
+    // ============================================
+    // Create: Anyone (guest checkout supported), but with required field validation
+    // Read: Admin or order owner (by UID or email)
+    // Update/Delete: Admins only
+
+    match /orders/{orderId} {
+      // Anyone can create an order but must include all required fields,
+      // status must be 'Pending' (prevents injecting arbitrary status),
+      // and total must be positive (prevents zero-value spam orders).
+      allow create: if request.resource.data.keys().hasAll([
+                         'email', 'customerName', 'phone', 'address',
+                         'items', 'subtotal', 'shipping', 'tax', 'total', 'status'
+                       ])
+                     && request.resource.data.status == 'Pending'
+                     && request.resource.data.total > 0
+                     && request.resource.data.items.size() > 0
+                     && request.resource.data.email is string
+                     && request.resource.data.email.size() > 0;
+
+      // Admins or order owner can read (by UID or by email for guest orders)
+      allow read: if isAdmin() ||
+                     (isSignedIn() && (resource.data.customerId == request.auth.uid ||
+                                       resource.data.email == request.auth.token.email));
+
+      // Only admins can update or delete (admin updates status to Paid)
+      allow update, delete: if isAdmin();
+    }
+
+    // ============================================
+    // INVENTORY CHANGES COLLECTION (Audit Trail)
+    // ============================================
+    // Create: Admins only (created when marking orders as Paid)
+    // Read: Admins only
+    // Update/Delete: Never (audit trail must be immutable)
+
+    match /inventoryChanges/{changeId} {
+      // Only admins can create inventory change logs
+      allow create: if isAdmin();
+
+      // Only admins can read audit trail
+      allow read: if isAdmin();
+
+      // Never allow updates or deletes (immutable audit trail)
+      allow update, delete: if false;
+    }
+
+    // ============================================
+    // AUDIT LOGS COLLECTION (Superadmin Activity Trail)
+    // ============================================
+    // Create: Admins (all admin actions get logged)
+    // Read: Superadmin only
+    // Update/Delete: Never (immutable audit trail)
+
+    match /auditLogs/{logId} {
+      allow create: if isAdmin();
+      allow read: if isSuperAdmin();
+      allow update, delete: if false;
+    }
+
+    // ============================================
+    // CUSTOMERS COLLECTION
+    // ============================================
+
+    match /customers/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      // Granular write rules: customers can create & update their own profile
+      // but only modify safe fields. Only admins can delete profiles.
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) &&
+                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['deletionRequestedAt', 'createdAt', 'role']);
+      allow update, delete: if isAdmin();
+
+      // Customer addresses subcollection
+      match /addresses/{addressId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if isOwner(userId) || isAdmin();
+      }
+
+      // Customer cart subcollection
+      match /cart/{itemId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+
+      // Customer favorites subcollection
+      match /favorites/{favoriteId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+
+      // Customer orders subcollection (legacy)
+      match /orders/{orderId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if isAdmin();
+      }
+    }
+
+    // ============================================
+    // PRODUCT REVIEWS COLLECTION
+    // ============================================
+
+    match /productReviews/{reviewId} {
+      // Anyone can read reviews
+      allow read: if true;
+
+      // Signed in users can create reviews — must use their own UID (no impersonation)
+      allow create: if isSignedIn() &&
+                       request.resource.data.customerUid == request.auth.uid;
+
+      // Review author can update if editCount < 2 (enforces atomic increment)
+      allow update: if isSignedIn() &&
+                       resource.data.customerUid == request.auth.uid &&
+                       resource.data.editCount < 2 &&
+                       request.resource.data.editCount == resource.data.editCount + 1;
+
+      // Author can delete own review, OR admin can delete any
+      allow delete: if (isSignedIn() && resource.data.customerUid == request.auth.uid) ||
+                       isAdmin();
+    }
+
+    // ============================================
+    // USERS COLLECTION (for role checking)
+    // ============================================
+
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId || isAdmin();
+
+      // New users can create their own doc, but only with role 'customer'
+      // (prevents self-escalation to admin).
+      allow create: if request.auth.uid == userId &&
+                       request.resource.data.role == 'customer';
+
+      // Admins can update/delete user docs.
+      // Only superadmins can assign admin/superadmin roles.
+      // Regular admins can only set role to 'customer' (or not change role at all).
+      allow update: if isAdmin() && (
+        isSuperAdmin() ||
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) ||
+        request.resource.data.role == 'customer'
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // NOTIFICATIONS COLLECTION
+    // ============================================
+
+    match /notifications/{notificationId} {
+      // Admins can always create. Authenticated users can only create notifications
+      // tied to their own email. Guest checkout is NOT allowed to create notifications
+      // directly (must go through a Cloud Function to avoid abuse).
+      allow create: if isAdmin() ||
+                       (isSignedIn() && request.resource.data.customerEmail == request.auth.token.email);
+
+      // Admins can read all, customers can read their own
+      allow read: if isAdmin() ||
+                     (isSignedIn() && resource.data.customerEmail == request.auth.token.email);
+
+      // Immutable
+      allow update, delete: if false;
+    }
+
+    // ============================================
+    // PROMO CODES COLLECTION
+    // ============================================
+    // Read: Everyone (checkout validates promo codes)
+    // Write: Admins only
+
+    match /promoCodes/{promoId} {
+      // Only signed-in users and admins can read promo codes.
+      // This prevents unauthenticated enumeration of all codes.
+      // Server-side functions (createPaymentIntent, validateOrderTotal)
+      // validate promos independently via Admin SDK.
+      allow read: if isSignedIn();
+      // Only the usedCount field can be incremented by signed-in users
+      // (to record code usage); all other writes are admin-only.
+      allow update: if isAdmin() ||
+                       (isSignedIn() &&
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedCount']) &&
+                        request.resource.data.usedCount == resource.data.usedCount + 1);
+      allow create, delete: if isAdmin();
+    }
+
+    // ============================================
+    // SPECIAL OFFERS COLLECTION
+    // ============================================
+    // Read: Everyone (checkout applies offers automatically)
+    // Write: Admins only
+
+    match /specialOffers/{offerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================
+    // SHOP SETTINGS COLLECTION
+    // ============================================
+    // Read: Everyone (checkout needs IVA/shipping values)
+    // Write: Admins only
+
+    match /shopSettings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================
+    // DEFAULT DENY ALL
+    // ============================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

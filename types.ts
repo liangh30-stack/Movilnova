@@ -1,11 +1,3 @@
-export enum ViewState {
-  HOME = 'HOME',
-  REPAIR_LOOKUP = 'REPAIR_LOOKUP',
-  EMPLOYEE_DASHBOARD = 'EMPLOYEE_DASHBOARD',
-  CUSTOM_CASE = 'CUSTOM_CASE',
-  ADMIN = 'ADMIN'
-}
-
 export type Language = 'EN' | 'CN' | 'ES' | 'FR' | 'DE';
 
 export interface Product {
@@ -13,28 +5,92 @@ export interface Product {
   name: string;
   price: number;
   originalPrice?: number;
+  costPrice?: number;
   category: string;
   image: string;
+  images?: string[];
   description: string;
+  stock?: number;
   isBundle?: boolean;
   compatibleModels?: string[];
-  brand?: string;
+  brands?: string[];
   isCustom?: boolean;
-  customImage?: string; // Original high-res upload
+  customImage?: string;
   selectedModel?: string;
+  colors?: string[];
+  colorImages?: Record<string, number>;
+  selectedColor?: string;
+}
+
+export interface ProductReview {
+  id: string;
+  productId: string;
+  customerUid: string;
+  customerName: string;
+  rating: number;        // 1-5 estrellas
+  comment: string;
+  createdAt: string;     // ISO timestamp
+  editCount?: number;    // default 0, max 2
+  updatedAt?: string;    // ISO timestamp última edición
+}
+
+export type OrderStatus = 'Pending' | 'Processing' | 'Paid' | 'Shipped' | 'Delivered' | 'Cancelled';
+
+export interface OrderStatusHistory {
+  status: OrderStatus;
+  timestamp: string;
+  note?: string;
+  updatedBy?: string;
+}
+
+export interface OrderTakenBy {
+  uid: string;
+  email: string;
+  takenAt: string;
+}
+
+export interface OrderItem {
+  productId: string | number;
+  productName: string;
+  name?: string;
+  productImage: string;
+  image?: string;
+  price: number;
+  quantity: number;
+  selectedModel?: string;
+  selectedColor?: string;
+  isCustom?: boolean;
 }
 
 export interface Order {
   id: string;
+  orderNumber: string; // Human-readable order number (e.g., "ORD-2024-001")
+  customerId?: string;
   customerName: string;
   email: string;
   phone: string;
   address: string;
-  items: Product[];
+  items: OrderItem[];
+  subtotal: number;
+  shipping: number;
+  tax: number;
   total: number;
-  status: 'Pending' | 'Paid' | 'Shipped' | 'Completed';
-  paymentMethod: 'Stripe' | 'PayPal';
-  date: string;
+  status: OrderStatus;
+  statusHistory: OrderStatusHistory[];
+  paymentMethod: 'Stripe' | 'Card' | 'Cash';
+  paymentId?: string;
+  trackingNumber?: string;
+  notes?: string;
+  takenBy?: OrderTakenBy;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PartType = 'original' | 'compatible';
+
+export interface RepairPart {
+  name: string;
+  type: PartType;
 }
 
 export interface RepairJob {
@@ -51,6 +107,9 @@ export interface RepairJob {
   publico?: boolean;
   telefono?: string;
   fechaEntrada?: string;
+  brand?: string;
+  model?: string;
+  parts?: RepairPart[];
 }
 
 export interface InventoryItem {
@@ -62,54 +121,95 @@ export interface InventoryItem {
   };
 }
 
-export interface AttendanceRecord {
-  date: string;
-  clockIn: string;
-  clockOut?: string;
-  isLate?: boolean;
-  latenessMinutes?: number;
-  breaks?: { start: string; end?: string }[];
+// Customer profile stored in Firestore customers/{uid}
+export interface Customer {
+  uid: string;
+  email: string;
+  displayName: string;
+  phone?: string;
+  createdAt: string;
+  updatedAt: string;
+  deletionRequestedAt?: string; // ISO timestamp — account scheduled for deletion 30 days after this date
+  fcmToken?: string; // FCM push notification token
 }
 
-export interface Employee {
+// Stored in Firestore customers/{uid}/addresses/{addressId}
+export interface CustomerAddress {
   id: string;
+  label: string;
+  fullName: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+  isDefault: boolean;
+}
+
+// Extends Order with customer linkage
+export interface CustomerOrder extends Order {
+  customerId: string;
+  shippingAddressId?: string;
+}
+
+// Cart item for Firestore persistence
+export interface FirestoreCartItem {
+  productId: string | number;
   name: string;
-  role: 'Technician' | 'Manager' | 'Sales' | 'admin';
-  pin?: string;
-  store: string;
-  attendanceHistory: AttendanceRecord[];
-  schedule?: { start: string; end: string };
-  permissions?: { canViewReports?: boolean };
-}
-
-export interface StockTransfer {
-  id: string;
-  itemId: string;
-  itemName: string;
-  fromStore: string;
-  toStore: string;
+  price: number;
+  image: string;
   quantity: number;
-  status: 'pending' | 'in_transit' | 'completed' | 'rejected';
-  date: string;
-  sentBy?: string;
-  receivedBy?: string;
-  receivedDate?: string;
-  notes?: string;
+  selectedModel?: string;
+  selectedColor?: string;
+  isCustom?: boolean;
+  addedAt: string;
 }
 
-export interface StoreConfig {
-  id: string;
-  name: string;
-  address: string;
-  isHQ: boolean;
-  manager?: string;
+// Favorites
+export interface CustomerFavorite {
+  productId: string | number;
+  addedAt: string;
 }
 
-export interface TransferNotification {
+// Inventory change tracking
+export interface InventoryChange {
   id: string;
-  transferId: string;
-  toStore: string;
-  message: string;
-  read: boolean;
+  productId: string | number;
+  productName: string;
+  previousStock: number;
+  newStock: number;
+  change: number;
+  reason: 'manual' | 'sale' | 'restock' | 'adjustment';
+  userId?: string;
+  userEmail?: string;
+  timestamp: string;
+}
+
+// Audit log
+export type AuditAction =
+  | 'product.create'
+  | 'product.update'
+  | 'product.delete'
+  | 'product.import'
+  | 'order.statusChange'
+  | 'order.take'
+  | 'order.release'
+  | 'promo.create'
+  | 'promo.update'
+  | 'promo.delete'
+  | 'offer.create'
+  | 'offer.update'
+  | 'offer.delete'
+  | 'settings.update'
+  | 'user.roleChange';
+
+export interface AuditLogEntry {
+  id: string;
+  action: AuditAction;
+  userId: string;
+  userEmail: string;
+  targetId?: string;
+  targetName?: string;
+  details?: Record<string, unknown>;
   timestamp: string;
 }

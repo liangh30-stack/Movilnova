@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: ESLint
+        run: npm run lint
+
       - name: TypeScript type check
         run: npx tsc --noEmit
 
@@ -61,3 +64,25 @@ jobs:
 
       - name: Build application
         run: npm run build
+
+      - name: Report bundle size
+        run: |
+          echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          du -sh dist/ >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "JS chunks:" >> $GITHUB_STEP_SUMMARY
+          find dist/assets -name '*.js' -exec du -h {} + | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "CSS:" >> $GITHUB_STEP_SUMMARY
+          find dist/assets -name '*.css' -exec du -h {} + >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for oversized chunks
+        run: |
+          MAX_KB=700
+          oversized=$(find dist/assets -name '*.js' -size +${MAX_KB}k)
+          if [ -n "$oversized" ]; then
+            echo "::warning::Chunks exceeding ${MAX_KB}KB:"
+            echo "$oversized" | while read f; do du -h "$f"; done
+          fi

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { CloudDownload, AlertCircle, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { CloudDownload, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 interface SyncSettingsProps {
   onSync: (url: string) => Promise<boolean>;
 }
 
 const SyncSettings: React.FC<SyncSettingsProps> = ({ onSync }) => {
+  const { t } = useTranslation();
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [msg, setMsg] = useState('');
@@ -16,60 +18,68 @@ const SyncSettings: React.FC<SyncSettingsProps> = ({ onSync }) => {
     const success = await onSync(url);
     if (success) {
       setStatus('success');
-      setMsg('Synchronized successfully!');
+      setMsg(t('syncSuccess') || 'Synchronized successfully!');
     } else {
       setStatus('error');
-      setMsg('Failed to sync. Check URL.');
+      setMsg(t('syncError') || 'Failed to sync. Check URL.');
     }
   };
 
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-        <CloudDownload size={24} className="text-blue-400" /> Cloud Sync Setup
+      <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
+        <CloudDownload size={24} className="text-brand-primary" /> {t('syncTitle') || 'Connect Inventory System'}
       </h2>
-      
-      <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-6">
-        <h3 className="text-white font-bold mb-2">Instructions</h3>
-        <ol className="list-decimal list-inside text-slate-400 text-sm space-y-2">
-          <li>Open your Google Sheet (Database).</li>
-          <li>Go to Extensions &gt; Apps Script.</li>
-          <li>Paste the helper script (available in documentation).</li>
-          <li>Deploy as Web App (Execute as: Me, Access: Anyone).</li>
-          <li>Paste the generated URL below.</li>
+
+      <div className="bg-brand-primary-light border border-brand-primary/20 rounded-lg p-4 mb-6">
+        <h3 className="text-brand-dark text-sm font-bold mb-2">{t('syncInstructionsTitle') || 'Instructions'}</h3>
+        <ol className="list-decimal list-inside text-brand-muted text-xs space-y-2">
+          <li>{t('syncStep1') || 'Open your Google Sheet (Database).'}</li>
+          <li>{t('syncStep2') || 'Go to Extensions > Apps Script.'}</li>
+          <li>{t('syncStep3') || 'Paste the helper script (available in documentation).'}</li>
+          <li>{t('syncStep4') || 'Deploy as Web App (Execute as: Me, Access: Anyone).'}</li>
+          <li>{t('syncStep5') || 'Paste the generated URL below.'}</li>
         </ol>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-slate-400 text-sm mb-1">Apps Script URL</label>
-          <input 
-            type="text" 
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+          <label className="block text-brand-dark text-sm font-medium mb-1">{t('syncUrlLabel') || 'Apps Script URL'}</label>
+          <input
+            type="text"
+            className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-brand-dark placeholder:text-brand-text-tertiary focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all"
             placeholder="https://script.google.com/macros/s/..."
             value={url}
             onChange={e => setUrl(e.target.value)}
+            aria-label={t('syncUrlLabel') || 'Apps Script URL'}
           />
         </div>
 
         {status === 'error' && (
-          <div className="bg-red-500/10 text-red-400 p-3 rounded-lg flex items-center gap-2 text-sm">
+          <div role="alert" className="bg-brand-critical/10 border border-brand-critical/20 text-brand-critical p-3 rounded-lg flex items-center gap-2 text-sm">
             <AlertCircle size={16} /> {msg}
           </div>
         )}
-        
+
         {status === 'success' && (
-          <div className="bg-green-500/10 text-green-400 p-3 rounded-lg flex items-center gap-2 text-sm">
+          <div role="alert" className="bg-brand-success/10 border border-brand-success/20 text-brand-success p-3 rounded-lg flex items-center gap-2 text-sm">
             <CheckCircle size={16} /> {msg}
           </div>
         )}
 
-        <button 
+        <button
           onClick={handleSyncClick}
           disabled={status === 'loading'}
-          className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-colors"
+          className="w-full bg-brand-primary hover:bg-brand-primary-dark disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
-          {status === 'loading' ? 'Syncing...' : 'Connect & Sync'}
+          {status === 'loading' ? (
+            <>
+              <Loader2 size={18} className="animate-spin text-brand-primary" />
+              <span>{t('syncLoading') || 'Syncing...'}</span>
+            </>
+          ) : (
+            <span>{t('syncButton') || 'Connect & Sync'}</span>
+          )}
         </button>
       </div>
     </div>

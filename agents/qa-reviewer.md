@@ -12,7 +12,7 @@
 ## 需要的上下文
 
 ```
-/technova/
+/movilnova/
 ├── [git diff]            # 代码变更
 ├── [lint results]        # ESLint 输出
 ├── [type check]          # TSC 输出

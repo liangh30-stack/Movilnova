@@ -13,7 +13,7 @@
 ## 需要的上下文
 
 ```
-/technova/
+/movilnova/
 ├── PRODUCT.md            # 产品定位
 ├── constants.ts          # 现有文案常量
 └── components/*.tsx      # 现有文案参考

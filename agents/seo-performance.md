@@ -49,7 +49,7 @@
 
 ## 需要的上下文
 ```
-/technova/
+/movilnova/
 ├── index.html            # HTML 模板
 ├── vite.config.ts        # 构建配置
 ├── dist/                 # 构建产物

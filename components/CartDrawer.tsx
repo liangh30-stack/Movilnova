@@ -1,20 +1,16 @@
-import React from 'react';
-import { X, Trash2, ShoppingBag, CheckCircle2, CreditCard, Plus, Minus, ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { X, Trash2, ShoppingBag, Plus, Minus, ArrowRight, Truck, Ban } from 'lucide-react';
+import { ShopSettings, DEFAULT_SHOP_SETTINGS } from '../services/storeConfigService';
 
 interface CartItem {
-  id: string;
+  id: string | number;
   name: string;
   image: string;
   price: number;
   quantity: number;
   selectedModel?: string;
-}
-
-interface CustomerInfo {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
+  selectedColor?: string;
 }
 
 interface CartDrawerProps {
@@ -22,16 +18,14 @@ interface CartDrawerProps {
   cart: CartItem[];
   cartTotal: number;
   cartItemCount: number;
-  checkoutStep: 'cart' | 'shipping' | 'payment' | 'success';
-  setCheckoutStep: (step: 'cart' | 'shipping' | 'payment' | 'success') => void;
   onClose: () => void;
   updateCartQuantity: (index: number, delta: number) => void;
   removeFromCart: (index: number) => void;
-  customerInfo: CustomerInfo;
-  setCustomerInfo: (info: CustomerInfo | ((prev: CustomerInfo) => CustomerInfo)) => void;
-  formErrors: Record<string, string>;
-  onProceedToPayment: () => void;
-  onPlaceOrder: (method: 'Stripe' | 'PayPal') => void;
+  customer: { displayName: string; email: string } | null;
+  onSignInClick: () => void;
+  onCheckout: () => void;
+  shopSettings?: ShopSettings;
+  products?: Array<{ id: string | number; stock?: number }>;
 }
 
 const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -39,200 +33,185 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   cart,
   cartTotal,
   cartItemCount,
-  checkoutStep,
-  setCheckoutStep,
   onClose,
   updateCartQuantity,
   removeFromCart,
-  customerInfo,
-  setCustomerInfo,
-  formErrors,
-  onProceedToPayment,
-  onPlaceOrder
+  customer,
+  onSignInClick,
+  onCheckout,
+  shopSettings = DEFAULT_SHOP_SETTINGS,
+  products = [],
 }) => {
+  const { t } = useTranslation();
+
+  // Restore focus to the previously focused element when the drawer unmounts
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    return () => {
+      previouslyFocused?.focus?.();
+    };
+  }, []);
+
   if (!isOpen) return null;
+
+  const freeShippingThreshold = shopSettings.freeShippingThreshold;
+  const amountToFreeShipping = Math.max(0, freeShippingThreshold - cartTotal);
+  const isFreeShipping = cartTotal >= freeShippingThreshold;
 
   return (
     <>
       <div
         className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm animate-in fade-in"
-        onClick={() => { onClose(); setCheckoutStep('cart'); }}
+        onClick={onClose}
+        role="presentation"
       />
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[70] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-        <div className="p-6 border-b flex justify-between items-center bg-gray-50">
-          <h3 className="text-xl font-bold flex items-center gap-2 text-brand-dark">
-            <ShoppingBag size={24} className="text-brand-pink" />
-            {checkoutStep === 'cart' && 'Tu Carrito'}
-            {checkoutStep === 'shipping' && 'Datos de Envío'}
-            {checkoutStep === 'payment' && 'Método de Pago'}
-            {checkoutStep === 'success' && 'Orden Exitosa'}
+      <div
+        className="fixed right-0 top-0 h-full w-full max-w-md bg-brand-surface z-[70] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
+        role="dialog"
+        aria-label={t('cartTitle')}
+      >
+        {/* Header */}
+        <div className="p-5 border-b border-brand-border flex justify-between items-center bg-brand-light">
+          <h3 className="text-lg font-bold flex items-center gap-2 text-brand-dark">
+            <ShoppingBag size={22} className="text-brand-primary" />
+            {t('cartTitle')}
+            {cartItemCount > 0 && (
+              <span className="bg-brand-primary text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold">
+                {cartItemCount}
+              </span>
+            )}
           </h3>
-          <button onClick={() => { onClose(); setCheckoutStep('cart'); }} className="p-2 hover:bg-gray-200 rounded-full">
-            <X size={24} />
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-brand-border rounded-lg transition-colors"
+            aria-label={t('ariaClose')}
+          >
+            <X size={22} />
           </button>
         </div>
 
-        {checkoutStep !== 'success' && cart.length > 0 && (
-          <div className="px-6 py-3 border-b bg-gray-50 flex items-center justify-center gap-2 text-xs">
-            <span className={`px-3 py-1 rounded-full ${checkoutStep === 'cart' ? 'bg-brand-pink text-white' : 'bg-gray-200 text-gray-500'}`}>1. Carrito</span>
-            <ArrowRight size={14} className="text-gray-300" />
-            <span className={`px-3 py-1 rounded-full ${checkoutStep === 'shipping' ? 'bg-brand-pink text-white' : 'bg-gray-200 text-gray-500'}`}>2. Envío</span>
-            <ArrowRight size={14} className="text-gray-300" />
-            <span className={`px-3 py-1 rounded-full ${checkoutStep === 'payment' ? 'bg-brand-pink text-white' : 'bg-gray-200 text-gray-500'}`}>3. Pago</span>
-          </div>
-        )}
-
-        <div className="flex-1 overflow-y-auto p-6">
-          {checkoutStep === 'success' && (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-              <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle2 size={48} />
-              </div>
-              <h4 className="text-2xl font-black text-brand-dark">¡Gracias por tu compra!</h4>
-              <p className="text-gray-500 text-sm">Tu pedido ha sido registrado. Te contactaremos para confirmar el pago y envío.</p>
-              <button onClick={() => { onClose(); setCheckoutStep('cart'); }} className="w-full bg-brand-dark text-white py-4 rounded-xl font-bold">Volver a la Tienda</button>
+        {/* Cart Items */}
+        <div className="flex-1 overflow-y-auto p-5">
+          {!customer && cart.length > 0 && (
+            <div className="bg-brand-primary/5 border border-brand-primary/20 rounded-xl p-3 mb-4 flex items-center justify-between">
+              <span className="text-xs text-brand-dark">{t('cartSignInToSave')}</span>
+              <button
+                onClick={onSignInClick}
+                className="text-xs font-bold text-brand-primary hover:text-brand-primary-dark transition-colors"
+              >
+                {t('customerLogin')}
+              </button>
             </div>
           )}
 
-          {checkoutStep === 'cart' && (
-            <div className="space-y-4">
-              {cart.length === 0 ? (
-                <div className="py-20 text-center opacity-40">El carrito está vacío</div>
-              ) : (
-                cart.map((item, idx) => (
-                  <div key={idx} className="flex gap-4 p-3 border rounded-xl bg-gray-50">
-                    <img src={item.image} className="w-16 h-16 object-cover rounded-lg" alt="" />
-                    <div className="flex-1">
-                      <div className="text-sm font-bold text-brand-dark">{item.name}</div>
-                      {item.selectedModel && <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{item.selectedModel}</div>}
-                      <div className="text-brand-pink font-bold">€{(item.price * item.quantity).toFixed(2)}</div>
-                      <div className="flex items-center gap-2 mt-2">
-                        <button onClick={() => updateCartQuantity(idx, -1)} className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-gray-200">
-                          <Minus size={14} />
-                        </button>
-                        <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
-                        <button onClick={() => updateCartQuantity(idx, 1)} className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-gray-200">
-                          <Plus size={14} />
-                        </button>
+          {cart.length === 0 ? (
+            <div className="py-20 text-center">
+              <ShoppingBag size={48} className="mx-auto mb-4 text-brand-muted opacity-30" />
+              <p className="text-brand-muted font-semibold">{t('cartEmpty')}</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {cart.map((item, idx) => {
+                const productData = products.find(p => String(p.id) === String(item.id));
+                const isOutOfStock = productData?.stock !== undefined && productData.stock <= 0;
+                return (
+                <div key={idx} className={`flex gap-3 p-3 bg-brand-surface rounded-xl border shadow-sm transition-shadow ${isOutOfStock ? 'border-red-200 dark:border-red-800 opacity-60' : 'border-brand-border hover:shadow-md'}`}>
+                  <div className="relative flex-shrink-0">
+                    <img src={item.image} loading="lazy" decoding="async" className={`w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl ${isOutOfStock ? 'grayscale-[50%]' : ''}`} alt={item.name} />
+                    {isOutOfStock && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl">
+                        <Ban size={18} className="text-white drop-shadow" />
                       </div>
-                    </div>
-                    <button onClick={() => removeFromCart(idx)} className="self-start"><Trash2 size={16} className="text-gray-300 hover:text-red-400"/></button>
+                    )}
                   </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {checkoutStep === 'shipping' && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Nombre Completo *</label>
-                <input
-                  type="text"
-                  value={customerInfo.name}
-                  onChange={e => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
-                  className={`w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-brand-pink outline-none ${formErrors.name ? 'border-red-400' : 'border-gray-200'}`}
-                  placeholder="Juan García"
-                />
-                {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
-              </div>
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Email *</label>
-                <input
-                  type="email"
-                  value={customerInfo.email}
-                  onChange={e => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
-                  className={`w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-brand-pink outline-none ${formErrors.email ? 'border-red-400' : 'border-gray-200'}`}
-                  placeholder="juan@email.com"
-                />
-                {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
-              </div>
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Teléfono *</label>
-                <input
-                  type="tel"
-                  value={customerInfo.phone}
-                  onChange={e => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  className={`w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-brand-pink outline-none ${formErrors.phone ? 'border-red-400' : 'border-gray-200'}`}
-                  placeholder="+34 600 123 456"
-                />
-                {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
-              </div>
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Dirección de Envío *</label>
-                <textarea
-                  value={customerInfo.address}
-                  onChange={e => setCustomerInfo(prev => ({ ...prev, address: e.target.value }))}
-                  className={`w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-brand-pink outline-none resize-none ${formErrors.address ? 'border-red-400' : 'border-gray-200'}`}
-                  placeholder="Calle, número, piso, código postal, ciudad"
-                  rows={3}
-                />
-                {formErrors.address && <p className="text-red-500 text-xs mt-1">{formErrors.address}</p>}
-              </div>
-            </div>
-          )}
-
-          {checkoutStep === 'payment' && (
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-xl border">
-                <h4 className="font-bold text-sm text-brand-dark mb-2">Resumen del Pedido</h4>
-                <p className="text-xs text-gray-500">{customerInfo.name}</p>
-                <p className="text-xs text-gray-500">{customerInfo.email}</p>
-                <p className="text-xs text-gray-500">{customerInfo.phone}</p>
-                <p className="text-xs text-gray-500">{customerInfo.address}</p>
-                <div className="mt-3 pt-3 border-t flex justify-between">
-                  <span className="font-bold">Total:</span>
-                  <span className="font-black text-brand-pink">€{cartTotal.toFixed(2)}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-brand-dark truncate">{item.name}</div>
+                    {(item.selectedModel || item.selectedColor) && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-brand-muted font-bold uppercase tracking-wider">
+                        {item.selectedColor && (
+                          <span
+                            className="inline-block w-3 h-3 rounded-full border border-brand-border flex-shrink-0"
+                            style={{ backgroundColor: item.selectedColor }}
+                          />
+                        )}
+                        {item.selectedModel}
+                      </div>
+                    )}
+                    {isOutOfStock ? (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Ban size={12} className="text-brand-critical" />
+                        <span className="text-xs font-semibold text-brand-critical">{t('outOfStock')}</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-brand-primary font-bold text-sm mt-0.5">
+                          {shopSettings.currencySymbol}{(item.price * item.quantity).toFixed(2)}
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <button
+                            onClick={() => updateCartQuantity(idx, -1)}
+                            className="w-8 h-8 rounded-lg border border-brand-border flex items-center justify-center hover:bg-brand-light active:bg-brand-border transition-colors"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
+                          <button
+                            onClick={() => updateCartQuantity(idx, 1)}
+                            disabled={(() => { const p = products.find(p => p.id === item.id); return p?.stock !== undefined && item.quantity >= p.stock; })()}
+                            className="w-8 h-8 rounded-lg border border-brand-border flex items-center justify-center hover:bg-brand-light active:bg-brand-border transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <button onClick={() => removeFromCart(idx)} className="self-start p-2 -mr-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 active:bg-red-100 dark:bg-red-900/30 dark:active:bg-red-900/30 transition-colors">
+                    <Trash2 size={16} className="text-brand-muted hover:text-brand-critical transition-colors" />
+                  </button>
                 </div>
-              </div>
-              <p className="text-xs text-gray-500 text-center">Selecciona tu método de pago preferido:</p>
-              <button
-                onClick={() => onPlaceOrder('Stripe')}
-                className="w-full bg-[#635bff] text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-[#5046e5] transition-colors"
-              >
-                <CreditCard size={20} /> Pagar con Stripe
-              </button>
-              <button
-                onClick={() => onPlaceOrder('PayPal')}
-                className="w-full bg-[#0070ba] text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-[#005ea6] transition-colors"
-              >
-                PayPal
-              </button>
-              <p className="text-[10px] text-gray-400 text-center">Nota: En esta demo el pedido se registra como "Pendiente". En producción se integraría con pasarelas de pago reales.</p>
+                );
+              })}
             </div>
           )}
         </div>
 
-        {cart.length > 0 && checkoutStep === 'cart' && (
-          <div className="p-6 border-t">
-            <div className="flex justify-between items-center mb-4 text-xl font-black">
-              <span>Total ({cartItemCount} items)</span>
-              <span>€{cartTotal.toFixed(2)}</span>
+        {/* Footer with total and checkout button */}
+        {cart.length > 0 && (
+          <div className="p-5 border-t border-brand-border space-y-3">
+            {/* Free shipping progress */}
+            {!isFreeShipping && (
+              <div className="bg-brand-light rounded-xl p-3">
+                <div className="flex items-center gap-2 text-xs text-brand-muted mb-1.5">
+                  <Truck size={14} className="text-brand-primary" />
+                  <span>{t('checkoutFreeShippingAway', { amount: `${shopSettings.currencySymbol}${amountToFreeShipping.toFixed(2)}` })}</span>
+                </div>
+                <div className="w-full bg-brand-border rounded-full h-1.5">
+                  <div
+                    className="bg-brand-primary h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, (cartTotal / freeShippingThreshold) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            {isFreeShipping && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-2.5 flex items-center gap-2">
+                <Truck size={14} className="text-green-600 dark:text-green-400" />
+                <span className="text-xs text-green-700 dark:text-green-400 font-semibold">{t('checkoutFreeShippingUnlocked')}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center text-lg font-black text-brand-dark">
+              <span>{t('cartSubtotal', 'Subtotal')}</span>
+              <span>{shopSettings.currencySymbol}{cartTotal.toFixed(2)}</span>
             </div>
+
             <button
-              onClick={() => setCheckoutStep('shipping')}
-              className="w-full bg-brand-pink text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2"
+              onClick={onCheckout}
+              className="w-full bg-brand-primary hover:bg-brand-primary-dark text-white py-4 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-colors"
             >
-              Continuar <ArrowRight size={20} />
-            </button>
-          </div>
-        )}
-
-        {checkoutStep === 'shipping' && (
-          <div className="p-6 border-t flex gap-3">
-            <button onClick={() => setCheckoutStep('cart')} className="flex-1 bg-gray-100 text-brand-dark py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-              <ArrowLeft size={20} /> Atrás
-            </button>
-            <button onClick={onProceedToPayment} className="flex-1 bg-brand-pink text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-              Continuar <ArrowRight size={20} />
-            </button>
-          </div>
-        )}
-
-        {checkoutStep === 'payment' && (
-          <div className="p-6 border-t">
-            <button onClick={() => setCheckoutStep('shipping')} className="w-full bg-gray-100 text-brand-dark py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-              <ArrowLeft size={20} /> Volver a Envío
+              {t('checkoutProceed')}
+              <ArrowRight size={20} />
             </button>
           </div>
         )}

@@ -12,7 +12,7 @@
 ## 需要的上下文
 
 ```
-/technova/
+/movilnova/
 ├── **/*.tsx              # 所有组件代码
 ├── **/*.ts               # 所有 TS 文件
 ├── types.ts              # 类型定义
@@ -24,7 +24,7 @@
 ## 输出格式
 
 ```typescript
-// 文件路径: /technova/components/NewComponent.tsx
+// 文件路径: /movilnova/components/NewComponent.tsx
 
 import React from 'react';
 // ... 完整可运行代码

@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovilNova - Guia Completa de Operaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ========== RESET & BASE ========== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1A1A1A;
+    line-height: 1.7;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== CSS VARIABLES ========== */
+  :root {
+    --green: #008060;
+    --green-dark: #006e52;
+    --green-light: #e6f5f0;
+    --dark: #1A1A1A;
+    --gray-900: #303030;
+    --gray-700: #6D7175;
+    --gray-500: #8C9196;
+    --gray-300: #C9CCCF;
+    --gray-100: #F6F6F7;
+    --orange: #FF6B35;
+    --blue: #2C6ECB;
+    --red: #D72C0D;
+    --yellow: #B98900;
+    --page-w: 210mm;
+    --page-margin: 22mm;
+  }
+
+  /* ========== PRINT STYLES ========== */
+  @page {
+    size: A4;
+    margin: 20mm 18mm 25mm 18mm;
+    @bottom-center {
+      content: "MovilNova - Guia de Operaciones  |  Pagina " counter(page);
+      font-size: 8pt;
+      color: #8C9196;
+      font-family: 'Inter', sans-serif;
+    }
+  }
+
+  @media print {
+    body { background: #fff; font-size: 10pt; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    section { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    table, figure { page-break-inside: avoid; }
+    a { color: var(--green) !important; text-decoration: none !important; }
+    .cover-page { page-break-after: always; height: 100vh; }
+    .toc-page { page-break-after: always; }
+  }
+
+  /* ========== LAYOUT ========== */
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ========== COVER PAGE ========== */
+  .cover-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #008060 0%, #004d3a 100%);
+    color: white;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-page::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.04) 0%, transparent 40%);
+  }
+  .cover-logo {
+    font-size: 4.5rem;
+    font-weight: 900;
+    letter-spacing: -3px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 8px;
+  }
+  .cover-logo span { color: #FFD700; }
+  .cover-tagline {
+    font-size: 1.1rem;
+    opacity: 0.7;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    position: relative; z-index: 1;
+  }
+  .cover-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.85;
+    margin-bottom: 48px;
+    position: relative; z-index: 1;
+  }
+  .cover-meta {
+    position: relative; z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .cover-version {
+    background: rgba(255,255,255,0.15);
+    padding: 8px 28px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .cover-confidential {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 16px;
+  }
+  .cover-line {
+    width: 80px; height: 3px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    margin: 24px 0;
+    position: relative; z-index: 1;
+  }
+
+  /* ========== TABLE OF CONTENTS ========== */
+  .toc-page { padding: 60px 0; }
+  .toc-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--green);
+  }
+  .toc-list { list-style: none; }
+  .toc-list li {
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .toc-list li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 0;
+    text-decoration: none;
+    color: var(--dark);
+    transition: color 0.2s;
+    font-size: 0.95rem;
+  }
+  .toc-list li a:hover { color: var(--green); }
+  .toc-list li a .toc-num {
+    font-weight: 700;
+    color: var(--green);
+    margin-right: 12px;
+    min-width: 28px;
+  }
+  .toc-list li a .toc-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--gray-300);
+    margin: 0 12px;
+    height: 1px;
+    align-self: flex-end;
+    margin-bottom: 6px;
+  }
+  .toc-section {
+    font-weight: 700;
+    font-size: 1.02rem;
+  }
+  .toc-sub {
+    padding-left: 28px !important;
+    font-size: 0.88rem !important;
+    color: var(--gray-700) !important;
+  }
+
+  /* ========== HEADINGS ========== */
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--green);
+    margin: 48px 0 24px 0;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--green-light);
+    letter-spacing: -0.5px;
+  }
+  h2 .sec-num {
+    display: inline-block;
+    background: var(--green);
+    color: white;
+    width: 38px; height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 1rem;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 32px 0 14px 0;
+  }
+  h3 .sub-num {
+    color: var(--green);
+    font-weight: 800;
+    margin-right: 6px;
+  }
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 20px 0 10px 0;
+  }
+
+  /* ========== TEXT ========== */
+  p { margin-bottom: 12px; color: var(--gray-900); }
+  strong { font-weight: 700; }
+
+  /* ========== LISTS ========== */
+  ul, ol {
+    margin: 8px 0 16px 24px;
+    color: var(--gray-900);
+  }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--green); }
+
+  /* ========== TABLES ========== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px 0;
+    font-size: 0.9rem;
+  }
+  thead th {
+    background: var(--green);
+    color: white;
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: var(--gray-100); }
+  tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  tbody tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+  /* ========== INFO BOXES ========== */
+  .info-box {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .info-box .icon { margin-right: 8px; }
+  .warn-box {
+    background: #FFF8E6;
+    border-left: 4px solid var(--yellow);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .danger-box {
+    background: #FFF4F4;
+    border-left: 4px solid var(--red);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+
+  /* ========== STEPS ========== */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 48px;
+    margin-bottom: 18px;
+    min-height: 36px;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 0;
+    width: 32px; height: 32px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  /* ========== CODE ========== */
+  code {
+    background: var(--gray-100);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--green-dark);
+  }
+  pre {
+    background: var(--dark);
+    color: #e6e6e6;
+    padding: 20px 24px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* ========== BADGES ========== */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-orange { background: #FFF0E6; color: var(--orange); }
+  .badge-blue { background: #EBF5FA; color: var(--blue); }
+  .badge-red { background: #FFF4F4; color: var(--red); }
+  .badge-yellow { background: #FFF8E6; color: var(--yellow); }
+  .badge-gray { background: var(--gray-100); color: var(--gray-700); }
+
+  /* ========== SCREENSHOTS PLACEHOLDER ========== */
+  .screenshot {
+    background: linear-gradient(135deg, var(--gray-100) 0%, #e8eaed 100%);
+    border: 2px dashed var(--gray-300);
+    border-radius: 10px;
+    padding: 32px;
+    text-align: center;
+    margin: 16px 0;
+    color: var(--gray-500);
+    font-size: 0.85rem;
+  }
+  .screenshot .label {
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+  }
+
+  /* ========== SEPARATOR ========== */
+  hr {
+    border: none;
+    border-top: 2px solid var(--gray-100);
+    margin: 40px 0;
+  }
+
+  /* ========== KBD ========== */
+  kbd {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    box-shadow: 0 1px 0 var(--gray-300);
+  }
+
+  /* ========== APPENDIX ========== */
+  .appendix h2 {
+    color: var(--gray-900);
+    border-bottom-color: var(--gray-300);
+  }
+  .appendix h2 .sec-num {
+    background: var(--gray-900);
+  }
+</style>
+</head>
+<body>
+
+<!-- ================================================================== -->
+<!-- PORTADA                                                            -->
+<!-- ================================================================== -->
+<div class="cover-page">
+  <div class="cover-logo">Tech<span>Nova</span></div>
+  <div class="cover-tagline">Ecosystem</div>
+  <div class="cover-line"></div>
+  <div class="cover-title">Guia Completa de Operaciones</div>
+  <div class="cover-subtitle">Manual integral para la gestion de la tienda online,<br>taller de reparaciones, inventario y administracion</div>
+  <div class="cover-meta">
+    <div class="cover-version">Version 1.0 &mdash; Febrero 2026</div>
+    <div class="cover-confidential">Manual de uso interno &bull; Confidencial</div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- INDICE                                                             -->
+<!-- ================================================================== -->
+<div class="container toc-page page-break">
+  <h1 class="toc-title">Indice de Contenidos</h1>
+  <ul class="toc-list">
+    <li><a href="#sec1" class="toc-section"><span class="toc-num">1</span> Introduccion <span class="toc-dots"></span></a></li>
+    <li><a href="#sec2" class="toc-section"><span class="toc-num">2</span> Tienda Online (Storefront) <span class="toc-dots"></span></a></li>
+    <li><a href="#sec2-1" class="toc-sub">2.1 Pagina principal</a></li>
+    <li><a href="#sec2-2" class="toc-sub">2.2 Catalogo de productos</a></li>
+    <li><a href="#sec2-3" class="toc-sub">2.3 Ficha de producto</a></li>
+    <li><a href="#sec2-4" class="toc-sub">2.4 Packs / Bundles</a></li>
+    <li><a href="#sec2-5" class="toc-sub">2.5 Diseno IA de Fundas</a></li>
+    <li><a href="#sec3" class="toc-section"><span class="toc-num">3</span> Carrito y Proceso de Compra <span class="toc-dots"></span></a></li>
+    <li><a href="#sec4" class="toc-section"><span class="toc-num">4</span> Sistema de Clientes <span class="toc-dots"></span></a></li>
+    <li><a href="#sec5" class="toc-section"><span class="toc-num">5</span> Seguimiento de Reparaciones <span class="toc-dots"></span></a></li>
+    <li><a href="#sec6" class="toc-section"><span class="toc-num">6</span> Panel de Empleados (Dashboard) <span class="toc-dots"></span></a></li>
+    <li><a href="#sec6-3" class="toc-sub">6.3 Taller (Kanban Board)</a></li>
+    <li><a href="#sec6-4" class="toc-sub">6.4 Informe Diario</a></li>
+    <li><a href="#sec6-5" class="toc-sub">6.5 Inventario</a></li>
+    <li><a href="#sec6-6" class="toc-sub">6.6 Fichaje (Asistencia)</a></li>
+    <li><a href="#sec6-7" class="toc-sub">6.7 Ventas / Pedidos Online</a></li>
+    <li><a href="#sec6-8" class="toc-sub">6.8 Informes (Solo Manager)</a></li>
+    <li><a href="#sec6-9" class="toc-sub">6.9 Sincronizar</a></li>
+    <li><a href="#sec7" class="toc-section"><span class="toc-num">7</span> Panel de Administracion <span class="toc-dots"></span></a></li>
+    <li><a href="#sec8" class="toc-section"><span class="toc-num">8</span> Cumplimiento Legal <span class="toc-dots"></span></a></li>
+    <li><a href="#sec9" class="toc-section"><span class="toc-num">9</span> Asistente IA <span class="toc-dots"></span></a></li>
+    <li><a href="#sec10" class="toc-section"><span class="toc-num">10</span> App Progresiva (PWA) <span class="toc-dots"></span></a></li>
+    <li><a href="#sec11" class="toc-section"><span class="toc-num">11</span> Guia de Despliegue y Dominio <span class="toc-dots"></span></a></li>
+    <li><a href="#sec12" class="toc-section"><span class="toc-num">12</span> Resolucion de Problemas <span class="toc-dots"></span></a></li>
+    <li><a href="#apA" class="toc-section"><span class="toc-num">A</span> Atajos y Accesos Rapidos <span class="toc-dots"></span></a></li>
+    <li><a href="#apB" class="toc-section"><span class="toc-num">B</span> Estructura Firebase <span class="toc-dots"></span></a></li>
+    <li><a href="#apC" class="toc-section"><span class="toc-num">C</span> Contacto y Soporte Tecnico <span class="toc-dots"></span></a></li>
+  </ul>
+</div>
+
+<!-- ================================================================== -->
+<!-- 1. INTRODUCCION                                                    -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec1">
+  <h2><span class="sec-num">1</span> Introduccion</h2>
+
+  <h3>Que es MovilNova Ecosystem</h3>
+  <p>MovilNova Ecosystem es una plataforma integral disenada para tiendas de accesorios y reparaciones de dispositivos moviles. Combina en una unica aplicacion web:</p>
+  <ul>
+    <li><strong>Tienda online</strong> con catalogo de productos, carrito de compra, proceso de pago y gestion de clientes.</li>
+    <li><strong>Taller de reparaciones</strong> con tablero Kanban para seguimiento de trabajos, asignacion de tecnicos y gestion de piezas.</li>
+    <li><strong>Sistema de inventario</strong> multi-tienda con transferencias entre sucursales.</li>
+    <li><strong>Panel de empleados</strong> con fichaje, informes, y gestion de pedidos online.</li>
+    <li><strong>Panel de administracion</strong> para gestion de productos conectado a Firebase.</li>
+    <li><strong>Asistente de IA</strong> integrado con Google Gemini para soporte tecnico y analisis visual.</li>
+    <li><strong>Cumplimiento legal RGPD</strong> completo con politicas de privacidad, cookies y terminos.</li>
+  </ul>
+
+  <h3>Stack Tecnologico</h3>
+  <table>
+    <thead>
+      <tr><th>Tecnologia</th><th>Uso</th><th>Version</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>React</td><td>Framework de interfaz de usuario</td><td>18.x</td></tr>
+      <tr><td>TypeScript</td><td>Tipado estatico</td><td>5.x</td></tr>
+      <tr><td>Tailwind CSS</td><td>Estilos y diseno responsivo</td><td>3.x</td></tr>
+      <tr><td>Firebase</td><td>Auth, Firestore, Storage, Hosting</td><td>10.x</td></tr>
+      <tr><td>Vite</td><td>Build tool y servidor de desarrollo</td><td>5.x</td></tr>
+      <tr><td>i18next</td><td>Internacionalizacion (5 idiomas)</td><td>23.x</td></tr>
+      <tr><td>Recharts</td><td>Graficos en informes</td><td>2.x</td></tr>
+      <tr><td>Google Gemini</td><td>Asistente IA y vision</td><td>API</td></tr>
+      <tr><td>Lucide React</td><td>Iconografia</td><td>0.4x</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Acceso a la Aplicacion</h3>
+  <p>La aplicacion se despliega como sitio web estatico en Firebase Hosting. La URL depende de la configuracion del dominio personalizado. En desarrollo:</p>
+  <pre><code>http://localhost:5173</code></pre>
+
+  <h3>Idiomas Disponibles</h3>
+  <table>
+    <thead>
+      <tr><th>Codigo</th><th>Idioma</th><th>Cobertura</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">ES</span></td><td>Espanol</td><td>Completa</td></tr>
+      <tr><td><span class="badge badge-blue">EN</span></td><td>Ingles</td><td>Completa</td></tr>
+      <tr><td><span class="badge badge-orange">ZH</span></td><td>Chino simplificado</td><td>Completa</td></tr>
+      <tr><td><span class="badge badge-blue">FR</span></td><td>Frances</td><td>Completa</td></tr>
+      <tr><td><span class="badge badge-yellow">DE</span></td><td>Aleman</td><td>Completa</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Como Cambiar el Idioma</h3>
+  <ol class="steps">
+    <li>Localiza el icono de <strong>globo terraqueo</strong> en la barra de navegacion superior (NavBar).</li>
+    <li>Haz clic en el icono para desplegar el menu de idiomas.</li>
+    <li>Selecciona el idioma deseado. La interfaz se actualizara inmediatamente.</li>
+  </ol>
+  <div class="info-box">
+    <strong>Nota:</strong> El idioma seleccionado se guarda en el navegador. Al volver a visitar la pagina, se recordara la preferencia.
+  </div>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 2. TIENDA ONLINE                                                   -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec2">
+  <h2><span class="sec-num">2</span> Tienda Online (Storefront)</h2>
+  <p>La tienda online es la cara publica de MovilNova. Los clientes pueden navegar productos, filtrar por categorias y marcas, ver detalles, leer resenas y anadir articulos al carrito.</p>
+
+  <h3 id="sec2-1"><span class="sub-num">2.1</span> Pagina Principal</h3>
+  <p>Al acceder al sitio web, el usuario ve:</p>
+  <ul>
+    <li><strong>Barra de navegacion (NavBar):</strong> Logo MovilNova, enlaces a Inicio, Reparaciones, icono de idioma, icono de carrito con contador, icono de usuario (cliente o empleado), y menu hamburguesa en movil.</li>
+    <li><strong>Hero banner rotativo:</strong> Carrusel con dos diapositivas que rota automaticamente cada 5 segundos. La primera muestra una escena 3D interactiva, la segunda muestra ofertas destacadas.</li>
+    <li><strong>Banner promocional:</strong> Franja superior verde con la oferta activa (ej. &quot;3x2 en todos los accesorios&quot;) y un temporizador de oferta limitada.</li>
+    <li><strong>Tarjetas de funcionalidades:</strong> Tres tarjetas destacadas:
+      <ul>
+        <li><strong>Diseno IA:</strong> Acceso al creador de fundas personalizadas con inteligencia artificial.</li>
+        <li><strong>Seguimiento de reparacion:</strong> Enlace rapido para consultar el estado de una reparacion.</li>
+        <li><strong>Oferta especial:</strong> Muestra la promocion vigente con temporizador.</li>
+      </ul>
+    </li>
+    <li><strong>Catalogo de productos:</strong> Grid responsive con todos los productos disponibles.</li>
+  </ul>
+
+  <div class="screenshot">
+    <div class="label">Captura: Pagina principal con hero banner, tarjetas de funcionalidades y catalogo</div>
+    Navegar a la URL principal de la aplicacion para ver esta vista
+  </div>
+
+  <h3 id="sec2-2"><span class="sub-num">2.2</span> Catalogo de Productos</h3>
+  <p>El catalogo ofrece multiples formas de encontrar productos:</p>
+
+  <h4>Categorias</h4>
+  <p>Una fila horizontal de botones permite filtrar por categoria. Las categorias disponibles son:</p>
+  <table>
+    <thead><tr><th>Categoria</th><th>ID interno</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td>Todos</td><td>(vacio)</td><td>Muestra todos los productos sin filtro</td></tr>
+      <tr><td>Fundas</td><td>Case</td><td>Fundas protectoras para moviles</td></tr>
+      <tr><td>Protectores</td><td>Screen Protector</td><td>Cristales templados y protectores de pantalla</td></tr>
+      <tr><td>Cargadores</td><td>Charger</td><td>Cargadores rapidos y adaptadores</td></tr>
+      <tr><td>Cables</td><td>Cable</td><td>Cables USB-C, Lightning, etc.</td></tr>
+      <tr><td>Power Banks</td><td>Power Bank</td><td>Baterias externas portatiles</td></tr>
+      <tr><td>Colgantes</td><td>Strap</td><td>Correas y cadenas para movil</td></tr>
+      <tr><td>Audio</td><td>Audio</td><td>Auriculares y accesorios de sonido</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Filtros por Marca y Modelo</h4>
+  <p>Debajo de las categorias hay una barra de filtros con:</p>
+  <ul>
+    <li><strong>Campo de busqueda:</strong> Busqueda libre por nombre, descripcion, categoria o marca del producto.</li>
+    <li><strong>Selector de marca:</strong> Dropdown con las marcas soportadas (Apple, Samsung, Xiaomi, Huawei, Oppo, Google).</li>
+    <li><strong>Selector de modelo:</strong> Se activa al elegir una marca. Muestra los modelos compatibles de esa marca.</li>
+    <li><strong>Boton limpiar filtros:</strong> Aparece cuando hay filtros activos para reiniciar la busqueda.</li>
+  </ul>
+  <p>El contador de resultados se actualiza dinamicamente: <em>&quot;12 productos encontrados&quot;</em>.</p>
+
+  <h3 id="sec2-3"><span class="sub-num">2.3</span> Ficha de Producto</h3>
+  <p>Al hacer clic en cualquier producto del catalogo (o en el overlay &quot;Vista rapida&quot;), se abre un modal de detalle a pantalla parcial con:</p>
+  <ul>
+    <li><strong>Imagen del producto:</strong> Vista ampliada a la izquierda (o arriba en movil).</li>
+    <li><strong>Categoria y nombre:</strong> Titulo completo con la categoria en verde arriba.</li>
+    <li><strong>Puntuacion y resenas:</strong> Estrellas amarillas con nota media y numero total de resenas.</li>
+    <li><strong>Precio:</strong> Precio actual en negro grande. Si es bundle, muestra precio tachado y badge de descuento.</li>
+    <li><strong>Descripcion:</strong> Texto detallado del producto.</li>
+    <li><strong>Selector de modelo:</strong> Dropdown obligatorio si el producto tiene modelos compatibles. El boton &quot;Anadir al carrito&quot; queda deshabilitado hasta seleccionar modelo.</li>
+    <li><strong>Caracteristicas:</strong> Iconos de &quot;Garantia&quot; y &quot;Envio rapido&quot;.</li>
+    <li><strong>Resenas de clientes:</strong> Lista de resenas con autor, puntuacion, fecha, texto, verificacion y contador de &quot;util&quot;. Boton para ver todas las resenas.</li>
+    <li><strong>Boton &quot;Anadir al carrito&quot;:</strong> Boton verde completo al final.</li>
+  </ul>
+
+  <h3 id="sec2-4"><span class="sub-num">2.4</span> Packs / Bundles</h3>
+  <p>Los bundles son productos agrupados con descuento. Se identifican por:</p>
+  <ul>
+    <li>Badge <span class="badge badge-orange">MAS VENDIDO</span> con icono de llama en la esquina superior izquierda.</li>
+    <li>Precio original tachado junto al precio con descuento.</li>
+    <li>Badge <span class="badge badge-green">Ahorra 30%</span> en la ficha de detalle.</li>
+  </ul>
+  <p>Ejemplo: &quot;Summer Vibes Bundle&quot; incluye funda + colgante a 24.99 EUR (precio original 35.99 EUR).</p>
+
+  <h3 id="sec2-5"><span class="sub-num">2.5</span> Diseno IA de Fundas</h3>
+  <p>MovilNova incluye un creador de fundas personalizadas con inteligencia artificial:</p>
+  <ol class="steps">
+    <li>Desde la pagina principal, haz clic en la tarjeta <strong>&quot;Diseno IA&quot;</strong> o en el boton &quot;Probar ahora&quot;.</li>
+    <li>Se abre el <strong>Custom Case Creator</strong> a pantalla completa.</li>
+    <li><strong>Sube una imagen:</strong> Arrastra o haz clic para seleccionar la imagen base para el diseno (fotografias, ilustraciones, etc.).</li>
+    <li><strong>Selecciona el modelo de movil:</strong> Elige la marca y modelo para el que quieres la funda.</li>
+    <li><strong>Genera el diseno:</strong> La IA procesa la imagen y crea un diseno adaptado a la funda.</li>
+    <li><strong>Anade al carrito:</strong> Una vez satisfecho con el resultado, puedes anadir la funda personalizada directamente al carrito.</li>
+  </ol>
+  <div class="warn-box">
+    <strong>Importante:</strong> Las fundas personalizadas se marcan como <code>isCustom: true</code> en el sistema. En el panel de empleados, se puede descargar la imagen original en alta resolucion para produccion.
+  </div>
+
+  <h4>Boton Favoritos</h4>
+  <p>Cada producto tiene un icono de corazon en la esquina superior derecha de la imagen. Los clientes registrados pueden:</p>
+  <ul>
+    <li>Hacer clic para anadir/quitar de favoritos.</li>
+    <li>El corazon se llena de verde cuando esta marcado como favorito.</li>
+    <li>Los favoritos se sincronizan con Firebase si el cliente esta logueado.</li>
+    <li>Se pueden ver todos los favoritos desde la seccion &quot;Mi Cuenta &gt; Favoritos&quot;.</li>
+  </ul>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 3. CARRITO Y PROCESO DE COMPRA                                     -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec3">
+  <h2><span class="sec-num">3</span> Carrito y Proceso de Compra</h2>
+  <p>El proceso de compra consta de 4 pasos, todo dentro de un panel lateral deslizante (drawer) que se abre desde la derecha.</p>
+
+  <h3><span class="sub-num">3.1</span> Carrito Lateral</h3>
+  <p>Se abre al hacer clic en el icono del carrito en la NavBar o al anadir un producto. Muestra:</p>
+  <ul>
+    <li><strong>Indicador de pasos:</strong> Barra superior con &quot;1. Carrito &rarr; 2. Envio &rarr; 3. Pago&quot;, con el paso activo resaltado en verde.</li>
+    <li><strong>Lista de productos:</strong> Cada articulo muestra imagen, nombre, modelo seleccionado (si aplica), precio y controles de cantidad (+/-).</li>
+    <li><strong>Boton eliminar:</strong> Icono de papelera para quitar un producto.</li>
+    <li><strong>Aviso para iniciar sesion:</strong> Si el cliente no esta logueado, aparece una franja con &quot;Inicia sesion para guardar tu carrito&quot;.</li>
+    <li><strong>Total y boton continuar:</strong> En la parte inferior, muestra el total con numero de articulos y boton verde &quot;Continuar&quot;.</li>
+  </ul>
+
+  <h3><span class="sub-num">3.2</span> Datos de Envio</h3>
+  <p>Al pulsar &quot;Continuar&quot; desde el carrito, se muestra el formulario de envio con los siguientes campos obligatorios:</p>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo</th><th>Validacion</th></tr></thead>
+    <tbody>
+      <tr><td>Nombre completo</td><td>Texto</td><td>Obligatorio, no puede estar vacio</td></tr>
+      <tr><td>Email</td><td>Email</td><td>Obligatorio, formato email valido</td></tr>
+      <tr><td>Telefono</td><td>Telefono</td><td>Obligatorio</td></tr>
+      <tr><td>Direccion de envio</td><td>Textarea</td><td>Obligatorio</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Checkboxes Legales (Obligatorios)</h4>
+  <ul>
+    <li><strong>Acepto los Terminos y Condiciones</strong> &mdash; Obligatorio para continuar.</li>
+    <li><strong>He leido y acepto la Politica de Privacidad</strong> &mdash; Obligatorio para continuar.</li>
+  </ul>
+  <p>Si no se marcan ambos checkboxes, aparece un mensaje de error en rojo y no se puede avanzar al paso de pago.</p>
+  <p>Botones: <strong>&quot;Atras&quot;</strong> (vuelve al carrito) y <strong>&quot;Continuar&quot;</strong> (valida y avanza a pago).</p>
+
+  <h3><span class="sub-num">3.3</span> Seleccion de Pago</h3>
+  <p>Se muestra un resumen del pedido (nombre, email, telefono, direccion, total) seguido de dos opciones de pago:</p>
+  <ul>
+    <li><strong>Pagar con Tarjeta (Stripe):</strong> Boton morado con icono de tarjeta de credito.</li>
+    <li><strong>PayPal:</strong> Boton azul con el logo de PayPal.</li>
+  </ul>
+  <div class="info-box">
+    <strong>Nota demo:</strong> En la version actual, los pedidos se registran con estado &quot;Pending&quot;. En produccion, se integrarian las pasarelas de pago reales de Stripe y PayPal.
+  </div>
+
+  <h3><span class="sub-num">3.4</span> Confirmacion de Pedido</h3>
+  <p>Tras seleccionar el metodo de pago, se muestra la pantalla de exito con:</p>
+  <ul>
+    <li>Icono de check verde grande.</li>
+    <li>Mensaje: &quot;Gracias por tu compra!&quot;</li>
+    <li>Texto: &quot;Tu pedido ha sido registrado. Te contactaremos para confirmar el pago y envio.&quot;</li>
+    <li>El ID del pedido se genera automaticamente con formato <code>ORD-XXXXXX</code>.</li>
+    <li>Boton para volver a la tienda.</li>
+  </ul>
+
+  <h3><span class="sub-num">3.5</span> Carrito Persistente</h3>
+  <p>Si el cliente ha iniciado sesion:</p>
+  <ul>
+    <li>El carrito se <strong>sincroniza automaticamente con Firebase</strong> (coleccion <code>cart</code>).</li>
+    <li>Al cerrar el navegador y volver, el carrito se recupera.</li>
+    <li>Tras completar un pedido, el carrito de Firebase se vacia automaticamente.</li>
+    <li>El pedido se guarda tambien en la coleccion <code>orders</code> del cliente en Firestore.</li>
+  </ul>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 4. SISTEMA DE CLIENTES                                             -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec4">
+  <h2><span class="sec-num">4</span> Sistema de Clientes</h2>
+  <p>Los clientes pueden crear una cuenta para acceder a funcionalidades avanzadas: carrito persistente, historial de pedidos, direcciones guardadas y lista de favoritos.</p>
+
+  <h3><span class="sub-num">4.1</span> Registro de Cuenta</h3>
+  <ol class="steps">
+    <li>Haz clic en el <strong>icono de usuario</strong> en la NavBar (si no estas logueado, se abre el modal de autenticacion).</li>
+    <li>Pulsa <strong>&quot;Crear Cuenta&quot;</strong> en la parte inferior del formulario.</li>
+    <li>Rellena los campos:
+      <ul>
+        <li><strong>Nombre completo:</strong> Nombre y apellidos del cliente.</li>
+        <li><strong>Email:</strong> Direccion de correo electronico (sera el identificador de la cuenta).</li>
+        <li><strong>Contrasena:</strong> Minimo 6 caracteres.</li>
+        <li><strong>Confirmar contrasena:</strong> Debe coincidir con la contrasena.</li>
+      </ul>
+    </li>
+    <li>Pulsa el boton <strong>&quot;Crear Cuenta&quot;</strong>. Si es exitoso, se cierra el modal y el cliente queda logueado.</li>
+  </ol>
+  <div class="info-box">
+    <strong>Backend:</strong> El registro crea un usuario en Firebase Auth y un documento en Firestore en la coleccion <code>customers/{uid}</code> con los campos: uid, email, displayName, createdAt, updatedAt.
+  </div>
+
+  <h3><span class="sub-num">4.2</span> Inicio de Sesion</h3>
+  <ol class="steps">
+    <li>Haz clic en el <strong>icono de usuario</strong> en la NavBar.</li>
+    <li>Introduce <strong>email</strong> y <strong>contrasena</strong>.</li>
+    <li>Pulsa <strong>&quot;Iniciar Sesion&quot;</strong>.</li>
+  </ol>
+  <p>Posibles errores mostrados:</p>
+  <table>
+    <thead><tr><th>Error</th><th>Mensaje</th></tr></thead>
+    <tbody>
+      <tr><td>Email invalido</td><td>&quot;Direccion de email invalida&quot;</td></tr>
+      <tr><td>Contrasena incorrecta</td><td>&quot;Contrasena incorrecta&quot;</td></tr>
+      <tr><td>Usuario no encontrado</td><td>&quot;No se encontro cuenta con este email&quot;</td></tr>
+      <tr><td>Demasiados intentos</td><td>&quot;Demasiados intentos. Intenta mas tarde.&quot;</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="sub-num">4.3</span> Recuperacion de Contrasena</h3>
+  <ol class="steps">
+    <li>En el modal de login, pulsa <strong>&quot;Has olvidado tu contrasena?&quot;</strong></li>
+    <li>Introduce tu <strong>email</strong>.</li>
+    <li>Pulsa <strong>&quot;Enviar enlace de restablecimiento&quot;</strong>.</li>
+    <li>Revisa tu bandeja de entrada. Firebase envia un email con un enlace para crear nueva contrasena.</li>
+  </ol>
+
+  <h3><span class="sub-num">4.4</span> Mi Cuenta &mdash; Perfil</h3>
+  <p>Al estar logueado, pulsando el icono de usuario se accede a <strong>Mi Cuenta</strong>. La seccion tiene un sidebar lateral con pestanas:</p>
+  <ul>
+    <li><strong>Perfil:</strong> Muestra nombre, email (no editable) y telefono. Boton &quot;Editar Perfil&quot; permite modificar nombre y telefono.</li>
+  </ul>
+
+  <h3><span class="sub-num">4.5</span> Mi Cuenta &mdash; Pedidos</h3>
+  <ul>
+    <li><strong>Historial completo de pedidos:</strong> Lista ordenada por fecha (mas reciente primero).</li>
+    <li>Cada pedido muestra: ID, fecha, total, estado (<span class="badge badge-yellow">Pending</span>, <span class="badge badge-blue">Paid</span>, <span class="badge badge-green">Shipped</span>, <span class="badge badge-green">Completed</span>), y metodo de pago.</li>
+    <li>Al hacer clic en un pedido, se expande mostrando los articulos con imagen, nombre y precio.</li>
+  </ul>
+
+  <h3><span class="sub-num">4.6</span> Mi Cuenta &mdash; Direcciones</h3>
+  <p>Gestion completa de direcciones de envio:</p>
+  <ul>
+    <li><strong>Anadir nueva direccion:</strong> Boton &quot;Anadir Direccion&quot; abre formulario con campos: Etiqueta (Casa, Trabajo...), Nombre completo, Calle, Ciudad, Codigo Postal, Pais, Telefono, y checkbox &quot;Predeterminada&quot;.</li>
+    <li><strong>Editar direccion:</strong> Icono de lapiz en cada tarjeta de direccion.</li>
+    <li><strong>Eliminar direccion:</strong> Icono de papelera. Eliminacion directa.</li>
+    <li><strong>Establecer predeterminada:</strong> Boton con estrella &quot;Establecer como predeterminada&quot;. La direccion predeterminada muestra un badge verde.</li>
+  </ul>
+  <div class="info-box">
+    <strong>Almacenamiento:</strong> Las direcciones se guardan en Firestore en <code>customers/{uid}/addresses/{addressId}</code>.
+  </div>
+
+  <h3><span class="sub-num">4.7</span> Mi Cuenta &mdash; Favoritos</h3>
+  <ul>
+    <li>Muestra un grid con los productos marcados como favoritos.</li>
+    <li>Cada tarjeta incluye: imagen, nombre, precio, boton para quitar de favoritos (corazon rojo) y boton &quot;Anadir al carrito&quot;.</li>
+    <li>Si no hay favoritos, muestra mensaje con boton &quot;Volver a la tienda&quot;.</li>
+  </ul>
+
+  <h3><span class="sub-num">4.8</span> Cerrar Sesion</h3>
+  <p>Boton <strong>&quot;Cerrar Sesion&quot;</strong> disponible en la parte inferior del sidebar de Mi Cuenta (rojo). Redirige a la pagina de inicio.</p>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 5. SEGUIMIENTO DE REPARACIONES                                     -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec5">
+  <h2><span class="sec-num">5</span> Seguimiento de Reparaciones (Clientes)</h2>
+  <p>Los clientes pueden consultar el estado de su reparacion sin necesidad de crear cuenta.</p>
+
+  <h3><span class="sub-num">5.1</span> Acceso</h3>
+  <p>Dos formas de acceder:</p>
+  <ul>
+    <li>Clic en <strong>&quot;Reparaciones&quot;</strong> en la barra de navegacion.</li>
+    <li>Clic en la tarjeta <strong>&quot;Seguimiento de reparacion&quot;</strong> en la pagina principal.</li>
+  </ul>
+
+  <h3><span class="sub-num">5.2</span> Buscar Pedido</h3>
+  <ol class="steps">
+    <li>Introduce el <strong>numero de pedido de reparacion</strong> (formato: <code>WX-XXXX</code>).</li>
+    <li>Introduce el <strong>numero de telefono</strong> asociado a la reparacion.</li>
+    <li>Pulsa <strong>&quot;Buscar&quot;</strong>. El sistema verifica que el telefono coincide con el registro.</li>
+  </ol>
+  <div class="warn-box">
+    <strong>Verificacion de seguridad:</strong> El numero de telefono debe coincidir con el registrado en el sistema. Si no coincide, se muestra un error de &quot;Telefono no coincide&quot;.
+  </div>
+
+  <h3><span class="sub-num">5.3</span> Ver Estado</h3>
+  <p>Si se encuentra la reparacion, se muestra una tarjeta detallada con:</p>
+  <ul>
+    <li><strong>Barra de progreso visual:</strong> Muestra las etapas secuenciales:
+      <ol>
+        <li><span class="badge badge-gray">Recibido</span></li>
+        <li><span class="badge badge-blue">Diagnostico</span></li>
+        <li><span class="badge badge-yellow">Esperando Piezas</span></li>
+        <li><span class="badge badge-green">En Reparacion</span></li>
+        <li><span class="badge badge-green">Listo para Recoger</span></li>
+      </ol>
+    </li>
+    <li>El paso actual se resalta en color verde con icono de check.</li>
+  </ul>
+
+  <h3><span class="sub-num">5.4</span> Informacion Mostrada</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td>ID de orden</td><td>Identificador unico (ej. WX-8888)</td></tr>
+      <tr><td>Dispositivo</td><td>Marca y modelo del dispositivo</td></tr>
+      <tr><td>Tecnico asignado</td><td>Nombre del tecnico responsable</td></tr>
+      <tr><td>Garantia</td><td>Periodo de garantia de la reparacion (ej. 6 meses)</td></tr>
+      <tr><td>Precio total</td><td>Coste total de la reparacion</td></tr>
+      <tr><td>Senal entregada</td><td>Importe ya pagado como deposito</td></tr>
+      <tr><td>Pendiente de pago</td><td>Diferencia entre total y senal</td></tr>
+      <tr><td>Tienda</td><td>Nombre y telefono de la sucursal</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="sub-num">5.5</span> Promocion de Resena Google</h3>
+  <p>Cuando el estado de la reparacion es <strong>&quot;Listo para Recoger&quot;</strong> o <strong>&quot;Terminado&quot;</strong>, aparece automaticamente una seccion especial:</p>
+  <ul>
+    <li>Titulo: &quot;Que tal el servicio?&quot;</li>
+    <li>Mensaje: &quot;5 estrellas en Google = Cupon 5 EUR!&quot;</li>
+    <li>Boton: &quot;Valorar en Google Maps&quot; (enlace configurable a la ficha de Google).</li>
+    <li>Al &quot;canjear&quot; el cupon, muestra un codigo de descuento para usar en tienda.</li>
+  </ul>
+
+  <h3><span class="sub-num">5.6</span> Productos Sugeridos</h3>
+  <p>Debajo del estado de reparacion, se muestra una seccion <strong>&quot;Esperando tu movil? Mira nuestras fundas nuevas.&quot;</strong> con un boton para ir a la tienda, incentivando compras adicionales mientras el cliente espera.</p>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 6. PANEL DE EMPLEADOS                                              -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec6">
+  <h2><span class="sec-num">6</span> Panel de Empleados (Dashboard)</h2>
+  <p>El dashboard es el centro de operaciones para el personal de MovilNova. Ofrece herramientas para gestionar reparaciones, inventario, fichajes, ventas e informes.</p>
+
+  <h3><span class="sub-num">6.1</span> Acceso al Dashboard</h3>
+  <ol class="steps">
+    <li>Haz clic en el <strong>icono de usuario</strong> en la NavBar <em>(si no hay cliente logueado)</em>, o accede desde el <strong>pie de pagina</strong> pulsando el texto &quot;Empleados&quot;.</li>
+    <li>Se abre el <strong>modal de login de empleados</strong> con un teclado numerico para PIN.</li>
+    <li>Introduce tu <strong>PIN de 4 digitos</strong>.</li>
+    <li>Pulsa <strong>&quot;Entrar&quot;</strong>.</li>
+  </ol>
+
+  <h3><span class="sub-num">6.2</span> Empleados y Roles</h3>
+  <table>
+    <thead><tr><th>Nombre</th><th>Rol</th><th>PIN</th><th>Tienda</th><th>Permisos Especiales</th></tr></thead>
+    <tbody>
+      <tr><td>Super Admin</td><td><span class="badge badge-red">Admin</span></td><td><code>0000</code></td><td>HQ</td><td>Todo, incluyendo informes</td></tr>
+      <tr><td>Manager</td><td><span class="badge badge-green">Manager</span></td><td><code>1234</code></td><td>Mall</td><td>Ventas, Informes, Sincronizar</td></tr>
+      <tr><td>Worker</td><td><span class="badge badge-blue">Technician</span></td><td><code>8888</code></td><td>Downtown</td><td>Taller, Inventario, Fichaje</td></tr>
+    </tbody>
+  </table>
+  <div class="info-box">
+    <strong>Nota:</strong> Los PINs por defecto pueden cambiarse mediante variables de entorno: <code>PIN_ADMIN</code>, <code>PIN_MANAGER</code>, <code>PIN_WORKER</code>.
+  </div>
+
+  <h4>Estructura del Dashboard</h4>
+  <p>El dashboard tiene un <strong>sidebar lateral</strong> con las pestanas disponibles segun el rol. Todos los empleados ven: Taller, Inventario, Fichaje. Los Managers y Admins ademas ven: Ventas, Informes, Sincronizar.</p>
+  <p>En la esquina superior derecha hay un <strong>icono de campana</strong> para notificaciones de transferencias de inventario entrantes.</p>
+
+  <!-- 6.3 TALLER -->
+  <h3 id="sec6-3"><span class="sub-num">6.3</span> Taller (Kanban Board)</h3>
+  <p>El tablero Kanban es la herramienta principal del taller. Muestra todas las reparaciones organizadas en columnas por estado.</p>
+
+  <h4>Columnas del Tablero</h4>
+  <table>
+    <thead><tr><th>Columna</th><th>Estado Interno</th><th>Color</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td>Recibido</td><td>Received</td><td><span class="badge badge-gray">Gris</span></td><td>Dispositivo entregado por el cliente</td></tr>
+      <tr><td>Diagnosticando</td><td>Diagnosing</td><td><span class="badge badge-blue">Azul</span></td><td>Tecnico examinando el problema</td></tr>
+      <tr><td>Esperando Piezas</td><td>Waiting for Parts</td><td><span class="badge badge-yellow">Amarillo</span></td><td>Se necesitan piezas que aun no han llegado</td></tr>
+      <tr><td>Reparado</td><td>Repaired</td><td><span class="badge badge-green">Verde</span></td><td>Reparacion completada</td></tr>
+      <tr><td>Listo para Recoger</td><td>Ready for Pickup</td><td><span class="badge badge-green">Verde</span></td><td>Cliente puede pasar a recoger</td></tr>
+      <tr><td>Terminado</td><td>Finished</td><td><span class="badge badge-gray">Gris</span></td><td>Entregado al cliente</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Crear Nuevo Ticket de Reparacion</h4>
+  <ol class="steps">
+    <li>Pulsa el boton <strong>&quot;+ Nuevo&quot;</strong> en la barra de herramientas del Kanban.</li>
+    <li>Se abre el formulario de reparacion con los siguientes campos:
+      <ul>
+        <li><strong>Cliente:</strong> Nombre del cliente.</li>
+        <li><strong>Telefono:</strong> Numero de contacto.</li>
+        <li><strong>Dispositivo:</strong> Seleccion de marca (Apple, Samsung, Xiaomi, etc.) y modelo.</li>
+        <li><strong>Problema:</strong> Descripcion del fallo o averia.</li>
+        <li><strong>Tecnico:</strong> Asignacion del tecnico responsable.</li>
+        <li><strong>Precio:</strong> Coste estimado de la reparacion.</li>
+        <li><strong>Piezas:</strong> Lista de piezas necesarias con tipo: <span class="badge badge-green">ORI</span> (original) o <span class="badge badge-blue">COMP</span> (compatible).</li>
+      </ul>
+    </li>
+    <li>Pulsa <strong>&quot;Guardar&quot;</strong>. El ticket se crea en la columna &quot;Recibido&quot; con un ID unico.</li>
+  </ol>
+
+  <h4>Mover Tarjetas (Drag &amp; Drop)</h4>
+  <p>Para cambiar el estado de una reparacion:</p>
+  <ul>
+    <li><strong>Arrastra</strong> la tarjeta de una columna a otra. El estado se actualiza automaticamente.</li>
+    <li>Al mover a &quot;Terminado&quot;, el progreso se establece al 100%.</li>
+  </ul>
+
+  <h4>Filtrar y Buscar</h4>
+  <ul>
+    <li><strong>Busqueda:</strong> Campo de texto para buscar por nombre de cliente, dispositivo, ID de orden o telefono.</li>
+    <li><strong>Filtro por tecnico:</strong> Dropdown para mostrar solo las reparaciones de un tecnico especifico.</li>
+  </ul>
+
+  <h4>Tarjeta de Reparacion</h4>
+  <p>Cada tarjeta en el Kanban muestra:</p>
+  <ul>
+    <li>ID de la reparacion (ej. <code>WX-8888</code>).</li>
+    <li>Nombre del cliente y telefono.</li>
+    <li>Dispositivo con logo de la marca (Apple, Samsung, etc.).</li>
+    <li>Piezas necesarias con badges de color: <span class="badge badge-green">ORI</span> o <span class="badge badge-blue">COMP</span>.</li>
+    <li>Precio de la reparacion.</li>
+    <li>Tecnico asignado.</li>
+    <li>Fechas de entrada y estimacion de salida.</li>
+  </ul>
+
+  <h4>Editar Ticket</h4>
+  <p>Haz clic en el icono de edicion de la tarjeta. Se abre el formulario pre-rellenado con todos los datos actuales. Modifica los campos necesarios y guarda.</p>
+
+  <h4>Imprimir Etiqueta</h4>
+  <p>Desde la tarjeta de reparacion, se puede generar una <strong>etiqueta adhesiva</strong> imprimible con el ID, dispositivo, cliente y fecha para pegar en el aparato del cliente.</p>
+
+  <h4>Boton &quot;Finalizar&quot;</h4>
+  <p>Disponible en las tarjetas de la columna &quot;Listo para Recoger&quot;. Marca la reparacion como completada y la mueve a &quot;Terminado&quot;.</p>
+
+  <!-- 6.4 INFORME DIARIO -->
+  <h3 id="sec6-4"><span class="sub-num">6.4</span> Informe Diario</h3>
+  <ol class="steps">
+    <li>En la barra de herramientas del Kanban, pulsa el boton <strong>&quot;Informe&quot;</strong> (icono de hoja de calculo).</li>
+    <li>Se genera un reporte con las reparaciones del dia.</li>
+    <li>El informe muestra:
+      <ul>
+        <li><strong>Total de reparaciones</strong> del dia.</li>
+        <li><strong>Lista detallada</strong> con marca, modelo, piezas usadas y precio.</li>
+        <li><strong>Badges de piezas:</strong> <span class="badge badge-green">Original</span> en verde, <span class="badge badge-blue">Compatible</span> en azul.</li>
+      </ul>
+    </li>
+    <li>El informe es <strong>imprimible</strong> directamente desde el navegador.</li>
+  </ol>
+
+  <!-- 6.5 INVENTARIO -->
+  <h3 id="sec6-5"><span class="sub-num">6.5</span> Inventario</h3>
+  <p>Sistema de inventario multi-tienda para gestionar piezas y accesorios.</p>
+
+  <h4>Vista General</h4>
+  <p>Tabla con las columnas:</p>
+  <table>
+    <thead><tr><th>Columna</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td>Pieza</td><td>Nombre del componente o accesorio</td></tr>
+      <tr><td>SKU</td><td>Codigo de referencia unico</td></tr>
+      <tr><td>Stock</td><td>Cantidad en la tienda actual del empleado</td></tr>
+      <tr><td>Todas las tiendas</td><td>Stock desglosado por sucursal (solo Managers)</td></tr>
+      <tr><td>Acciones</td><td>Boton &quot;Enviar&quot; para transferir stock</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Codigo de Colores del Stock</h4>
+  <table>
+    <thead><tr><th>Color</th><th>Condicion</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">Verde</span></td><td>Stock &gt; 5</td><td>Nivel adecuado</td></tr>
+      <tr><td><span class="badge badge-yellow">Amarillo</span></td><td>Stock 1-5</td><td>Nivel bajo, considerar reposicion</td></tr>
+      <tr><td><span class="badge badge-red">Rojo</span></td><td>Stock = 0</td><td>Sin stock, reposicion urgente</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Tiendas Configuradas</h4>
+  <table>
+    <thead><tr><th>ID</th><th>Nombre</th><th>Direccion</th><th>Tipo</th></tr></thead>
+    <tbody>
+      <tr><td>porrino</td><td>MovilNova Porrino</td><td>C/ Principal 123</td><td><span class="badge badge-green">HQ</span></td></tr>
+      <tr><td>vigo</td><td>MovilNova Vigo</td><td>Gran Via 45</td><td>Sucursal</td></tr>
+      <tr><td>ourense</td><td>MovilNova Ourense</td><td>Rua do Paseo 78</td><td>Sucursal</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Transferencia entre Tiendas</h4>
+  <ol class="steps">
+    <li>En la tabla de inventario, pulsa <strong>&quot;Enviar&quot;</strong> en la fila de la pieza deseada.</li>
+    <li>Se abre un modal con:
+      <ul>
+        <li>Nombre de la pieza y stock disponible.</li>
+        <li><strong>Cantidad a enviar:</strong> Campo numerico.</li>
+        <li><strong>Tienda destino:</strong> Selector con las otras sucursales.</li>
+      </ul>
+    </li>
+    <li>Pulsa <strong>&quot;Confirmar Envio&quot;</strong>. El stock se deduce inmediatamente del inventario del remitente.</li>
+    <li>La tienda destino recibe una <strong>notificacion</strong> (campana con badge rojo).</li>
+  </ol>
+
+  <h4>Notificaciones de Transferencias</h4>
+  <p>Al pulsar el icono de campana:</p>
+  <ul>
+    <li>Aparece un dropdown con las transferencias pendientes.</li>
+    <li>Cada transferencia muestra: pieza, cantidad, tienda de origen, y quien la envio.</li>
+    <li>Dos botones: <strong>&quot;Aceptar&quot;</strong> (anade al inventario de destino) o <strong>&quot;Rechazar&quot;</strong> (devuelve al remitente).</li>
+  </ul>
+
+  <h4>Historial de Transferencias</h4>
+  <p>Boton &quot;Historial&quot; muestra un registro de todas las transferencias enviadas/recibidas con estado (Completado, Rechazado, Pendiente) y fecha.</p>
+
+  <!-- 6.6 FICHAJE -->
+  <h3 id="sec6-6"><span class="sub-num">6.6</span> Fichaje (Asistencia)</h3>
+  <p>Control de horarios y presencia del personal.</p>
+
+  <h4>Interfaz</h4>
+  <ul>
+    <li><strong>Reloj digital:</strong> Hora actual en tiempo real grande en el centro.</li>
+    <li><strong>Fecha actual:</strong> Debajo del reloj.</li>
+    <li><strong>Selector de empleado:</strong> Dropdown con los empleados de la tienda actual (el admin ve todos).</li>
+    <li><strong>Campo PIN:</strong> Aparece al seleccionar empleado. Entrada de PIN de 4 digitos con estilo de tracking amplio.</li>
+  </ul>
+
+  <h4>Botones de Accion</h4>
+  <table>
+    <thead><tr><th>Boton</th><th>Tipo</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td>ENTRADA</td><td>IN</td><td>Registra hora de llegada al trabajo</td></tr>
+      <tr><td>SALIDA</td><td>OUT</td><td>Registra hora de fin de jornada</td></tr>
+      <tr><td>PAUSA</td><td>BREAK_START</td><td>Inicia periodo de descanso</td></tr>
+      <tr><td>VOLVER</td><td>BREAK_END</td><td>Finaliza periodo de descanso</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Geolocalizacion</h4>
+  <p>Cada fichaje registra automaticamente las coordenadas GPS del empleado usando la API de geolocalizacion del navegador. Si no esta disponible (entorno sin HTTPS), se usa una ubicacion por defecto de Vigo.</p>
+
+  <h4>Registro de Fichajes</h4>
+  <p>El admin puede ver el historial de fichajes de todos los empleados con indicadores de retraso en rojo.</p>
+
+  <!-- 6.7 VENTAS -->
+  <h3 id="sec6-7"><span class="sub-num">6.7</span> Ventas / Pedidos Online</h3>
+  <p>Disponible solo para Managers y Admins. Muestra todos los pedidos realizados en la tienda web.</p>
+  <ul>
+    <li><strong>Vista general:</strong> Grid de tarjetas con cada pedido.</li>
+    <li><strong>Cada tarjeta muestra:</strong> ID del pedido, nombre del cliente, estado (Pending/Paid), lista de productos (hasta 2 visibles + indicador de mas), total.</li>
+    <li><strong>Boton imprimir:</strong> Genera un recibo en nueva ventana con formato profesional, listo para imprimir.</li>
+    <li><strong>Productos personalizados:</strong> Los articulos marcados como &quot;CUSTOM&quot; muestran un badge especial. Se puede descargar la imagen original en alta resolucion para produccion.</li>
+    <li><strong>Total de ventas:</strong> Mostrado en la esquina superior derecha.</li>
+  </ul>
+
+  <!-- 6.8 INFORMES -->
+  <h3 id="sec6-8"><span class="sub-num">6.8</span> Informes (Solo Manager)</h3>
+  <p>Panel de analitica con KPIs y graficos visuales.</p>
+
+  <h4>KPIs (Indicadores Clave)</h4>
+  <table>
+    <thead><tr><th>KPI</th><th>Descripcion</th><th>Color</th></tr></thead>
+    <tbody>
+      <tr><td>Ingresos Totales</td><td>Suma de ventas online + reparaciones completadas</td><td>Verde</td></tr>
+      <tr><td>Reparaciones</td><td>Total de reparaciones activas y completadas</td><td>Azul</td></tr>
+      <tr><td>Ventas Online</td><td>Numero de pedidos y total facturado</td><td>Naranja</td></tr>
+      <tr><td>Ticket Medio</td><td>Promedio de ingresos por pedido</td><td>Amarillo</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Graficos</h4>
+  <ul>
+    <li><strong>Ingresos Semanales:</strong> Grafico de area con dos series (Ventas y Reparaciones) por dia de la semana (Lun-Dom). Usa gradientes de color naranja y verde.</li>
+    <li><strong>Estado de Reparaciones:</strong> Grafico de dona/pastel mostrando la distribucion de reparaciones por estado con leyenda lateral.</li>
+    <li><strong>Tabla de reparaciones recientes:</strong> Lista de las 5 reparaciones mas recientes con ID, cliente, dispositivo, problema, estado y precio.</li>
+  </ul>
+
+  <!-- 6.9 SINCRONIZAR -->
+  <h3 id="sec6-9"><span class="sub-num">6.9</span> Sincronizar</h3>
+  <p>Permite conectar el sistema con Google Sheets para sincronizacion de inventario.</p>
+  <ol class="steps">
+    <li>Abre tu <strong>Google Sheet</strong> que funciona como base de datos de inventario.</li>
+    <li>Ve a <strong>Extensiones &gt; Apps Script</strong>.</li>
+    <li><strong>Pega el codigo</strong> del script de sincronizacion (disponible en la documentacion tecnica).</li>
+    <li><strong>Despliega como Web App:</strong> Ejecutar como: Tu cuenta. Acceso: Cualquiera.</li>
+    <li><strong>Copia la URL</strong> generada (formato: <code>https://script.google.com/macros/s/...</code>).</li>
+    <li>Pega la URL en el campo del panel de Sincronizacion y pulsa <strong>&quot;Sincronizar&quot;</strong>.</li>
+  </ol>
+  <div class="info-box">
+    <strong>Instrucciones detalladas</strong> se muestran directamente en el panel de Sincronizacion dentro de un recuadro verde con los 5 pasos.
+  </div>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 7. PANEL DE ADMINISTRACION                                         -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec7">
+  <h2><span class="sec-num">7</span> Panel de Administracion (Gestion de Productos)</h2>
+  <p>El panel de administracion permite gestionar el catalogo de productos directamente en Firebase Firestore.</p>
+
+  <h3><span class="sub-num">7.1</span> Acceso</h3>
+  <ol class="steps">
+    <li>Desplazate hasta el <strong>pie de pagina</strong> del sitio web.</li>
+    <li>Haz clic en el enlace <strong>&quot;Panel Admin&quot;</strong> (o texto equivalente en la zona de enlaces internos del footer).</li>
+    <li>Se muestra la pantalla de login con icono de escudo.</li>
+    <li>Introduce las credenciales de Firebase Auth:</li>
+  </ol>
+  <table>
+    <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Email</td><td><code>admin@movilnova.com</code></td></tr>
+      <tr><td>Contrasena</td><td><code>Admin123456</code></td></tr>
+    </tbody>
+  </table>
+  <div class="danger-box">
+    <strong>SEGURIDAD:</strong> Cambia las credenciales por defecto inmediatamente en Firebase Console antes de poner el sistema en produccion.
+  </div>
+
+  <h3><span class="sub-num">7.2</span> Importar Datos Demo</h3>
+  <ol class="steps">
+    <li>Una vez dentro del panel, pulsa el boton <strong>&quot;Importar Datos Demo&quot;</strong> (icono de base de datos).</li>
+    <li>Si ya existen productos, se pide confirmacion.</li>
+    <li>Se cargan <strong>11 productos predefinidos</strong> (10 productos + 1 bundle) en Firestore.</li>
+    <li>Mensaje de exito: &quot;11 productos importados correctamente&quot;.</li>
+  </ol>
+
+  <h3><span class="sub-num">7.3</span> Anadir Producto Nuevo</h3>
+  <ol class="steps">
+    <li>Pulsa <strong>&quot;Nuevo Producto&quot;</strong> (boton rosa con icono +).</li>
+    <li>Se abre un formulario modal con los campos:</li>
+  </ol>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td>Nombre del Producto</td><td>Texto</td><td>Si</td><td>Nombre visible en la tienda</td></tr>
+      <tr><td>Precio (EUR)</td><td>Numerico</td><td>Si</td><td>Precio de venta</td></tr>
+      <tr><td>Precio Original</td><td>Numerico</td><td>No</td><td>Precio antes del descuento (aparece tachado)</td></tr>
+      <tr><td>Categoria</td><td>Selector</td><td>Si</td><td>Case, Screen Protector, Charger, Cable, Power Bank, Strap, Audio, Bundle</td></tr>
+      <tr><td>Marca</td><td>Selector</td><td>No</td><td>Apple, Samsung, Xiaomi, Huawei, Oppo, Google o Universal</td></tr>
+      <tr><td>Modelos Compatibles</td><td>Checkboxes</td><td>No</td><td>Aparece al seleccionar marca. Lista de modelos para marcar.</td></tr>
+      <tr><td>Imagen</td><td>URL / Upload</td><td>Si</td><td>URL de imagen o subir archivo (max 5MB). Se sube a Firebase Storage.</td></tr>
+      <tr><td>Descripcion</td><td>Textarea</td><td>Si</td><td>Texto detallado del producto</td></tr>
+      <tr><td>Es Bundle/Pack</td><td>Checkbox</td><td>No</td><td>Marcar si es un paquete con descuento</td></tr>
+    </tbody>
+  </table>
+  <ol class="steps" start="3">
+    <li>Pulsa <strong>&quot;Crear Producto&quot;</strong>. El producto se sube a Firebase Firestore y aparece inmediatamente en la tienda.</li>
+  </ol>
+
+  <h3><span class="sub-num">7.4</span> Editar Producto</h3>
+  <ol class="steps">
+    <li>En la tabla de productos, pulsa el <strong>icono de lapiz</strong> en la columna de acciones.</li>
+    <li>Se abre el mismo formulario modal pre-rellenado con los datos actuales.</li>
+    <li>Modifica los campos deseados.</li>
+    <li>Pulsa <strong>&quot;Guardar Cambios&quot;</strong>. Los cambios se reflejan inmediatamente en la tienda.</li>
+  </ol>
+
+  <h3><span class="sub-num">7.5</span> Eliminar Producto</h3>
+  <ol class="steps">
+    <li>Pulsa el <strong>icono de papelera</strong> en la fila del producto.</li>
+    <li>Aparece un dialogo de confirmacion con el nombre del producto.</li>
+    <li>Pulsa <strong>&quot;Eliminar&quot;</strong> para confirmar. El producto se borra de Firebase Firestore.</li>
+  </ol>
+  <div class="danger-box">
+    <strong>ATENCION:</strong> La eliminacion es permanente y no se puede deshacer. Asegurate de que el producto no esta en ningun carrito activo.
+  </div>
+
+  <h3><span class="sub-num">7.6</span> Cambiar Precios</h3>
+  <p>Para actualizar el precio de un producto:</p>
+  <ol class="steps">
+    <li>Pulsa <strong>editar</strong> en el producto deseado.</li>
+    <li>Modifica el campo <strong>&quot;Precio&quot;</strong> y opcionalmente el <strong>&quot;Precio Original&quot;</strong> (para mostrar descuento).</li>
+    <li>Pulsa <strong>&quot;Guardar Cambios&quot;</strong>. El nuevo precio se aplica inmediatamente en la tienda online.</li>
+  </ol>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 8. CUMPLIMIENTO LEGAL                                              -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec8">
+  <h2><span class="sec-num">8</span> Cumplimiento Legal</h2>
+  <p>MovilNova incluye todas las paginas legales necesarias para cumplir con la normativa europea (RGPD) y espanola (LOPDGDD, LSSI-CE).</p>
+
+  <h3><span class="sub-num">8.1</span> Banner de Cookies</h3>
+  <p>Al visitar el sitio por primera vez, aparece automaticamente un banner de consentimiento de cookies en la parte inferior con tres opciones:</p>
+  <ul>
+    <li><strong>Aceptar todas:</strong> Activa todas las cookies, incluyendo analiticas y de marketing.</li>
+    <li><strong>Rechazar no esenciales:</strong> Solo permite cookies estrictamente necesarias.</li>
+    <li><strong>Configurar:</strong> Abre un panel con categorias individuales de cookies para activar/desactivar.</li>
+  </ul>
+  <p>La preferencia se guarda en el navegador y no vuelve a aparecer en futuras visitas.</p>
+
+  <h3><span class="sub-num">8.2</span> Politica de Privacidad</h3>
+  <p>Accesible desde el pie de pagina. Incluye:</p>
+  <ul>
+    <li>Datos del responsable del tratamiento.</li>
+    <li>Datos recopilados y finalidad.</li>
+    <li>Base legal del tratamiento.</li>
+    <li>Derechos RGPD: acceso, rectificacion, supresion, limitacion, portabilidad, oposicion.</li>
+    <li>Informacion sobre transferencias internacionales.</li>
+    <li>Periodo de conservacion de datos.</li>
+  </ul>
+
+  <h3><span class="sub-num">8.3</span> Terminos y Condiciones</h3>
+  <p>Cubre:</p>
+  <ul>
+    <li>Proceso de compra y formalizacion del contrato.</li>
+    <li>Metodos de pago aceptados (Stripe, PayPal).</li>
+    <li>Politica de envio y plazos.</li>
+    <li>Derecho de desistimiento: 14 dias habiles desde la recepcion.</li>
+    <li>Garantia legal: 2 anos para productos nuevos.</li>
+  </ul>
+
+  <h3><span class="sub-num">8.4</span> Aviso Legal</h3>
+  <ul>
+    <li>Datos identificativos del titular del sitio web.</li>
+    <li>Propiedad intelectual e industrial.</li>
+    <li>Exclusion de responsabilidad.</li>
+    <li>Legislacion aplicable y jurisdiccion.</li>
+  </ul>
+
+  <h3><span class="sub-num">8.5</span> Politica de Cookies</h3>
+  <ul>
+    <li>Definicion de que son las cookies.</li>
+    <li>Tabla detallada con: nombre de cookie, proveedor, finalidad, tipo, duracion.</li>
+    <li>Instrucciones para desactivar cookies en cada navegador (Chrome, Firefox, Safari, Edge).</li>
+  </ul>
+
+  <h3><span class="sub-num">8.6</span> Checkboxes en Checkout</h3>
+  <p>Durante el proceso de compra (paso de envio), el cliente debe aceptar obligatoriamente:</p>
+  <ul>
+    <li>Terminos y Condiciones.</li>
+    <li>Politica de Privacidad.</li>
+  </ul>
+  <p>Sin ambos marcados, el boton de continuar muestra errores de validacion y no permite avanzar.</p>
+
+  <h3><span class="sub-num">8.7</span> Configuracion Antes de Publicar</h3>
+  <div class="danger-box">
+    <strong>MUY IMPORTANTE:</strong> Antes de poner el sitio en produccion, debes reemplazar todos los marcadores de posicion en las paginas legales con los datos reales de tu empresa:
+  </div>
+  <table>
+    <thead><tr><th>Marcador</th><th>Reemplazar por</th></tr></thead>
+    <tbody>
+      <tr><td><code>[NOMBRE_EMPRESA]</code></td><td>Razon social completa</td></tr>
+      <tr><td><code>[NIF]</code></td><td>CIF/NIF de la empresa</td></tr>
+      <tr><td><code>[DIRECCION]</code></td><td>Domicilio social completo</td></tr>
+      <tr><td><code>[EMAIL]</code></td><td>Email de contacto</td></tr>
+      <tr><td><code>[TELEFONO]</code></td><td>Telefono de atencion</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 9. ASISTENTE IA                                                    -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec9">
+  <h2><span class="sec-num">9</span> Asistente IA</h2>
+  <p>MovilNova integra un asistente de inteligencia artificial potenciado por Google Gemini, disponible para los clientes en todas las paginas publicas.</p>
+
+  <h3><span class="sub-num">9.1</span> Acceso</h3>
+  <p>Boton flotante circular en la <strong>esquina inferior derecha</strong> de la pantalla (icono de robot). No aparece en el Dashboard de empleados ni en el Panel de Administracion.</p>
+  <p>Al hacer clic, se despliega una ventana de chat.</p>
+
+  <h3><span class="sub-num">9.2</span> Modo Chat</h3>
+  <p>Modo predeterminado. Permite mantener una conversacion fluida con el asistente para:</p>
+  <ul>
+    <li>Preguntas sobre productos y recomendaciones.</li>
+    <li>Informacion sobre el proceso de compra.</li>
+    <li>Consultas sobre reparaciones.</li>
+    <li>Soporte tecnico general sobre dispositivos moviles.</li>
+  </ul>
+  <p>El asistente mantiene el contexto de la conversacion durante la sesion.</p>
+
+  <h3><span class="sub-num">9.3</span> Modo Pensar</h3>
+  <p>Para problemas que requieren razonamiento complejo:</p>
+  <ul>
+    <li>Pulsa el icono de <strong>cerebro</strong> para activar el modo &quot;Pensar&quot;.</li>
+    <li>El asistente utiliza un modelo con razonamiento profundo (thinking mode).</li>
+    <li>Ideal para: diagnostico de problemas tecnicos, comparativas de productos, recomendaciones personalizadas complejas.</li>
+  </ul>
+
+  <h3><span class="sub-num">9.4</span> Modo Vision</h3>
+  <p>Para analisis visual de imagenes:</p>
+  <ol class="steps">
+    <li>Pulsa el <strong>icono de imagen</strong> en la barra inferior del chat.</li>
+    <li><strong>Sube una foto</strong> desde tu dispositivo.</li>
+    <li>El modo cambia automaticamente a &quot;Vision&quot;.</li>
+    <li>Escribe lo que quieres que analice la IA (o simplemente envia la imagen).</li>
+    <li>El asistente analizara la imagen para:
+      <ul>
+        <li>Identificar modelos de dispositivos.</li>
+        <li>Evaluar danos en pantallas, carcasas, etc.</li>
+        <li>Identificar piezas y componentes.</li>
+        <li>Recomendar accesorios compatibles.</li>
+      </ul>
+    </li>
+  </ol>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 10. PWA                                                            -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec10">
+  <h2><span class="sec-num">10</span> App Progresiva (PWA)</h2>
+  <p>MovilNova es una Progressive Web App, lo que permite instalarla en dispositivos moviles como si fuera una app nativa.</p>
+
+  <h3><span class="sub-num">10.1</span> Instalacion en Movil</h3>
+
+  <h4>En Android (Chrome)</h4>
+  <ol class="steps">
+    <li>Abre el sitio web de MovilNova en Chrome.</li>
+    <li>Aparecera automaticamente un banner &quot;Anadir a pantalla de inicio&quot; (o pulsa el menu de tres puntos).</li>
+    <li>Confirma la instalacion.</li>
+    <li>La app aparece en tu pantalla de inicio con el icono de MovilNova.</li>
+  </ol>
+
+  <h4>En iOS (Safari)</h4>
+  <ol class="steps">
+    <li>Abre el sitio web en Safari.</li>
+    <li>Pulsa el icono de <strong>compartir</strong> (cuadrado con flecha hacia arriba).</li>
+    <li>Selecciona <strong>&quot;Anadir a pantalla de inicio&quot;</strong>.</li>
+    <li>Confirma el nombre y pulsa &quot;Anadir&quot;.</li>
+  </ol>
+
+  <h3><span class="sub-num">10.2</span> Funcionamiento Offline</h3>
+  <p>Gracias al Service Worker y la cache de recursos, la app puede funcionar sin conexion a internet para las paginas ya visitadas. Los productos cargados previamente seguiran visibles.</p>
+
+  <h3><span class="sub-num">10.3</span> Experiencia Nativa</h3>
+  <p>Al abrir desde el icono instalado:</p>
+  <ul>
+    <li>No se muestra la barra de direcciones del navegador.</li>
+    <li>Pantalla completa con splash screen de MovilNova.</li>
+    <li>Transiciones fluidas como una app nativa.</li>
+    <li>Soporte para notificaciones push (requiere configuracion adicional).</li>
+  </ul>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 11. GUIA DE DESPLIEGUE                                             -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec11">
+  <h2><span class="sec-num">11</span> Guia de Despliegue y Dominio</h2>
+
+  <h3><span class="sub-num">11.1</span> Dominios Recomendados</h3>
+  <table>
+    <thead><tr><th>Dominio</th><th>Disponibilidad Estimada</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td><code>movilnova.es</code></td><td>Verificar</td><td>Opcion principal</td></tr>
+      <tr><td><code>movilnovastore.es</code></td><td>Probable</td><td>Alternativa descriptiva</td></tr>
+      <tr><td><code>movilnovashop.es</code></td><td>Probable</td><td>Alternativa e-commerce</td></tr>
+      <tr><td><code>movilnova.com.es</code></td><td>Verificar</td><td>Variante .com.es</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="sub-num">11.2</span> Registradores Recomendados</h3>
+  <table>
+    <thead><tr><th>Registrador</th><th>Precio .es</th><th>Caracteristicas</th></tr></thead>
+    <tbody>
+      <tr><td>DonDominio</td><td>~10-15 EUR/ano</td><td>Registrador espanol, DNS gratis, soporte en espanol</td></tr>
+      <tr><td>Nominalia</td><td>~12-18 EUR/ano</td><td>Panel facil, certificados SSL, email incluido</td></tr>
+      <tr><td>Dinahosting</td><td>~10-15 EUR/ano</td><td>Registrador gallego, hosting + dominio, buen soporte</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="sub-num">11.3</span> Hosting Recomendado</h3>
+  <p><strong>Firebase Hosting</strong> ya esta integrado en el proyecto y es la opcion recomendada:</p>
+  <ul>
+    <li>Plan gratuito (Spark): 10 GB de almacenamiento, 360 MB/dia de transferencia.</li>
+    <li>SSL automatico y gratuito.</li>
+    <li>CDN global para velocidad optima.</li>
+    <li>Despliegue con un solo comando.</li>
+  </ul>
+
+  <h3><span class="sub-num">11.4</span> Pasos de Despliegue</h3>
+  <ol class="steps">
+    <li><strong>Build de produccion:</strong></li>
+  </ol>
+  <pre><code>npm run build</code></pre>
+  <p>Genera los archivos optimizados en la carpeta <code>dist/</code>.</p>
+
+  <ol class="steps" start="2">
+    <li><strong>Inicializar Firebase Hosting</strong> (solo la primera vez):</li>
+  </ol>
+  <pre><code>firebase init hosting</code></pre>
+  <p>Seleccionar directorio publico: <code>dist</code>. Configurar como SPA: Si. No sobreescribir <code>index.html</code>.</p>
+
+  <ol class="steps" start="3">
+    <li><strong>Desplegar:</strong></li>
+  </ol>
+  <pre><code>firebase deploy</code></pre>
+  <p>El sitio estara disponible en <code>https://tu-proyecto.web.app</code>.</p>
+
+  <h3><span class="sub-num">11.5</span> Configuracion DNS</h3>
+  <p>Para usar un dominio personalizado con Firebase Hosting:</p>
+  <ol class="steps">
+    <li>En la consola de Firebase, ve a <strong>Hosting &gt; Dominios personalizados</strong>.</li>
+    <li>Anade tu dominio (ej. <code>movilnova.es</code>).</li>
+    <li>Firebase te dara registros DNS (tipo A y TXT) para anadir en tu registrador.</li>
+    <li>Anade los registros en el panel de tu registrador de dominios.</li>
+    <li>Espera la propagacion DNS (puede tardar hasta 24-48 horas).</li>
+  </ol>
+
+  <h3><span class="sub-num">11.6</span> SSL Gratuito</h3>
+  <p>Firebase Hosting, Vercel y Netlify proporcionan certificados SSL gratuitos y automaticos. No se requiere configuracion adicional. El sitio funcionara con <code>https://</code> automaticamente.</p>
+
+  <h3><span class="sub-num">11.7</span> Costes Estimados</h3>
+  <table>
+    <thead><tr><th>Concepto</th><th>Coste Anual</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>Dominio .es</td><td>10-15 EUR</td><td>Renovacion anual</td></tr>
+      <tr><td>Firebase Hosting (Spark)</td><td>0 EUR</td><td>Plan gratuito, suficiente para inicio</td></tr>
+      <tr><td>Firebase (Blaze)</td><td>~0-30 EUR/mes</td><td>Pago por uso, si crece el trafico</td></tr>
+      <tr><td>Google Gemini API</td><td>Variable</td><td>Segun uso del asistente IA</td></tr>
+      <tr><td><strong>Total minimo</strong></td><td><strong>~10 EUR/ano</strong></td><td>Solo dominio + hosting gratuito</td></tr>
+      <tr><td><strong>Total con hosting pagado</strong></td><td><strong>~130 EUR/ano</strong></td><td>Dominio + Firebase Blaze + APIs</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- 12. RESOLUCION DE PROBLEMAS                                        -->
+<!-- ================================================================== -->
+<div class="container page-break">
+<section id="sec12">
+  <h2><span class="sec-num">12</span> Resolucion de Problemas</h2>
+
+  <table>
+    <thead><tr><th style="width:30%">Problema</th><th style="width:35%">Causa Probable</th><th style="width:35%">Solucion</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>No puedo acceder al panel de admin</strong></td>
+        <td>Credenciales incorrectas o usuario no creado en Firebase Auth</td>
+        <td>Verifica que el email <code>admin@movilnova.com</code> esta creado en Firebase Console &gt; Authentication. Resetea la contrasena si es necesario.</td>
+      </tr>
+      <tr>
+        <td><strong>Los productos no aparecen en la tienda</strong></td>
+        <td>Firebase no esta conectado o la coleccion <code>products</code> esta vacia</td>
+        <td>1) Verifica la conexion a Firebase en la consola del navegador (F12). 2) Accede al panel admin e importa los datos demo. 3) Verifica las reglas de seguridad de Firestore.</td>
+      </tr>
+      <tr>
+        <td><strong>El idioma no cambia</strong></td>
+        <td>Cache del navegador con datos antiguos</td>
+        <td>Limpia la cache del navegador: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Delete</kbd>. Tambien prueba en ventana de incognito.</td>
+      </tr>
+      <tr>
+        <td><strong>La PWA no se puede instalar</strong></td>
+        <td>Falta HTTPS o manifest.webmanifest incorrecto</td>
+        <td>1) Asegurate de acceder por HTTPS (obligatorio para PWA). 2) Verifica que <code>manifest.webmanifest</code> existe en <code>public/</code>. 3) Revisa la consola del navegador para errores.</td>
+      </tr>
+      <tr>
+        <td><strong>El carrito no se guarda entre sesiones</strong></td>
+        <td>El cliente no ha iniciado sesion</td>
+        <td>Invita al cliente a crear una cuenta o iniciar sesion. El carrito solo persiste en Firebase para usuarios autenticados.</td>
+      </tr>
+      <tr>
+        <td><strong>Error al subir imagen de producto</strong></td>
+        <td>Archivo demasiado grande o formato no soportado</td>
+        <td>Asegurate de que la imagen es menor a 5MB y es formato JPG, PNG o WebP. Verifica las reglas de Firebase Storage.</td>
+      </tr>
+      <tr>
+        <td><strong>El asistente IA no responde</strong></td>
+        <td>API key de Gemini no configurada o cuota agotada</td>
+        <td>Verifica que la variable de entorno de la API key de Google Gemini esta correctamente configurada. Revisa la cuota en la consola de Google Cloud.</td>
+      </tr>
+      <tr>
+        <td><strong>Fichaje no registra ubicacion</strong></td>
+        <td>Permisos de geolocalizacion denegados</td>
+        <td>El empleado debe permitir el acceso a la ubicacion en su navegador. En desarrollo sin HTTPS, se usa ubicacion por defecto (Vigo).</td>
+      </tr>
+      <tr>
+        <td><strong>Transferencia de inventario no llega</strong></td>
+        <td>Diferentes pestanas del navegador no sincronizan</td>
+        <td>Las transferencias usan localStorage + evento <code>storage</code>. Ambas tiendas deben estar abiertas en diferentes pestanas del mismo navegador.</td>
+      </tr>
+      <tr>
+        <td><strong>Graficos de informes vacios</strong></td>
+        <td>No hay datos de reparaciones o pedidos</td>
+        <td>Crea algunas reparaciones de prueba en el Kanban y realiza pedidos de prueba en la tienda para que los graficos tengan datos que mostrar.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- APENDICE A: ATAJOS                                                 -->
+<!-- ================================================================== -->
+<div class="container page-break appendix">
+<section id="apA">
+  <h2><span class="sec-num">A</span> Apendice A: Atajos y Accesos Rapidos</h2>
+
+  <table>
+    <thead><tr><th>Accion</th><th>Como acceder</th><th>Disponible para</th></tr></thead>
+    <tbody>
+      <tr><td>Ir a la tienda</td><td>Clic en &quot;Inicio&quot; en NavBar</td><td>Todos</td></tr>
+      <tr><td>Ver reparaciones</td><td>Clic en &quot;Reparaciones&quot; en NavBar</td><td>Todos</td></tr>
+      <tr><td>Abrir carrito</td><td>Clic en icono de carrito (NavBar)</td><td>Todos</td></tr>
+      <tr><td>Cambiar idioma</td><td>Clic en icono de globo (NavBar)</td><td>Todos</td></tr>
+      <tr><td>Crear cuenta / Login cliente</td><td>Clic en icono de usuario (NavBar)</td><td>Clientes</td></tr>
+      <tr><td>Mi Cuenta</td><td>Clic en icono de usuario (logueado)</td><td>Clientes</td></tr>
+      <tr><td>Dashboard empleados</td><td>Footer &gt; &quot;Empleados&quot; &gt; PIN</td><td>Empleados</td></tr>
+      <tr><td>Panel de administracion</td><td>Footer &gt; &quot;Panel Admin&quot;</td><td>Admin Firebase</td></tr>
+      <tr><td>Diseno IA de fundas</td><td>Tarjeta &quot;Diseno IA&quot; en inicio</td><td>Todos</td></tr>
+      <tr><td>Asistente IA</td><td>Boton flotante esquina inferior derecha</td><td>Todos (paginas publicas)</td></tr>
+      <tr><td>Politica de privacidad</td><td>Footer &gt; &quot;Privacidad&quot;</td><td>Todos</td></tr>
+      <tr><td>Terminos y condiciones</td><td>Footer &gt; &quot;Terminos&quot;</td><td>Todos</td></tr>
+      <tr><td>Aviso legal</td><td>Footer &gt; &quot;Aviso Legal&quot;</td><td>Todos</td></tr>
+      <tr><td>Politica de cookies</td><td>Footer &gt; &quot;Cookies&quot;</td><td>Todos</td></tr>
+      <tr><td>Nuevo ticket reparacion</td><td>Dashboard &gt; Taller &gt; &quot;+ Nuevo&quot;</td><td>Empleados</td></tr>
+      <tr><td>Informe diario</td><td>Dashboard &gt; Taller &gt; &quot;Informe&quot;</td><td>Empleados</td></tr>
+      <tr><td>Transferir stock</td><td>Dashboard &gt; Inventario &gt; &quot;Enviar&quot;</td><td>Empleados</td></tr>
+      <tr><td>Imprimir recibo</td><td>Dashboard &gt; Ventas &gt; Icono impresora</td><td>Manager/Admin</td></tr>
+      <tr><td>Ver informes</td><td>Dashboard &gt; Informes</td><td>Manager/Admin</td></tr>
+      <tr><td>Sincronizar Google Sheets</td><td>Dashboard &gt; Sincronizar</td><td>Manager/Admin</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Vistas de la Aplicacion (ViewState)</h3>
+  <table>
+    <thead><tr><th>Estado</th><th>URL / Vista</th><th>Descripcion</th></tr></thead>
+    <tbody>
+      <tr><td><code>HOME</code></td><td>Pagina principal</td><td>Hero + Storefront</td></tr>
+      <tr><td><code>REPAIR_LOOKUP</code></td><td>Seguimiento</td><td>Busqueda de reparaciones</td></tr>
+      <tr><td><code>CUSTOM_CASE</code></td><td>Creador IA</td><td>Diseno de fundas personalizadas</td></tr>
+      <tr><td><code>EMPLOYEE_DASHBOARD</code></td><td>Dashboard</td><td>Panel de empleados (requiere PIN)</td></tr>
+      <tr><td><code>CUSTOMER_ACCOUNT</code></td><td>Mi Cuenta</td><td>Perfil, pedidos, direcciones, favoritos</td></tr>
+      <tr><td><code>ADMIN</code></td><td>Panel Admin</td><td>Gestion de productos Firebase</td></tr>
+      <tr><td><code>LEGAL_PRIVACY</code></td><td>Privacidad</td><td>Politica de privacidad</td></tr>
+      <tr><td><code>LEGAL_TERMS</code></td><td>Terminos</td><td>Terminos y condiciones</td></tr>
+      <tr><td><code>LEGAL_NOTICE</code></td><td>Aviso Legal</td><td>Aviso legal</td></tr>
+      <tr><td><code>LEGAL_COOKIES</code></td><td>Cookies</td><td>Politica de cookies</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- APENDICE B: ESTRUCTURA FIREBASE                                    -->
+<!-- ================================================================== -->
+<div class="container page-break appendix">
+<section id="apB">
+  <h2><span class="sec-num">B</span> Apendice B: Estructura Firebase</h2>
+
+  <h3>Colecciones de Firestore</h3>
+  <table>
+    <thead><tr><th>Coleccion / Subcoleccion</th><th>Descripcion</th><th>Campos Principales</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>products</code></td>
+        <td>Catalogo de productos de la tienda</td>
+        <td>name, price, originalPrice, category, brand, compatibleModels[], image, description, isBundle</td>
+      </tr>
+      <tr>
+        <td><code>customers/{uid}</code></td>
+        <td>Perfil del cliente</td>
+        <td>uid, email, displayName, phone, createdAt, updatedAt</td>
+      </tr>
+      <tr>
+        <td><code>customers/{uid}/addresses</code></td>
+        <td>Direcciones del cliente</td>
+        <td>label, fullName, street, city, postalCode, country, phone, isDefault</td>
+      </tr>
+      <tr>
+        <td><code>customers/{uid}/orders</code></td>
+        <td>Historial de pedidos del cliente</td>
+        <td>id, customerName, email, phone, address, items[], total, status, paymentMethod, date, customerId</td>
+      </tr>
+      <tr>
+        <td><code>customers/{uid}/cart</code></td>
+        <td>Carrito persistente del cliente</td>
+        <td>productId, name, price, image, quantity, selectedModel, isCustom, addedAt</td>
+      </tr>
+      <tr>
+        <td><code>customers/{uid}/favorites</code></td>
+        <td>Lista de productos favoritos</td>
+        <td>productId, addedAt</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Firebase Storage</h3>
+  <table>
+    <thead><tr><th>Ruta</th><th>Contenido</th><th>Limite</th></tr></thead>
+    <tbody>
+      <tr><td><code>products/{filename}</code></td><td>Imagenes de productos subidas desde el Panel Admin</td><td>5 MB por archivo</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Firebase Authentication</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>Email/Password (Admin)</td><td>Login del panel de administracion de productos</td></tr>
+      <tr><td>Email/Password (Clientes)</td><td>Registro e inicio de sesion de clientes</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Datos Locales (localStorage)</h3>
+  <p>Algunos datos se almacenan localmente en el navegador para un funcionamiento rapido:</p>
+  <table>
+    <thead><tr><th>Clave</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><code>current_user</code></td><td>Empleado actualmente logueado (Dashboard)</td></tr>
+      <tr><td><code>shop_orders</code></td><td>Pedidos realizados en la tienda (para el panel de ventas)</td></tr>
+      <tr><td><code>inventory</code></td><td>Estado del inventario multi-tienda</td></tr>
+      <tr><td><code>repairs</code></td><td>Lista de reparaciones del taller</td></tr>
+      <tr><td><code>stock_transfers</code></td><td>Transferencias de inventario entre tiendas</td></tr>
+      <tr><td><code>transfer_notifications</code></td><td>Notificaciones de transferencias pendientes</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<!-- ================================================================== -->
+<!-- APENDICE C: CONTACTO                                               -->
+<!-- ================================================================== -->
+<div class="container page-break appendix">
+<section id="apC">
+  <h2><span class="sec-num">C</span> Apendice C: Contacto y Soporte Tecnico</h2>
+
+  <h3>Soporte Tecnico</h3>
+  <table>
+    <thead><tr><th>Canal</th><th>Contacto</th></tr></thead>
+    <tbody>
+      <tr><td>Email de soporte</td><td><code>[CONFIGURAR_EMAIL_SOPORTE]</code></td></tr>
+      <tr><td>Repositorio del codigo</td><td><code>[CONFIGURAR_URL_REPOSITORIO]</code></td></tr>
+      <tr><td>Consola Firebase</td><td><a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a></td></tr>
+      <tr><td>Documentacion React</td><td><a href="https://react.dev" target="_blank">react.dev</a></td></tr>
+      <tr><td>Documentacion Firebase</td><td><a href="https://firebase.google.com/docs" target="_blank">firebase.google.com/docs</a></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Historial de Versiones</h3>
+  <table>
+    <thead><tr><th>Version</th><th>Fecha</th><th>Cambios Principales</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">1.0</span></td><td>Febrero 2026</td><td>Version inicial: tienda, taller Kanban, inventario multi-tienda, fichaje, informes, PWA, i18n (5 idiomas), asistente IA, sistema de clientes con favoritos y direcciones, cumplimiento legal RGPD</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <div style="text-align: center; padding: 40px 0; color: var(--gray-500); font-size: 0.85rem;">
+    <div style="font-size: 1.5rem; font-weight: 900; color: var(--green); letter-spacing: -1px; margin-bottom: 8px;">
+      MovilNova
+    </div>
+    <p>Guia Completa de Operaciones &mdash; Version 1.0</p>
+    <p>Documento generado en febrero de 2026</p>
+    <p style="margin-top: 16px; font-size: 0.75rem; color: var(--gray-300);">
+      Este documento es confidencial y de uso exclusivo interno.
+    </p>
+  </div>
+</section>
+</div>
+
+</body>
+</html>

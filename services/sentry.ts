@@ -4,7 +4,7 @@ export const initSentry = () => {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
 
   if (!dsn) {
-    console.warn('Sentry DSN not configured. Error tracking is disabled.');
+    // Silently skip — no console output to avoid info leakage in production
     return;
   }
 
@@ -26,7 +26,7 @@ export const initSentry = () => {
   });
 };
 
-export const captureException = (error: Error, context?: Record<string, any>) => {
+export const captureException = (error: Error, context?: Record<string, unknown>) => {
   Sentry.captureException(error, { extra: context });
 };
 
@@ -35,7 +35,8 @@ export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'i
 };
 
 export const setUser = (user: { id: string; email?: string; username?: string } | null) => {
-  Sentry.setUser(user);
+  // Strip PII — only send anonymized ID to Sentry, never email
+  Sentry.setUser(user ? { id: user.id } : null);
 };
 
 export const showReportDialog = (options?: Sentry.ReportDialogOptions) => {

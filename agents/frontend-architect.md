@@ -12,7 +12,7 @@
 ## 需要的上下文
 
 ```
-/technova/
+/movilnova/
 ├── package.json          # 依赖版本
 ├── tsconfig.json         # TS 配置
 ├── vite.config.ts        # 构建配置

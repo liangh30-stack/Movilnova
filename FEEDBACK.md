@@ -1,71 +1,71 @@
-# 团队对 Technova 产品的客观意见
+# Opiniones Objetivas del Equipo sobre el Producto MovilNova
 
-> 好的坏的都要说，供产品与协作参考。
-
----
-
-## 一、做得好的地方
-
-### 产品与定位
-- **定位清晰**：一句话（面向现代维修店的智能管理平台 + AI）和三类用户（老板 / 技师 / 客户）都写得很清楚，便于各 Agent 对齐。
-- **MVP 范围明确**：PRODUCT.md 里已实现 / 规划功能分阶段列出，Phase 2/3 有方向，不会无限膨胀。
-- **价值主张可量化**：例如「减少 30% 诊断时间」「月活跃工单数」等，方便后续验证和迭代。
-
-### 工程与协作
-- **技术栈统一**：React 18 + TypeScript + Vite + Firebase + Gemini，CONTEXT.md 与实现一致，新人/Agent 容易上手。
-- **Agent 分工明确**：从策略 → 架构 → UI+文案 → 代码 → QA → SEO 的流程和职责在 AGENTS.md 里写死了，减少扯皮。
-- **多语言已铺好**：i18n（en/zh/es/de/fr）和 lazy load 大页面都在用，为后续国际化打基础。
-- **代码无明显技术债**：未发现成堆 TODO/FIXME，结构相对干净。
-
-### 功能覆盖
-- **三端齐全**：Storefront、EmployeePortal、Dashboard 都有对应组件与入口，MVP 承诺的功能在代码里有体现。
-- **AI 已接入**：Gemini 用于智能问答/诊断建议等，和「AI 提升效率」的卖点一致。
-- **PWA / 离线**：有 PWA 相关配置与组件，对弱网/现场场景友好。
+> Tanto lo bueno como lo malo deben mencionarse, como referencia para el producto y la colaboración.
 
 ---
 
-## 二、需要改进或注意的地方
+## Aspectos Positivos
 
-### 产品与文档
-- **README 与产品不符**：README 仍是「AI Studio app」模板口吻，未改成 Technova 的简介、本地运行、环境变量（如 GEMINI_API_KEY、Firebase）。新用户或部署时会困惑。
-- **成功指标未落地**：PRODUCT.md 里的北极星指标、转化率、CSAT 等没有对应埋点或统计说明，无法验证「做没做到」。
-- **定价策略未实现**：文档里有 Starter/Pro/Business 定价，产品内暂无定价页或套餐逻辑，容易造成「文档有、产品没有」的落差。
+### Producto y Posicionamiento
+- **Posicionamiento claro**: Una frase (plataforma de gestión inteligente para talleres de reparación modernos + IA) y tres tipos de usuarios (propietario / técnico / cliente) están escritos claramente, facilitando la alineación de todos los agentes.
+- **Alcance MVP definido**: PRODUCT.md lista funcionalidades implementadas/planificadas por fases, Fase 2/3 tienen dirección, no habrá expansión infinita.
+- **Propuesta de valor cuantificable**: Ejemplos como "reduce 30% el tiempo de diagnóstico", "órdenes de trabajo activas mensuales", etc., facilitan validación e iteración posteriores.
 
-### 质量与可维护性
-- **测试覆盖不足**：目前仅 `authService.test.ts`，核心流程（预约、工单、AI 调用、结账）缺少单测或集成测，回归成本高，重构风险大。
-- **类型与常量**：部分地方用 MOCK_* 常量，若与 Firestore 真实模型不一致，后续切真实数据容易踩坑；types.ts 与后端模型的对应关系可以再写清楚一点。
-- **错误与边界**：Sentry 已接入是好事，但关键路径（如支付、工单提交）的错误提示、重试、离线处理是否统一，值得做一次走查。
+### Ingeniería y Colaboración
+- **Stack tecnológico unificado**: React 18 + TypeScript + Vite + Firebase + Gemini, CONTEXT.md consistente con la implementación, fácil para nuevos miembros/agentes.
+- **División de agentes clara**: El flujo y responsabilidades desde estrategia → arquitectura → UI+copy → código → QA → SEO en AGENTS.md están establecidos, reduciendo disputas.
+- **Multi-idioma ya implementado**: i18n (en/zh/es/de/fr) y lazy load de páginas grandes en uso, sentando bases para internacionalización posterior.
+- **Sin deuda técnica obvia**: No se encontraron muchos TODO/FIXME, estructura relativamente limpia.
 
-### 体验与一致性
-- **三端体验统一度**：Storefront 偏「官网+预约」，Employee/Dashboard 偏「后台」，视觉和交互是否要统一设计语言，需要产品侧拍板，避免各做各的。
-- **移动端**：PRODUCT.md 和 SEO Agent 都强调移动端，但未单独说明是否有移动端专用布局或触摸优化，建议在 CONTEXT 或设计规范里写一句。
-- **无障碍**：AGENTS 里 QA 和 SEO 都会提 a11y，但暂无成文的无障碍清单（如焦点顺序、ARIA、对比度），容易漏项。
-
-### 流程与交付
-- **/ship 实际跑通率**：README 里强调 `/ship` 一键交付，若 MCP 或环境未配齐，实际可能断在某一环；建议在 agents/README 里加一段「首次使用检查清单」。
-- **发布与上线**：没有看到部署文档（如 Vercel/Firebase Hosting）、环境区分（staging/prod）、发布检查清单，容易把「能跑」当成「能上」。
+### Cobertura Funcional
+- **Tres portales completos**: Storefront, EmployeePortal, Dashboard todos tienen componentes y puntos de entrada correspondientes, las funcionalidades prometidas en MVP están en el código.
+- **IA integrada**: Gemini usado para Q&A inteligente/sugerencias de diagnóstico, etc., consistente con la propuesta de venta "IA mejora eficiencia".
+- **PWA / Offline**: Configuración y componentes relacionados con PWA presentes, amigable para escenarios de campo/red débil.
 
 ---
 
-## 三、总结表
+## Aspectos a Mejorar o Prestar Atención
 
-| 维度         | 好的                         | 坏的 / 风险                          |
-|--------------|------------------------------|--------------------------------------|
-| 产品定位     | 清晰、分阶段                 | 指标未度量、定价未落地               |
-| 文档         | PRODUCT/CONTEXT/AGENTS 齐全  | README 未产品化                      |
-| 代码与架构   | 栈统一、结构清晰、无显性债   | 测试少、类型/模型需与后端对齐        |
-| 体验         | 三端+多语言+PWA              | 三端一致性、移动端/a11y 待明确       |
-| 协作与交付   | Agent 流程定义清楚           | /ship 与发布流程需可执行、可检查     |
+### Producto y Documentación
+- **README no coincide con producto**: README todavía usa lenguaje de plantilla "AI Studio app", no convertido a introducción de MovilNova, ejecución local, variables de entorno (como GEMINI_API_KEY, Firebase). Nuevos usuarios o durante despliegue habrá confusión.
+- **Métricas de éxito no implementadas**: Métrica estrella del norte, tasa de conversión, CSAT, etc. en PRODUCT.md no tienen puntos de seguimiento o estadísticas correspondientes, no se puede verificar "si se logró".
+- **Estrategia de precios no implementada**: Documentación tiene precios Starter/Pro/Business, producto actualmente sin página de precios o lógica de paquetes, fácil causar brecha "documentación sí, producto no".
+
+### Calidad y Mantenibilidad
+- **Cobertura de tests insuficiente**: Actualmente solo `authService.test.ts`, flujos principales (reserva, orden de trabajo, llamada IA, checkout) carecen de tests unitarios o de integración, alto costo de regresión, gran riesgo de refactorización.
+- **Tipos y constantes**: Algunos lugares usan constantes MOCK_*, si no coinciden con modelo real de Firestore, fácil caer en trampas al cambiar a datos reales; relación de correspondencia entre types.ts y modelo backend puede escribirse más claramente.
+- **Errores y límites**: Sentry ya integrado es bueno, pero notificaciones de error, reintentos, manejo offline de rutas clave (como pago, envío de orden de trabajo) ¿están unificados? Vale la pena hacer revisión.
+
+### Experiencia y Consistencia
+- **Unificación de experiencia en tres portales**: Storefront orientado a "sitio web oficial + reserva", Employee/Dashboard orientados a "backend", ¿lenguaje visual e interacción deben unificarse? Necesita decisión del lado de producto, evitar que cada uno haga lo suyo.
+- **Móvil**: PRODUCT.md y agente SEO enfatizan móvil, pero no se especifica separadamente si hay layout especial para móvil u optimización táctil, sugerir escribir una línea en CONTEXT o especificaciones de diseño.
+- **Accesibilidad**: QA y SEO mencionarán a11y, pero no hay lista formal de accesibilidad (como orden de foco, ARIA, contraste), fácil omitir elementos.
+
+### Flujo y Entrega
+- **Tasa real de ejecución de /ship**: README enfatiza entrega con un clic `/ship`, si MCP o entorno no están completos, puede interrumpirse en algún paso; sugerir agregar "checklist de uso inicial" en agents/README.
+- **Publicación y lanzamiento**: No se vio documentación de despliegue (como Vercel/Firebase Hosting), distinción de entornos (staging/prod), checklist de publicación, fácil considerar "puede ejecutarse" como "puede publicarse".
 
 ---
 
-## 四、建议的下一步（按优先级）
+## Tabla Resumen
 
-1. **立刻**：把 README 改成 Technova 产品说明 + 本地运行与必要环境变量。
-2. **短期**：为核心路径（预约、工单、结账）补 2～3 个关键测试；在 CONTEXT 或 DESIGN 里写清「移动端与 a11y 原则」。
-3. **中期**：落地 1 个定价页或套餐展示，与 PRODUCT 定价表一致；定义「发布前检查清单」（含 QA + SEO + 部署）。
-4. **长期**：把北极星与关键指标接到埋点/报表，至少能看「月活跃工单数」和一项质量指标。
+| Dimensión | Bueno | Malo / Riesgo |
+|-----------|-------|---------------|
+| Posicionamiento del producto | Claro, por fases | Métricas no medidas, precios no implementados |
+| Documentación | PRODUCT/CONTEXT/AGENTS completos | README no productizado |
+| Código y arquitectura | Stack unificado, estructura clara, sin deuda visible | Pocos tests, tipos/modelo necesitan alineación con backend |
+| Experiencia | Tres portales + multi-idioma + PWA | Consistencia de tres portales, móvil/a11y por aclarar |
+| Colaboración y entrega | Flujo de agentes definido claramente | /ship y flujo de publicación necesitan ser ejecutables, verificables |
 
 ---
 
-*本文档由各 Agent 视角综合，旨在客观反映当前产品状态，便于后续迭代与协作。*
+## Próximos Pasos Sugeridos (por prioridad)
+
+1. **Inmediato**: Cambiar README a explicación de producto MovilNova + ejecución local y variables de entorno necesarias.
+2. **Corto plazo**: Agregar 2-3 tests clave para rutas principales (reserva, orden de trabajo, checkout); escribir claramente en CONTEXT o DESIGN "principios de móvil y a11y".
+3. **Medio plazo**: Implementar 1 página de precios o visualización de paquetes, consistente con tabla de precios de PRODUCT; definir "checklist de pre-publicación" (incluye QA + SEO + despliegue).
+4. **Largo plazo**: Conectar métrica estrella del norte y métricas clave a puntos de seguimiento/reportes, al menos poder ver "órdenes de trabajo activas mensuales" y un indicador de calidad.
+
+---
+
+*Este documento es una síntesis desde la perspectiva de varios agentes, con el objetivo de reflejar objetivamente el estado actual del producto para facilitar iteración y colaboración posteriores.*

@@ -1,7 +1,8 @@
 import React from 'react';
 import * as Sentry from '@sentry/react';
+import { useTranslation } from 'react-i18next';
 import { AlertTriangle, RefreshCw, MessageSquare } from 'lucide-react';
-import { showReportDialog } from '@/services/sentry';
+import { showReportDialog, captureException } from '@/services/sentry';
 
 interface FallbackProps {
   error: Error;
@@ -9,34 +10,35 @@ interface FallbackProps {
 }
 
 const ErrorFallback: React.FC<FallbackProps> = ({ error, resetError }) => {
+  const { t } = useTranslation();
   const handleReport = () => {
     showReportDialog({
-      title: 'Report an Issue',
-      subtitle: 'Help us fix this problem by describing what happened.',
-      subtitle2: 'Your feedback is valuable to us.',
+      title: t('errorReportTitle'),
+      subtitle: t('errorReportSubtitle'),
+      subtitle2: t('errorReportSubtitle2'),
     });
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 text-center">
+    <div className="min-h-[400px] flex items-center justify-center p-8">
+      <div className="bg-brand-surface rounded-lg border border-brand-border shadow-lg p-8 max-w-lg text-center" role="alert">
         <div className="flex justify-center mb-6">
-          <div className="p-4 bg-red-500/20 rounded-full">
-            <AlertTriangle className="w-12 h-12 text-red-400" />
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-full">
+            <AlertTriangle className="w-12 h-12 text-brand-critical" />
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-white mb-2">
-          Something went wrong
+        <h1 className="text-xl font-bold text-brand-dark mb-2">
+          {t('errorTitle')}
         </h1>
 
-        <p className="text-slate-400 mb-6">
-          We apologize for the inconvenience. An unexpected error has occurred.
+        <p className="text-brand-muted text-sm mb-6">
+          {t('errorMessage')}
         </p>
 
         {import.meta.env.DEV && (
-          <div className="mb-6 p-4 bg-slate-900 rounded-lg text-left">
-            <p className="text-xs font-mono text-red-400 break-all">
+          <div className="mb-6 bg-brand-light border border-brand-border rounded-lg p-4 text-left">
+            <p className="text-xs font-mono text-brand-muted break-all">
               {error.message}
             </p>
           </div>
@@ -45,18 +47,18 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, resetError }) => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={resetError}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-dark text-white rounded-lg font-semibold px-6 py-2 transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
-            Try Again
+            {t('errorTryAgain')}
           </button>
 
           <button
             onClick={handleReport}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 bg-brand-light hover:bg-brand-border text-brand-muted rounded-lg px-6 py-2 transition-colors"
           >
             <MessageSquare className="w-4 h-4" />
-            Report Issue
+            {t('errorReportIssue')}
           </button>
         </div>
       </div>
@@ -68,10 +70,13 @@ export const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <Sentry.ErrorBoundary
       fallback={({ error, resetError }) => (
-        <ErrorFallback error={error} resetError={resetError} />
+        <ErrorFallback error={error instanceof Error ? error : new Error(String(error))} resetError={resetError} />
       )}
       onError={(error, componentStack) => {
-        console.error('ErrorBoundary caught an error:', error, componentStack);
+        captureException(error instanceof Error ? error : new Error(String(error)), {
+          source: 'ErrorBoundary',
+          componentStack: componentStack ?? undefined,
+        });
       }}
     >
       {children}

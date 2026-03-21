@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom brand color theme */
+@theme {
+  --color-brand-primary: #008060;
+  --color-brand-primary-dark: #004C3F;
+  --color-brand-primary-light: #F1F8F5;
+  --color-brand-secondary: #1A1A1A;
+  --color-brand-accent: #FF6B35;
+  --color-brand-accent-light: #FFF4EE;
+  --color-brand-dark: #1A1A1A;
+  --color-brand-light: #F6F6F7;
+  --color-brand-muted: #616161;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-border: #E1E3E5;
+  --color-brand-border-subtle: #EDEEEF;
+  --color-brand-success: #008060;
+  --color-brand-warning: #B98900;
+  --color-brand-critical: #D72C0D;
+  --color-brand-info: #2C6ECB;
+  --color-brand-text-primary: #1A1A1A;
+  --color-brand-text-secondary: #616161;
+  --color-brand-text-tertiary: #8C9196;
+  /* Backward compatibility aliases */
+  --color-brand-purple: #008060;
+  --color-brand-blue: #2C6ECB;
+  --color-brand-cyan: #FF6B35;
+  --color-brand-pink: #FF6B35;
+  --color-brand-green: #008060;
+  --color-brand-teal: #008060;
+  --color-brand-emphasis: #1A1A1A;
+  --color-brand-input: #F6F6F7;
+
+  --font-family-sans: 'Ubuntu', system-ui, sans-serif;
+}
+
+/* Dark mode color overrides — applied when .dark class is on <html>
+ * Palette based on Material Design 3 + Stripe/GitHub dark patterns.
+ * Page bg #121212, surface #1e1e1e, input #2a2a2a
+ * Text: primary #e0e0e0, secondary #b0b0b0, tertiary #808080
+ * Brand green keeps the same tone as light mode.
+ */
+.dark {
+  --color-brand-primary: #008060;
+  --color-brand-primary-dark: #004C3F;
+  --color-brand-primary-light: #0a2a1f;
+  --color-brand-secondary: #e0e0e0;
+  --color-brand-accent: #fb923c;
+  --color-brand-accent-light: #2a1a0e;
+  --color-brand-dark: #e0e0e0;
+  --color-brand-light: #121212;
+  --color-brand-muted: #b0b0b0;
+  --color-brand-surface: #1e1e1e;
+  --color-brand-border: #383838;
+  --color-brand-border-subtle: #2a2a2a;
+  --color-brand-success: #008060;
+  --color-brand-warning: #fbbf24;
+  --color-brand-critical: #f87171;
+  --color-brand-info: #60a5fa;
+  --color-brand-text-primary: #e0e0e0;
+  --color-brand-text-secondary: #b0b0b0;
+  --color-brand-text-tertiary: #808080;
+  --color-brand-purple: #008060;
+  --color-brand-blue: #60a5fa;
+  --color-brand-cyan: #fb923c;
+  --color-brand-pink: #fb923c;
+  --color-brand-green: #008060;
+  --color-brand-teal: #008060;
+  --color-brand-emphasis: #111111;
+  --color-brand-input: #2a2a2a;
+}
+
+/* Base styles */
+body {
+  font-family: 'Ubuntu', system-ui, sans-serif;
+  background-color: var(--color-brand-light);
+  color: var(--color-brand-text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-brand-light); }
+::-webkit-scrollbar-thumb { background: var(--color-brand-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand-muted); }
+
+/* Focus ring for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+/* Professional hero background */
+.pro-hero-bg {
+  background: linear-gradient(135deg, var(--color-brand-light) 0%, var(--color-brand-surface) 50%, var(--color-brand-primary-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.pro-hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(0, 128, 96, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 80%, rgba(255, 107, 53, 0.04) 0%, transparent 50%);
+}
+
+.stripe-gradient {
+  background: linear-gradient(135deg, var(--color-brand-light) 0%, var(--color-brand-surface) 50%, var(--color-brand-primary-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.stripe-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(0, 128, 96, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 80%, rgba(255, 107, 53, 0.04) 0%, transparent 50%);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+  background: var(--color-brand-surface);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 8px;
+}

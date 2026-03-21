@@ -1,208 +1,249 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Play, Shield, Zap, Globe, ChevronDown } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Star, TrendingUp, Package } from 'lucide-react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { Product } from '../types';
+import { productPath } from '../routes';
 
-const Hero3D: React.FC = () => {
+interface Hero3DProps {
+  onViewOffers?: () => void;
+  products?: Product[];
+}
+
+const Hero3D: React.FC<Hero3DProps> = ({ onViewOffers, products = [] }) => {
   const { t } = useTranslation();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate();
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [productIndex, setProductIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+  const [ratingsMap, setRatingsMap] = useState<Record<string, number>>({});
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
-  };
+  // Fetch average ratings for all products once
+  useEffect(() => {
+    getDocs(collection(db, 'productReviews')).then(snap => {
+      const buckets: Record<string, { sum: number; count: number }> = {};
+      snap.docs.forEach(d => {
+        const data = d.data();
+        const pid = data.productId as string;
+        if (!buckets[pid]) buckets[pid] = { sum: 0, count: 0 };
+        buckets[pid].sum += (data.rating as number) || 0;
+        buckets[pid].count += 1;
+      });
+      const map: Record<string, number> = {};
+      for (const [pid, b] of Object.entries(buckets)) {
+        map[pid] = Math.round((b.sum / b.count) * 10) / 10;
+      }
+      setRatingsMap(map);
+    }).catch(() => {});
+  }, []);
 
   const scrollToProducts = () => {
     document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Shuffle products once at mount so the rotation order is random
+  const shuffledProducts = useMemo(() => {
+    const available = products.filter(p => p.image && (p.stock == null || p.stock > 0));
+    if (available.length === 0) return [];
+    const shuffled = [...available];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [products]);
+
+  const currentProduct = shuffledProducts.length > 0 ? shuffledProducts[productIndex % shuffledProducts.length] : null;
+  const currentRating = currentProduct ? (ratingsMap[String(currentProduct.id)] ?? 0) : 0;
+
+  const features = [
+    { icon: Shield, title: t('heroWarranty'), desc: t('heroProtection') || '24-month guarantee' },
+    { icon: Zap, title: t('heroFreeShipping'), desc: t('heroDelivery') || 'Express delivery' },
+    { icon: Star, title: t('heroRating'), desc: t('heroWorldwide') || '4.9/5 rating' },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature(prev => (prev + 1) % features.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [features.length]);
+
+  // Rotate product every 5s with fade transition
+  const rotateProduct = useCallback(() => {
+    if (shuffledProducts.length <= 1) return;
+    setIsFading(true);
+    setTimeout(() => {
+      setProductIndex(prev => (prev + 1) % shuffledProducts.length);
+      setIsFading(false);
+    }, 300);
+  }, [shuffledProducts.length]);
+
+  useEffect(() => {
+    if (shuffledProducts.length <= 1) return;
+    const interval = setInterval(rotateProduct, 5000);
+    return () => clearInterval(interval);
+  }, [rotateProduct, shuffledProducts.length]);
+
+  const discount = currentProduct?.originalPrice && currentProduct.originalPrice > currentProduct.price
+    ? Math.round((1 - currentProduct.price / currentProduct.originalPrice) * 100)
+    : 0;
+
   return (
-    <div
-      className="relative min-h-[90vh] flex items-center overflow-hidden stripe-gradient"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Animated gradient orbs */}
-      <div
-        className="absolute w-[800px] h-[800px] rounded-full opacity-30 blur-3xl transition-transform duration-1000 ease-out"
-        style={{
-          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.8) 0%, transparent 70%)',
-          left: `${10 + mousePosition.x * 10}%`,
-          top: `${-20 + mousePosition.y * 10}%`,
-        }}
-      />
-      <div
-        className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-3xl transition-transform duration-1000 ease-out"
-        style={{
-          background: 'radial-gradient(circle, rgba(0, 212, 255, 0.8) 0%, transparent 70%)',
-          right: `${5 + mousePosition.x * 5}%`,
-          top: `${10 + mousePosition.y * 10}%`,
-        }}
-      />
-      <div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-3xl transition-transform duration-1000 ease-out"
-        style={{
-          background: 'radial-gradient(circle, rgba(255, 128, 191, 0.8) 0%, transparent 70%)',
-          left: `${40 + mousePosition.x * 5}%`,
-          bottom: `${-10 + mousePosition.y * 5}%`,
-        }}
-      />
+    <div className="relative min-h-[75vh] lg:min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-brand-primary/5 via-brand-light to-brand-accent/5">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-1/4 w-72 h-72 bg-brand-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-32 left-1/3 w-96 h-96 bg-brand-accent/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-brand-primary/5 rounded-full blur-2xl" />
+      </div>
 
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           {/* Left: Content */}
           <div className="space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-              <div className="w-2 h-2 bg-brand-green rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">{t('heroNewCollection')}</span>
+            {/* Main Title with gradient */}
+            <div className="space-y-3">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-brand-dark leading-[1.05] tracking-tight">
+                {t('heroTitle2Line1')}
+              </h1>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primary bg-clip-text text-transparent animate-gradient">
+                {t('heroTitle2Line2')}
+              </h2>
             </div>
 
-            {/* Main Title - Stripe style large text */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
-              {t('heroTitle2Line1')}
-              <span className="block bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-pink bg-clip-text text-transparent">
-                {t('heroTitle2Line2')}
-              </span>
-            </h1>
-
             {/* Subtitle */}
-            <p className="text-xl text-white/60 max-w-lg leading-relaxed">
+            <p className="text-xl text-brand-muted max-w-xl leading-relaxed font-medium">
               {t('heroSubtitle2')}
             </p>
 
-            {/* CTA Buttons - Stripe style */}
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 onClick={scrollToProducts}
-                className="group bg-white text-brand-dark px-8 py-4 rounded-full font-semibold text-lg transition-all hover:shadow-2xl hover:shadow-white/25 flex items-center justify-center gap-3"
+                className="group relative bg-gradient-to-r from-brand-primary to-brand-accent hover:shadow-2xl hover:shadow-brand-primary/30 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 overflow-hidden"
               >
-                {t('heroShopNow')}
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10">{t('heroShopNow')}</span>
+                <ArrowRight size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-accent to-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
               <button
-                onClick={scrollToProducts}
-                className="group bg-white/10 hover:bg-white/15 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold text-lg transition-all border border-white/20 flex items-center justify-center gap-3"
+                onClick={() => { if (onViewOffers) onViewOffers(); else scrollToProducts(); }}
+                className="group bg-brand-surface hover:bg-brand-surface text-brand-dark px-8 py-4 rounded-xl font-bold text-lg transition-all border-2 border-brand-border hover:border-brand-primary flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
               >
-                <Play size={18} fill="currentColor" />
                 {t('heroViewOffers')}
+                <TrendingUp size={18} className="group-hover:scale-110 transition-transform" />
               </button>
             </div>
 
-            {/* Trust indicators - Stripe minimal style */}
-            <div className="flex flex-wrap gap-8 pt-8 border-t border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                  <Shield size={20} className="text-brand-cyan" />
+            {/* Rotating feature indicators */}
+            <div className="flex gap-4 pt-8">
+              {features.map((feature, idx) => (
+                <div
+                  key={idx}
+                  className={`flex items-center gap-3 p-4 rounded-xl transition-all duration-500 ${
+                    activeFeature === idx
+                      ? 'bg-brand-surface border-2 border-brand-primary shadow-lg scale-105'
+                      : 'bg-brand-surface/50 border border-brand-border opacity-60'
+                  }`}
+                >
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
+                    activeFeature === idx ? 'bg-brand-primary text-white' : 'bg-brand-primary-light text-brand-primary'
+                  }`}>
+                    <feature.icon size={20} />
+                  </div>
+                  <div>
+                    <p className="text-brand-dark font-bold text-sm">{feature.title}</p>
+                    <p className="text-brand-muted text-xs">{feature.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">{t('heroWarranty')}</p>
-                  <p className="text-white/40 text-xs">Protection</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                  <Zap size={20} className="text-brand-purple" />
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">{t('heroFreeShipping')}</p>
-                  <p className="text-white/40 text-xs">Delivery</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                  <Globe size={20} className="text-brand-pink" />
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">{t('heroRating')}</p>
-                  <p className="text-white/40 text-xs">Worldwide</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Right: Floating Cards - Stripe style */}
+          {/* Right: Rotating product showcase */}
           <div className="hidden lg:block relative h-[500px]">
-            {/* Main product card */}
+            {/* Floating product card */}
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-3xl shadow-2xl overflow-hidden hover-lift cursor-pointer"
-              style={{
-                transform: `translate(-50%, -50%) rotateY(${(mousePosition.x - 0.5) * 10}deg) rotateX(${(mousePosition.y - 0.5) * -10}deg)`,
-                transition: 'transform 0.3s ease-out',
-              }}
-              onClick={scrollToProducts}
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-brand-surface rounded-2xl border border-brand-border shadow-2xl overflow-hidden hover:shadow-brand-primary/20 hover:scale-105 transition-all duration-500 cursor-pointer group ${
+                isFading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+              }`}
+              onClick={() => currentProduct ? navigate(productPath(currentProduct.id)) : scrollToProducts()}
             >
-              <div className="h-48 bg-gradient-to-br from-brand-purple/20 via-brand-cyan/10 to-brand-pink/20 flex items-center justify-center">
+              <div className="relative h-56 bg-gradient-to-br from-brand-light to-brand-primary/10 flex items-center justify-center overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=300&h=200&fit=crop"
-                  alt="Product"
-                  className="w-full h-full object-cover"
+                  src={currentProduct?.images?.[0] || currentProduct?.image || 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=300&fit=crop'}
+                  alt={currentProduct?.name || t('ariaFeaturedProduct')}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
+                <div className="absolute top-3 left-3 flex gap-2">
+                  {currentProduct?.isBundle && (
+                    <span className="px-3 py-1.5 bg-brand-primary text-white text-xs font-bold rounded-lg shadow-lg">
+                      BUNDLE
+                    </span>
+                  )}
+                  {discount > 0 && (
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-brand-accent to-orange-500 text-white text-xs font-bold rounded-lg shadow-lg">
+                      -{discount}%
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-brand-purple/10 text-brand-purple text-xs font-semibold rounded-full">
-                    Bestseller
+                <h3 className="text-xl font-bold text-brand-dark mb-3 group-hover:text-brand-primary transition-colors line-clamp-1">
+                  {currentProduct?.name || t('heroFeaturedProduct')}
+                </h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl font-black text-brand-dark">
+                    €{currentProduct ? currentProduct.price.toFixed(2) : '19.99'}
                   </span>
-                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                    -30%
-                  </span>
+                  {currentProduct?.originalPrice && currentProduct.originalPrice > currentProduct.price && (
+                    <span className="text-base text-brand-muted line-through">
+                      €{currentProduct.originalPrice.toFixed(2)}
+                    </span>
+                  )}
                 </div>
-                <h3 className="text-lg font-bold text-brand-dark mb-1">{t('heroFeaturedProduct')}</h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-brand-dark">€19.99</span>
-                  <span className="text-sm text-gray-400 line-through">€29.99</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={14} fill={i < Math.round(currentRating) ? 'currentColor' : 'none'} className={i < Math.round(currentRating) ? 'text-brand-accent' : 'text-brand-border'} />
+                    ))}
+                  </div>
+                  {currentProduct?.brands && currentProduct.brands.length > 0 && (
+                    <span className="text-xs font-semibold text-brand-primary uppercase tracking-wide">
+                      {currentProduct.brands.join(' · ')}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Floating stat cards */}
-            <div
-              className="absolute top-10 right-10 bg-white/90 backdrop-blur-xl rounded-2xl p-4 shadow-xl border border-white/50"
-              style={{
-                transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
-                transition: 'transform 0.5s ease-out',
-              }}
-            >
+            <div className="absolute top-12 right-4 bg-brand-surface/90 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-brand-border animate-float">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                  <span className="text-green-600 text-lg">✓</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-accent rounded-xl flex items-center justify-center">
+                  <Package size={20} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Orders Today</p>
-                  <p className="text-lg font-bold text-brand-dark">2,847</p>
+                  <p className="text-xs text-brand-muted font-semibold">{t('heroOrdersToday') || 'Orders Today'}</p>
+                  <p className="text-2xl font-black text-brand-dark">{t('heroOrdersCount') || '2,847'}</p>
                 </div>
               </div>
             </div>
 
-            <div
-              className="absolute bottom-16 left-0 bg-white/90 backdrop-blur-xl rounded-2xl p-4 shadow-xl border border-white/50"
-              style={{
-                transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 15}px)`,
-                transition: 'transform 0.5s ease-out',
-              }}
-            >
+            <div className={`absolute bottom-4 left-4 bg-brand-surface/90 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-brand-border animate-float delay-500 transition-opacity duration-300 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-brand-purple/10 rounded-xl flex items-center justify-center">
-                  <span className="text-brand-purple text-lg">★</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-brand-accent to-orange-500 rounded-xl flex items-center justify-center">
+                  <Star size={20} className="text-white" fill="currentColor" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Customer Rating</p>
-                  <p className="text-lg font-bold text-brand-dark">4.9/5.0</p>
+                  <p className="text-xs text-brand-muted font-semibold">{t('heroCustomerRating') || 'Customer Rating'}</p>
+                  <p className="text-2xl font-black text-brand-dark">{currentRating > 0 ? `${currentRating.toFixed(1)}/5.0` : '—'}</p>
                 </div>
               </div>
             </div>
@@ -210,13 +251,26 @@ const Hero3D: React.FC = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <button
-        onClick={scrollToProducts}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 hover:text-white/80 transition-colors"
-      >
-        <ChevronDown size={32} className="animate-bounce" />
-      </button>
+      <style>{`
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient {
+          background-size: 200% auto;
+          animation: gradient 3s ease infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        .animate-float.delay-500 {
+          animation-delay: 500ms;
+        }
+      `}</style>
     </div>
   );
 };

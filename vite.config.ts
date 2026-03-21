@@ -1,23 +1,26 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       server: {
         port: 3000,
-        host: '0.0.0.0',
+        host: 'localhost',
       },
       plugins: [
+        tailwindcss(),
         react(),
         VitePWA({
           registerType: 'autoUpdate',
           includeAssets: ['favicon.svg', 'apple-touch-icon.svg'],
           manifest: {
-            name: 'TechNova - 维修店智能管理平台',
-            short_name: 'TechNova',
+            name: 'MovilNova - 维修店智能管理平台',
+            short_name: 'MovilNova',
             description: '在线预约·进度追踪·配件商城 | AI 辅助诊断',
             theme_color: '#1D3557',
             background_color: '#ffffff',
@@ -44,11 +47,15 @@ export default defineConfig(({ mode }) => {
             ],
           },
           workbox: {
+            navigateFallback: '/index.html',
+            navigateFallbackDenylist: [/^\/offline\.html$/, /^\/__\//],
+            globIgnores: ['**/firebase-messaging-sw.js'],
             globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+            offlineGoogleAnalytics: false,
             runtimeCaching: [
               {
                 urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-                handler: 'CacheFirst',
+                handler: 'StaleWhileRevalidate',
                 options: {
                   cacheName: 'google-fonts-cache',
                   expiration: {
@@ -76,9 +83,10 @@ export default defineConfig(({ mode }) => {
               },
               {
                 urlPattern: /^https:\/\/images\.unsplash\.com\/.*/i,
-                handler: 'CacheFirst',
+                handler: 'NetworkFirst',
                 options: {
                   cacheName: 'unsplash-images-cache',
+                  networkTimeoutSeconds: 5,
                   expiration: {
                     maxEntries: 50,
                     maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
@@ -91,14 +99,9 @@ export default defineConfig(({ mode }) => {
             ],
           },
         }),
+        ...(process.env.ANALYZE === 'true' ? [visualizer({ open: true, filename: 'dist/bundle-stats.html', gzipSize: true })] : []),
       ],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.PIN_ADMIN': JSON.stringify(env.PIN_ADMIN || '0000'),
-        'process.env.PIN_MANAGER': JSON.stringify(env.PIN_MANAGER || '1234'),
-        'process.env.PIN_WORKER': JSON.stringify(env.PIN_WORKER || '8888')
-      },
+      define: {},
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
@@ -109,10 +112,15 @@ export default defineConfig(({ mode }) => {
           output: {
             manualChunks: {
               'vendor-react': ['react', 'react-dom'],
-              'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+              'vendor-firebase-core': ['firebase/app', 'firebase/auth'],
+              'vendor-firebase-firestore': ['firebase/firestore'],
+              'vendor-firebase-ext': ['firebase/functions', 'firebase/storage', 'firebase/app-check'],
+              'vendor-stripe': ['@stripe/stripe-js', '@stripe/react-stripe-js'],
               'vendor-charts': ['recharts'],
-              'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+              'vendor-i18n': ['i18next', 'react-i18next'],
               'vendor-sentry': ['@sentry/react'],
+              'vendor-router': ['react-router-dom'],
+              'vendor-icons': ['lucide-react'],
             },
           },
         },

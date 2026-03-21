@@ -1,9 +1,9 @@
-# TechNova Agent System
+# MovilNova Agent System
 
 ## 一键交付
 
 ```bash
-/ship 做一个 TechNova 首页的 hero + features 区块，风格高端极简科技
+/ship 做一个 MovilNova 首页的 hero + features 区块，风格高端极简科技
 ```
 
 `/ship` 命令会自动调度所有 Agent，按顺序完成：需求分析 → 架构设计 → UI + 文案 → 代码实现 → 质量审查 → SEO优化
@@ -107,7 +107,7 @@ User Request
 ## Agent 文件位置
 
 ```
-/technova/
+/movilnova/
 ├── agents/
 │   ├── README.md                 # 本文件
 │   ├── orchestrator.md           # 总控调度 System Prompt

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { signInAdmin } from '../services/authService';
+import { useTranslation } from 'react-i18next';
+import { signIn, type AppUser } from '../services/authService';
 import { LogIn, AlertCircle, Loader2, ArrowLeft, Shield } from 'lucide-react';
 
+
 interface AdminLoginProps {
-  onLoginSuccess: () => void;
+  onLoginSuccess: (user: AppUser) => void;
   onBack: () => void;
 }
 
 const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -18,35 +21,29 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
     setError(null);
 
     if (!email.trim() || !password.trim()) {
-      setError('Por favor ingresa email y contraseña');
+      setError(t('adminValidationError') || 'Por favor ingresa email y contraseña');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await signInAdmin(email, password);
-      onLoginSuccess();
+      const user = await signIn(email, password);
+
+      // Solo dejar pasar admins
+      if (user.role !== 'admin') {
+        setError('No tienes permisos de administrador');
+        return;
+      }
+
+      onLoginSuccess(user);
     } catch (err: unknown) {
       const firebaseError = err as { code?: string };
-      switch (firebaseError.code) {
-        case 'auth/invalid-email':
-          setError('Email inválido');
-          break;
-        case 'auth/user-not-found':
-          setError('Usuario no encontrado');
-          break;
-        case 'auth/wrong-password':
-          setError('Contraseña incorrecta');
-          break;
-        case 'auth/invalid-credential':
-          setError('Credenciales inválidas');
-          break;
-        case 'auth/too-many-requests':
-          setError('Demasiados intentos. Intenta más tarde');
-          break;
-        default:
-          setError('Error al iniciar sesión. Verifica tus credenciales');
+      if (firebaseError.code === 'auth/too-many-requests') {
+        setError(t('adminErrorTooManyRequests') || 'Demasiados intentos. Intenta más tarde');
+      } else {
+        // Unified message for all credential errors to prevent user enumeration
+        setError(t('adminErrorInvalidCredential') || 'Credenciales inválidas');
       }
     } finally {
       setIsLoading(false);
@@ -54,43 +51,44 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-light flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors"
+          className="flex items-center gap-2 text-brand-muted hover:text-brand-dark mb-8 transition-colors"
         >
           <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Volver a la tienda</span>
+          <span className="text-sm font-medium">{t('adminBackToShop') || 'Volver a la tienda'}</span>
         </button>
 
-        <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 shadow-2xl">
+        <div className="bg-brand-surface rounded-lg border border-brand-border shadow-lg p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-tr from-brand-pink to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-brand-pink/20">
-              <Shield size={36} className="text-white" />
+            <div className="w-20 h-20 bg-brand-primary-light rounded-full flex items-center justify-center mx-auto mb-6">
+              <Shield size={36} className="text-brand-primary" />
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">Admin Panel</h1>
-            <p className="text-slate-400 text-sm mt-2">Gestión de productos TechNova</p>
+            <h1 className="text-2xl font-bold text-brand-dark tracking-tight">{t('adminTitle') || 'Panel de Administración'}</h1>
+            <p className="text-brand-muted text-sm mt-2">{t('adminSubtitle') || 'Acceso restringido para personal autorizado'}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" role="form">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                Email
+              <label className="block text-sm font-medium text-brand-dark mb-2">
+                {t('adminEmail') || 'Correo electrónico'}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@technova.com"
+                placeholder="admin@movilnova.com"
                 disabled={isLoading}
-                className="w-full bg-slate-900/50 border border-slate-600/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/20 outline-none transition-all disabled:opacity-50"
+                aria-label={t('adminEmail') || 'Correo electrónico'}
+                className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3.5 text-brand-dark placeholder:text-brand-text-tertiary focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all disabled:opacity-50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                Contraseña
+              <label className="block text-sm font-medium text-brand-dark mb-2">
+                {t('adminPassword') || 'Contraseña'}
               </label>
               <input
                 type="password"
@@ -98,12 +96,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 disabled={isLoading}
-                className="w-full bg-slate-900/50 border border-slate-600/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/20 outline-none transition-all disabled:opacity-50"
+                aria-label={t('adminPassword') || 'Contraseña'}
+                className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3.5 text-brand-dark placeholder:text-brand-text-tertiary focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all disabled:opacity-50"
               />
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+              <div role="alert" className="flex items-center gap-2 text-brand-critical text-sm bg-brand-critical/10 border border-brand-critical/20 rounded-lg px-4 py-3">
                 <AlertCircle size={18} />
                 <span>{error}</span>
               </div>
@@ -112,24 +111,24 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-brand-pink to-purple-500 text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all shadow-xl shadow-brand-pink/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-brand-primary hover:bg-brand-primary-dark text-white py-4 rounded-lg font-semibold text-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
-                  <Loader2 size={20} className="animate-spin" />
-                  <span>Iniciando sesión...</span>
+                  <Loader2 size={20} className="animate-spin text-white" />
+                  <span>{t('adminLoggingIn') || 'Iniciando...'}</span>
                 </>
               ) : (
                 <>
                   <LogIn size={20} />
-                  <span>Iniciar Sesión</span>
+                  <span>{t('adminLoginButton') || 'Iniciar sesión'}</span>
                 </>
               )}
             </button>
           </form>
 
-          <p className="text-center text-xs text-slate-500 mt-6">
-            Solo personal autorizado
+          <p className="text-center text-xs text-brand-text-tertiary mt-6">
+            {t('adminFooter') || 'Solo personal autorizado'}
           </p>
         </div>
       </div>
