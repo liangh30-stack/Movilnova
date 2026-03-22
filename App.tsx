@@ -42,6 +42,7 @@ const ProductPage = lazy(() => import('./components/ProductPage'));
 const LegalPage = lazy(() => import('./components/LegalPage'));
 const CookieConsentBanner = lazy(() => import('./components/CookieConsentBanner'));
 const LocalPage = lazy(() => import('./components/LocalPage'));
+const StoresSection = lazy(() => import('./components/StoresSection'));
 const CheckoutPage = lazy(() => import('./components/CheckoutPage'));
 
 // Loading fallback component
@@ -383,6 +384,8 @@ const App: React.FC = () => {
                     <Loader2 size={32} className="animate-spin text-brand-primary" />
                   </div>
                 ) : (
+                  <>
+                  <StoresSection />
                   <Storefront
                     products={products}
                     onAddToCart={handleAddToCart}
@@ -401,6 +404,7 @@ const App: React.FC = () => {
                     showOffersOnly={showOffersOnly}
                     onClearOffersFilter={() => setShowOffersOnly(false)}
                   />
+                  </>
                 )}
               </>
             } />
