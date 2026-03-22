@@ -41,6 +41,14 @@ const SiteFooter: React.FC<SiteFooterProps> = ({ customer, onCustomerAccountClic
           </ul>
         </div>
         <div>
+          <h4 className="font-bold mb-4 uppercase text-xs tracking-widest text-brand-text-tertiary">Nuestras Tiendas</h4>
+          <ul className="text-sm text-brand-text-tertiary space-y-3">
+            <li><button className="hover:text-white transition-colors text-left" onClick={() => navigate(ROUTES.LOCAL_PORRINO)}>📍 Galaxia Phone Porriño</button></li>
+            <li><button className="hover:text-white transition-colors text-left" onClick={() => navigate(ROUTES.LOCAL_BAIONA)}>📍 Galaxia Phone Baiona</button></li>
+            <li><button className="hover:text-white transition-colors text-left" onClick={() => navigate(ROUTES.LOCAL_LALIN)}>📍 Galaxia Phone Lalín</button></li>
+          </ul>
+        </div>
+        <div>
           <h4 className="font-bold mb-4 uppercase text-xs tracking-widest text-brand-text-tertiary">{t('footerLegal') || 'Legal'}</h4>
           <ul className="text-sm text-brand-text-tertiary space-y-3">
             <li>
