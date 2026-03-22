@@ -7,8 +7,8 @@ const STORES = [
   {
     city: 'O Porriño',
     brand: 'Galaxia Phone',
-    address: 'C/ Principal 123, 36400 O Porriño',
-    phone: '+34 986 123 456',
+    address: 'Rúa Ramón González, 54, 36400 O Porriño',
+    phone: '+34 603 93 69 78',
     hours: 'Lun–Vie 10–20h · Sáb 10–14h',
     rating: 4.7,
     reviews: 53,
@@ -20,8 +20,8 @@ const STORES = [
   {
     city: 'Baiona',
     brand: 'Galaxia Phone',
-    address: 'C/ Victoria R. Cadaval 9, 36300 Baiona',
-    phone: '+34 986 123 457',
+    address: 'Rúa Carabela a Pinta, 14, 36300 Baiona',
+    phone: '+34 623 97 93 19',
     hours: 'Lun–Vie 10–20h · Sáb 10–14h',
     rating: 5.0,
     reviews: 15,
@@ -33,8 +33,8 @@ const STORES = [
   {
     city: 'Lalín',
     brand: 'Galaxia Phone',
-    address: 'Rúa Principal 45, 36500 Lalín',
-    phone: '+34 986 123 458',
+    address: 'Rúa Wenceslao Calvo Garra, 10, 36500 Lalín',
+    phone: '+34 611 32 12 67',
     hours: 'Lun–Vie 10–20h · Sáb 10–14h',
     rating: 4.7,
     reviews: 31,
