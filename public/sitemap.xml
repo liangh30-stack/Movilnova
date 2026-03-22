@@ -2,20 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Inicio -->
   <url>
     <loc>https://movilnova.es/</loc>
     <lastmod>2026-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://movilnova.es/?lang=en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/" />
+  </url>
+
+  <!-- Páginas locales por ciudad -->
+  <url>
+    <loc>https://movilnova.es/tienda/porrino</loc>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://movilnova.es/tienda/baiona</loc>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://movilnova.es/tienda/lalin</loc>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Seguimiento de reparación -->
   <url>
-    <loc>https://movilnova.es/seguimiento</loc>
+    <loc>https://movilnova.es/reparaciones</loc>
     <lastmod>2026-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

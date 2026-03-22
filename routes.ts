@@ -3,6 +3,11 @@ export const ROUTES = {
   PRODUCT: '/producto/:id',
   REPAIR_LOOKUP: '/reparaciones',
 
+  // Local landing pages
+  LOCAL_PORRINO: '/tienda/porrino',
+  LOCAL_BAIONA: '/tienda/baiona',
+  LOCAL_LALIN: '/tienda/lalin',
+
   ADMIN: '/admin',
   CUSTOMER_ACCOUNT: '/miperfil',
   CHECKOUT: '/pagar',

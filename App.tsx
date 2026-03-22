@@ -41,6 +41,7 @@ const AdminPanel = lazy(() => import('./components/AdminPanel'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
 const LegalPage = lazy(() => import('./components/LegalPage'));
 const CookieConsentBanner = lazy(() => import('./components/CookieConsentBanner'));
+const LocalPage = lazy(() => import('./components/LocalPage'));
 const CheckoutPage = lazy(() => import('./components/CheckoutPage'));
 
 // Loading fallback component
@@ -539,6 +540,11 @@ const App: React.FC = () => {
             } />
 
             {/* Catch-all 404 */}
+            {/* Local SEO landing pages */}
+            <Route path={ROUTES.LOCAL_PORRINO} element={<LocalPage city="porrino" />} />
+            <Route path={ROUTES.LOCAL_BAIONA} element={<LocalPage city="baiona" />} />
+            <Route path={ROUTES.LOCAL_LALIN} element={<LocalPage city="lalin" />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
