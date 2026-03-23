@@ -411,13 +411,13 @@ const App: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                  <StoresSection />
                   <FeaturedProducts
                     products={products}
                     onAddToCart={handleAddToCart}
                     favorites={favorites}
                     onToggleFavorite={toggleFavorite}
                   />
+                  <StoresSection />
                   </>
                 )}
               </>
