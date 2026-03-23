@@ -86,6 +86,10 @@ export default function StoresSection() {
                   title={`Mapa ${store.city}`}
                   className="w-full h-full"
                 />
+                {/* Favicon badge — top left */}
+                <div className="absolute top-2 left-2 w-8 h-8 rounded-lg overflow-hidden shadow-md border border-white/60 bg-white">
+                  <img src="/favicon.svg" alt="MovilNova" width={32} height={32} className="w-full h-full object-cover" />
+                </div>
                 {/* Overlay to make whole area clickable */}
                 <div className="absolute inset-0" />
               </a>
