@@ -117,7 +117,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 return (
                 <div key={idx} className={`flex gap-3 p-3 bg-brand-surface rounded-xl border shadow-sm transition-shadow ${isOutOfStock ? 'border-red-200 dark:border-red-800 opacity-60' : 'border-brand-border hover:shadow-md'}`}>
                   <div className="relative flex-shrink-0">
-                    <img src={item.image} loading="lazy" decoding="async" className={`w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl ${isOutOfStock ? 'grayscale-[50%]' : ''}`} alt={item.name} />
+                    <img src={item.image} loading="lazy" decoding="async" width={64} height={64} className={`w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl ${isOutOfStock ? 'grayscale-[50%]' : ''}`} alt={item.name} />
                     {isOutOfStock && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl">
                         <Ban size={18} className="text-white drop-shadow" />

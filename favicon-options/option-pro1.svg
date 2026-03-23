@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgp1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0FD89E"/>
+      <stop offset="50%" stop-color="#008060"/>
+      <stop offset="100%" stop-color="#004D3D"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="#0A0A0A"/>
+  <!-- Glowing accent circle -->
+  <circle cx="256" cy="256" r="120" fill="url(#bgp1)" opacity="0.08"/>
+  <!-- Phone outline - sleek -->
+  <rect x="178" y="96" width="156" height="320" rx="28" fill="none" stroke="url(#bgp1)" stroke-width="12"/>
+  <!-- Screen -->
+  <rect x="194" y="128" width="124" height="248" rx="8" fill="url(#bgp1)" opacity="0.15"/>
+  <!-- Notch -->
+  <rect x="228" y="104" width="56" height="8" rx="4" fill="#0FD89E" opacity="0.5"/>
+  <!-- Nova spark / repair bolt -->
+  <path d="M268 200L240 270h28L248 340" fill="none" stroke="#0FD89E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <!-- Bottom bar -->
+  <rect x="238" y="392" width="36" height="4" rx="2" fill="#0FD89E" opacity="0.4"/>
+</svg>

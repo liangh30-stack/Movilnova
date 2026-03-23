@@ -15,7 +15,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 // Store configurations
 const STORES: StoreConfig[] = [
-  { id: 'porrino', name: 'TechNova Porriño', address: 'C/ Principal 123', isHQ: true, manager: 'Carlos' },
+  { id: 'porrino', name: 'Galaxia Phone Porriño', address: 'Rúa Ramón González, 54', isHQ: true, manager: 'Carlos' },
   { id: 'vigo', name: 'TechNova Vigo', address: 'Gran Vía 45', isHQ: false, manager: 'María' },
   { id: 'ourense', name: 'TechNova Ourense', address: 'Rúa do Paseo 78', isHQ: false, manager: 'Pedro' },
 ];

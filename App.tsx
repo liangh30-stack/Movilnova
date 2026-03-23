@@ -43,6 +43,7 @@ const LegalPage = lazy(() => import('./components/LegalPage'));
 const CookieConsentBanner = lazy(() => import('./components/CookieConsentBanner'));
 const LocalPage = lazy(() => import('./components/LocalPage'));
 const StoresSection = lazy(() => import('./components/StoresSection'));
+const FeaturedProducts = lazy(() => import('./components/FeaturedProducts'));
 const CheckoutPage = lazy(() => import('./components/CheckoutPage'));
 
 // Loading fallback component
@@ -386,23 +387,11 @@ const App: React.FC = () => {
                 ) : (
                   <>
                   <StoresSection />
-                  <Storefront
+                  <FeaturedProducts
                     products={products}
                     onAddToCart={handleAddToCart}
-                    lang={lang}
-                    onTrackOrderClick={(searchTerm) => {
-                      if (searchTerm) setRepairSearchTerm(searchTerm);
-                      navigate(ROUTES.REPAIR_LOOKUP);
-                    }}
-
                     favorites={favorites}
                     onToggleFavorite={toggleFavorite}
-                    featuredProductId={shopSettings.featuredProductId}
-                    bannerEnabled={shopSettings.bannerEnabled}
-                    bannerText={shopSettings.bannerText}
-                    bannerSubtext={shopSettings.bannerSubtext}
-                    showOffersOnly={showOffersOnly}
-                    onClearOffersFilter={() => setShowOffersOnly(false)}
                   />
                   </>
                 )}
@@ -419,6 +408,26 @@ const App: React.FC = () => {
                 customerUid={customer?.uid ?? null}
                 customerName={customer?.displayName ?? null}
                 isAdmin={!!adminUser}
+              />
+            } />
+
+            <Route path={ROUTES.CATALOG} element={
+              <Storefront
+                products={products}
+                onAddToCart={handleAddToCart}
+                lang={lang}
+                onTrackOrderClick={(searchTerm) => {
+                  if (searchTerm) setRepairSearchTerm(searchTerm);
+                  navigate(ROUTES.REPAIR_LOOKUP);
+                }}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                featuredProductId={shopSettings.featuredProductId}
+                bannerEnabled={shopSettings.bannerEnabled}
+                bannerText={shopSettings.bannerText}
+                bannerSubtext={shopSettings.bannerSubtext}
+                showOffersOnly={showOffersOnly}
+                onClearOffersFilter={() => setShowOffersOnly(false)}
               />
             } />
 

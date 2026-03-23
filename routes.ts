@@ -1,5 +1,6 @@
 export const ROUTES = {
   HOME: '/',
+  CATALOG: '/productos',
   PRODUCT: '/producto/:id',
   REPAIR_LOOKUP: '/reparaciones',
 

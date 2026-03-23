@@ -47,6 +47,7 @@ export const NavBar: React.FC<NavBarProps> = ({
 
   const navItems = [
     { label: t('navShop'), path: ROUTES.HOME },
+    { label: t('navCatalog') || 'Productos', path: ROUTES.CATALOG },
     { label: t('navTrack'), path: ROUTES.REPAIR_LOOKUP },
   ];
 

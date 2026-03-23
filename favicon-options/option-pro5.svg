@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgp5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D0D0D"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    <linearGradient id="green5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FFB8"/>
+      <stop offset="50%" stop-color="#00D492"/>
+      <stop offset="100%" stop-color="#008060"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bgp5)"/>
+  <!-- Geometric M made of triangles -->
+  <path d="M128 380 L128 160 L256 300 L384 160 L384 380" fill="none" stroke="url(#green5)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Dot accent -->
+  <circle cx="256" cy="380" r="14" fill="#00FFB8"/>
+</svg>

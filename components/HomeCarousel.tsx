@@ -10,7 +10,7 @@ interface HomeCarouselProps {
 const HomeCarousel: React.FC<HomeCarouselProps> = ({ carouselIndex, setCarouselIndex, layerOne }) => {
   const { t } = useTranslation();
   return (
-    <div className="relative overflow-hidden" role="region" aria-roledescription="carousel" aria-label={t('ariaFeaturedContent')}>
+    <div className="relative overflow-hidden min-h-[75vh] lg:min-h-[85vh]" role="region" aria-roledescription="carousel" aria-label={t('ariaFeaturedContent')}>
       <div role="tabpanel" aria-label={t('ariaSlide', { number: 1 })}>
         {layerOne}
       </div>

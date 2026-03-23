@@ -251,6 +251,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
                 <OptimizedImage
                   src={imgs[imageIndex] || product.image}
                   alt={`${product.name} - ${imageIndex + 1}`}
+                  width={600}
+                  height={600}
                   loading="eager"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="w-full h-full object-cover"

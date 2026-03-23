@@ -961,7 +961,7 @@ function buildOrderEmailHtml(params: {
         <tr>
           <td style="background:#f8f8fc;padding:20px 32px;text-align:center;
                      color:#999;font-size:12px;border-top:1px solid #eee;line-height:1.6;">
-            MovilNova S.L. &middot; C/ Principal 123, 36400 Porri&ntilde;o, Pontevedra<br>
+            MovilNova S.L. &middot; R&uacute;a Ram&oacute;n Gonz&aacute;lez 54, 36400 O Porri&ntilde;o, Pontevedra<br>
             <a href="mailto:info@movilnova.es" style="color:#666;text-decoration:none;">info@movilnova.es</a>
           </td>
         </tr>

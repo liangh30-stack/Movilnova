@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgp4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#008060"/>
+      <stop offset="100%" stop-color="#004C3F"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bgp4)"/>
+  <!-- Wrench + Phone combined mark -->
+  <!-- Phone body -->
+  <rect x="196" y="106" width="120" height="236" rx="20" fill="none" stroke="white" stroke-width="14"/>
+  <!-- Screen shine -->
+  <rect x="214" y="132" width="84" height="180" rx="6" fill="white" opacity="0.1"/>
+  <!-- Wrench extending from phone -->
+  <path d="M256 342 L256 406 M236 406 L276 406" stroke="white" stroke-width="14" stroke-linecap="round"/>
+  <!-- Gear/settings circle on phone screen -->
+  <circle cx="256" cy="210" r="32" fill="none" stroke="white" stroke-width="8"/>
+  <circle cx="256" cy="210" r="12" fill="white"/>
+  <!-- Gear teeth -->
+  <line x1="256" y1="172" x2="256" y2="164" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <line x1="256" y1="248" x2="256" y2="256" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <line x1="218" y1="210" x2="210" y2="210" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <line x1="294" y1="210" x2="302" y2="210" stroke="white" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -177,8 +177,11 @@ const Hero3D: React.FC<Hero3DProps> = ({ onViewOffers, products = [] }) => {
                 <img
                   src={currentProduct?.images?.[0] || currentProduct?.image || 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=300&fit=crop'}
                   alt={currentProduct?.name || t('ariaFeaturedProduct')}
-                  loading="lazy"
+                  width={320}
+                  height={224}
+                  loading="eager"
                   decoding="async"
+                  fetchPriority="high"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute top-3 left-3 flex gap-2">

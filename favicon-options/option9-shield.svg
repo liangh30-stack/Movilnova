@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="22" fill="#008060"/>
+  <!-- Shield shape -->
+  <path d="M50 20L25 32V52C25 68 36 80 50 85C64 80 75 68 75 52V32L50 20Z" fill="white" opacity="0.15"/>
+  <path d="M50 24L29 34V52C29 66 38 76 50 81C62 76 71 66 71 52V34L50 24Z" fill="none" stroke="white" stroke-width="2.5"/>
+  <!-- Check -->
+  <path d="M38 52L46 60L62 42" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

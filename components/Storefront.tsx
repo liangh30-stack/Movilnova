@@ -259,7 +259,10 @@ const Storefront: React.FC<StorefrontProps> = ({ products, onAddToCart, lang, on
                 <OptimizedImage
                   src={featuredProduct.images?.[0] || featuredProduct.image}
                   alt={featuredProduct.name}
+                  width={288}
+                  height={288}
                   sizes="(max-width: 640px) 192px, (max-width: 768px) 224px, 288px"
+                  loading="eager"
                   className="w-full h-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -498,6 +501,8 @@ const Storefront: React.FC<StorefrontProps> = ({ products, onAddToCart, lang, on
                         <OptimizedImage
                           src={imgs[currentIndex] || product.image}
                           alt={`${product.name} - ${currentIndex + 1}`}
+                          width={400}
+                          height={400}
                           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />

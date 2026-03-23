@@ -738,7 +738,7 @@ const MyAccountPage: React.FC<MyAccountPageProps> = ({
             return (
             <div key={product.id} className={`bg-brand-surface rounded-2xl border border-brand-border overflow-hidden transition-all group ${outOfStock ? 'opacity-60' : 'hover:shadow-md'}`}>
               <div className="relative aspect-square bg-brand-light">
-                <img src={product.image} alt={product.name} className={`w-full h-full object-cover ${outOfStock ? 'grayscale-[50%]' : 'group-hover:scale-105'} transition-transform duration-300`} />
+                <img src={product.image} alt={product.name} width={400} height={400} className={`w-full h-full object-cover ${outOfStock ? 'grayscale-[50%]' : 'group-hover:scale-105'} transition-transform duration-300`} />
                 {outOfStock && (
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                     <div className="bg-brand-surface/95 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-md">

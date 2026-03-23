@@ -31,7 +31,7 @@ const CITY_DATA: Record<CitySlug, {
     mapUrl: 'https://maps.google.com/?q=Galaxia+Phone+O+Porrino',
     reviews: 55,
     rating: 4.7,
-    hours: 'Lun-Vie 10:00-20:00 | Sáb 10:00-14:00',
+    hours: 'Lun-Sáb 10:00-14:00 / 16:30-20:30',
     description: 'Tu tienda de reparación de móviles de confianza en O Porriño. Reparamos iPhone, Samsung, Xiaomi y todas las marcas con garantía. Cambio de pantallas y baterías en menos de 1 hora.',
     keywords: ['reparación móviles Porriño', 'reparar iPhone Porriño', 'cambio pantalla Samsung Porriño', 'tienda fundas Porriño', 'servicio técnico móviles O Porriño'],
     services: [
@@ -59,7 +59,7 @@ const CITY_DATA: Record<CitySlug, {
     mapUrl: 'https://maps.google.com/?q=Galaxia+Phone+Baiona',
     reviews: 23,
     rating: 5.0,
-    hours: 'Lun-Vie 10:00-20:00 | Sáb 10:00-14:00',
+    hours: 'Lun-Sáb 10:00-14:00 / 16:30-20:30',
     description: 'La mejor tienda de móviles en Baiona con valoración perfecta ⭐⭐⭐⭐⭐. Reparación de móviles, fundas, cargadores y accesorios. Tu servicio técnico de confianza en la Costa de la Vela.',
     keywords: ['reparación móviles Baiona', 'tienda móviles Baiona', 'accesorios móvil Baiona', 'reparar iPhone Baiona Pontevedra', 'tienda fundas Baiona'],
     services: [
@@ -87,7 +87,7 @@ const CITY_DATA: Record<CitySlug, {
     mapUrl: 'https://maps.google.com/?q=Galaxia+Phone+Lalín',
     reviews: 31,
     rating: 4.7,
-    hours: 'Lun-Vie 10:00-20:00 | Sáb 10:00-14:00',
+    hours: 'Lun-Sáb 10:00-14:00 / 16:30-20:30',
     description: 'Galaxia Phone Lalín: tu servicio técnico de móviles en el corazón de Deza. Reparación económica y rápida de pantallas, baterías y conectores. Tienda de accesorios para móvil.',
     keywords: ['reparación móviles Lalín', 'Galaxia Phone Lalín', 'tienda accesorios móvil Lalín', 'cambio pantalla iPhone Lalín', 'servicio técnico móviles Deza'],
     services: [
@@ -133,8 +133,8 @@ export default function LocalPage({ city }: LocalPageProps) {
     },
     geo: { '@type': 'GeoCoordinates', latitude: data.lat, longitude: data.lng },
     openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '10:00', closes: '20:00' },
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '10:00', closes: '14:00' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: '10:00', closes: '14:00' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: '16:30', closes: '20:30' },
     ],
     aggregateRating: { '@type': 'AggregateRating', ratingValue: data.rating, reviewCount: data.reviews },
     priceRange: '€€',
