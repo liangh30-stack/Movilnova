@@ -57,16 +57,32 @@ export const NavBar: React.FC<NavBarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <button
-            className="flex items-center gap-3 cursor-pointer group bg-transparent border-none p-0"
-            onClick={() => navigate(ROUTES.HOME)}
-            aria-label={t('ariaGoHome')}
-          >
-            <div className="w-9 h-9 rounded-lg overflow-hidden shadow-sm flex-shrink-0">
-              <img src="/favicon.svg" alt="MovilNova" width={36} height={36} className="w-full h-full object-cover" />
-            </div>
-            <span className="hidden sm:inline text-xl font-bold text-brand-dark tracking-tight">{COMPANY.brandName}</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              className="flex items-center gap-3 cursor-pointer group bg-transparent border-none p-0"
+              onClick={() => navigate(ROUTES.HOME)}
+              aria-label={t('ariaGoHome')}
+            >
+              <div className="w-9 h-9 rounded-lg overflow-hidden shadow-sm flex-shrink-0">
+                <img src="/favicon.svg" alt="MovilNova" width={36} height={36} className="w-full h-full object-cover" />
+              </div>
+              <span className="hidden sm:inline text-xl font-bold text-brand-dark tracking-tight">{COMPANY.brandName}</span>
+            </button>
+
+            {/* Catalog icon — next to logo */}
+            <button
+              onClick={() => navigate(ROUTES.CATALOG)}
+              className={`p-2 rounded-lg transition-colors ${
+                location.pathname === ROUTES.CATALOG
+                  ? 'text-brand-primary bg-brand-primary-light'
+                  : 'text-brand-muted hover:text-brand-dark hover:bg-brand-light'
+              }`}
+              aria-label="Catálogo"
+              title="Catálogo"
+            >
+              <LayoutGrid size={20} />
+            </button>
+          </div>
 
           {/* Center Nav - Desktop */}
           <div className="hidden md:flex items-center gap-1">
@@ -90,20 +106,6 @@ export const NavBar: React.FC<NavBarProps> = ({
 
           {/* Right Actions */}
           <div className="flex items-center gap-1">
-            {/* Catalog shortcut */}
-            <button
-              onClick={() => navigate(ROUTES.CATALOG)}
-              className={`p-2 rounded-lg transition-colors ${
-                location.pathname === ROUTES.CATALOG
-                  ? 'text-brand-primary bg-brand-primary-light'
-                  : 'text-brand-muted hover:text-brand-dark hover:bg-brand-light'
-              }`}
-              aria-label="Catálogo"
-              title="Catálogo"
-            >
-              <LayoutGrid size={20} />
-            </button>
-
             {/* Theme Toggle */}
             <button
               onClick={() => onThemeChange(isDark ? 'light' : 'dark')}
