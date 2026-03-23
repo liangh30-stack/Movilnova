@@ -381,8 +381,27 @@ const App: React.FC = () => {
                   layerOne={<Hero3D products={products} onViewOffers={() => { setShowOffersOnly(true); setTimeout(() => document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }), 100); }} />}
                 />
                 {isLoadingProducts ? (
-                  <div className="flex items-center justify-center py-20">
-                    <Loader2 size={32} className="animate-spin text-brand-primary" />
+                  /* Skeleton — same height as real content to avoid CLS */
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                    {/* StoresSection skeleton */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                      {[0,1,2].map(i => (
+                        <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />
+                      ))}
+                    </div>
+                    {/* FeaturedProducts skeleton — 6 cards, 2 cols mobile / 3 cols desktop */}
+                    <div className="h-6 w-40 bg-gray-100 rounded mb-6 animate-pulse" />
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[0,1,2,3,4,5].map(i => (
+                        <div key={i} className="rounded-2xl overflow-hidden border border-gray-100">
+                          <div className="aspect-square bg-gray-100 animate-pulse" />
+                          <div className="p-3 space-y-2">
+                            <div className="h-3 bg-gray-100 rounded animate-pulse w-3/4" />
+                            <div className="h-4 bg-gray-100 rounded animate-pulse w-1/3" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <>
