@@ -13,6 +13,7 @@ import NavBar from './components/NavBar';
 import MobileMenu from './components/MobileMenu';
 import CartDrawer from './components/CartDrawer';
 import HomeCarousel from './components/HomeCarousel';
+import PromoBannerCarousel from './components/PromoBannerCarousel';
 import SiteFooter from './components/SiteFooter';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -375,6 +376,11 @@ const App: React.FC = () => {
           <Routes>
             <Route path={ROUTES.HOME} element={
               <>
+                <PromoBannerCarousel
+                  shopBannerEnabled={shopSettings.bannerEnabled}
+                  shopBannerText={shopSettings.bannerText}
+                  shopBannerSubtext={shopSettings.bannerSubtext}
+                />
                 <HomeCarousel
                   carouselIndex={carouselIndex}
                   setCarouselIndex={setCarouselIndex}
