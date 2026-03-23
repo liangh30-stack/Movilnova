@@ -1306,5 +1306,8 @@
   "promoNewUserSub": "使用优惠码 BIENVENIDOS 结账",
   "promoAlreadyUsed": "您已使用过此优惠码",
   "promoMaxUsesPerUser": "每账户最多使用次数",
-  "promoMaxUsesPerUserHint": "0 = 不限制，1 = 每用户一次"
+  "promoMaxUsesPerUserHint": "0 = 不限制，1 = 每用户一次",
+  "repairHeroTrust1": "6个月保修",
+  "repairHeroTrust2": "快速维修",
+  "repairHeroTrust3": "认证技术员"
 }

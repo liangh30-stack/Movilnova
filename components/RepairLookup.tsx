@@ -110,17 +110,50 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
   const currentStep = result ? getStatusStep(result.status) : 0;
 
   return (
-    <div className="min-h-screen bg-brand-light py-12 px-4" aria-label={t('trackTitle')}>
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-brand-light" aria-label={t('trackTitle')}>
 
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary rounded-lg mb-5 shadow-sm" aria-hidden="true">
+      {/* ── Hero with repair workshop background ── */}
+      <div className="relative overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-105"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&q=80&auto=format&fit=crop')`,
+            filter: 'blur(3px)',
+          }}
+          aria-hidden="true"
+        />
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90" aria-hidden="true" />
+
+        {/* Hero content */}
+        <div className="relative z-10 max-w-2xl mx-auto px-4 py-16 text-center">
+          {/* Trust badges */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
+              <Shield size={14} className="text-emerald-400" />
+              <span className="text-white/90 text-xs font-medium">{t('repairHeroTrust1', 'Garantía 6 meses')}</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
+              <Clock size={14} className="text-brand-accent" />
+              <span className="text-white/90 text-xs font-medium">{t('repairHeroTrust2', 'Reparación express')}</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
+              <CheckCircle size={14} className="text-blue-400" />
+              <span className="text-white/90 text-xs font-medium">{t('repairHeroTrust3', 'Técnicos certificados')}</span>
+            </div>
+          </div>
+
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary/90 backdrop-blur-sm rounded-xl mb-5 shadow-xl shadow-brand-primary/30 border border-brand-primary/50" aria-hidden="true">
             <Search size={28} className="text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-brand-dark mb-3 tracking-tight">{t('trackTitle')}</h1>
-          <p className="text-brand-muted text-base max-w-md mx-auto">{t('trackDesc')}</p>
+          <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-lg">{t('trackTitle')}</h1>
+          <p className="text-white/75 text-base sm:text-lg max-w-md mx-auto leading-relaxed">{t('trackDesc')}</p>
         </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto px-4 -mt-8 pb-12">
+        {/* Search Form Card — elevated over hero */}
 
         {/* Search Form Card */}
         <div className="bg-brand-surface rounded-lg border border-brand-border shadow-sm p-8 mb-8">

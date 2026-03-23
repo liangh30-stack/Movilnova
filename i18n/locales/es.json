@@ -1306,5 +1306,8 @@
   "promoNewUserSub": "Código BIENVENIDOS · Mínimo 25€",
   "promoAlreadyUsed": "Ya has utilizado este código promocional",
   "promoMaxUsesPerUser": "Uso máx. por cuenta",
-  "promoMaxUsesPerUserHint": "0 = ilimitado, 1 = una vez por usuario"
+  "promoMaxUsesPerUserHint": "0 = ilimitado, 1 = una vez por usuario",
+  "repairHeroTrust1": "Garantía 6 meses",
+  "repairHeroTrust2": "Reparación express",
+  "repairHeroTrust3": "Técnicos certificados"
 }

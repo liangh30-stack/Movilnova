@@ -1306,5 +1306,8 @@
   "promoNewUserSub": "Code BIENVENIDOS · Min. €25 purchase",
   "promoAlreadyUsed": "You have already used this promo code",
   "promoMaxUsesPerUser": "Max uses per account",
-  "promoMaxUsesPerUserHint": "0 = unlimited, 1 = once per user"
+  "promoMaxUsesPerUserHint": "0 = unlimited, 1 = once per user",
+  "repairHeroTrust1": "6-month warranty",
+  "repairHeroTrust2": "Express repair",
+  "repairHeroTrust3": "Certified technicians"
 }

@@ -1306,5 +1306,8 @@
   "promoNewUserSub": "Code BIENVENIDOS · Mindestbestellwert 25€",
   "promoAlreadyUsed": "Du hast diesen Gutscheincode bereits verwendet",
   "promoMaxUsesPerUser": "Max. Nutzungen pro Konto",
-  "promoMaxUsesPerUserHint": "0 = unbegrenzt, 1 = einmal pro Nutzer"
+  "promoMaxUsesPerUserHint": "0 = unbegrenzt, 1 = einmal pro Nutzer",
+  "repairHeroTrust1": "6 Monate Garantie",
+  "repairHeroTrust2": "Express-Reparatur",
+  "repairHeroTrust3": "Zertifizierte Techniker"
 }
