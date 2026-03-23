@@ -1,5 +1,5 @@
 export const COMPANY = {
-  brandName: (import.meta.env.VITE_COMPANY_NAME || 'MovilNova').replace(/\s+S\.L\.?$/, ''),
+  brandName: import.meta.env.VITE_BRAND_NAME || 'MovilNova',
   name: import.meta.env.VITE_COMPANY_NAME || 'Liangbin Huang',
   nif: import.meta.env.VITE_COMPANY_NIF || 'X9484897L',
   address: import.meta.env.VITE_COMPANY_ADDRESS || 'Rúa Ramón González, 54, 36400 O Porriño, Pontevedra',
