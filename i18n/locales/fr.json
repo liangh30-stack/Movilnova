@@ -1301,5 +1301,7 @@
   "localShopOnlineDesc": "Coques, chargeurs, câbles et accessoires avec livraison rapide partout en Espagne. Retrait en boutique à {{city}} aussi possible.",
   "localShopOnlineCta": "Voir la boutique",
   "localFaqTitle": "❓ Questions Fréquentes — {{city}}",
-  "localOtherStores": "📍 Autres boutiques MovilNova en Galice"
+  "localOtherStores": "📍 Autres boutiques MovilNova en Galice",
+  "promoNewUserTitle": "Bienvenue ! 5€ de réduction sur votre première commande",
+  "promoNewUserSub": "Utilisez le code BIENVENIDO5 à la caisse"
 }

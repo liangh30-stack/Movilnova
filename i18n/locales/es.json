@@ -1301,5 +1301,7 @@
   "localShopOnlineDesc": "Fundas, cargadores, cables y accesorios con envío rápido a toda España. También puedes recoger en tienda en {{city}}.",
   "localShopOnlineCta": "Ver tienda",
   "localFaqTitle": "❓ Preguntas Frecuentes — {{city}}",
-  "localOtherStores": "📍 Otras tiendas MovilNova en Galicia"
+  "localOtherStores": "📍 Otras tiendas MovilNova en Galicia",
+  "promoNewUserTitle": "¡Bienvenido! 5€ de descuento en tu primera compra",
+  "promoNewUserSub": "Usa el código BIENVENIDO5 al finalizar el pedido"
 }

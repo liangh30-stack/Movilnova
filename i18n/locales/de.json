@@ -1301,5 +1301,7 @@
   "localShopOnlineDesc": "Hüllen, Ladegeräte, Kabel und Zubehör mit schnellem Versand in ganz Spanien. Auch Abholung in der Filiale in {{city}} möglich.",
   "localShopOnlineCta": "Shop besuchen",
   "localFaqTitle": "❓ Häufige Fragen — {{city}}",
-  "localOtherStores": "📍 Andere MovilNova-Filialen in Galicien"
+  "localOtherStores": "📍 Andere MovilNova-Filialen in Galicien",
+  "promoNewUserTitle": "Willkommen! 5€ Rabatt auf deine erste Bestellung",
+  "promoNewUserSub": "Nutze den Code BIENVENIDO5 beim Bezahlen"
 }

@@ -1301,5 +1301,7 @@
   "localShopOnlineDesc": "手机壳、充电器、数据线及配件，全西班牙快速配送。也可在{{city}}门店自取。",
   "localShopOnlineCta": "进入商店",
   "localFaqTitle": "❓ 常见问题 — {{city}}",
-  "localOtherStores": "📍 加利西亚其他 MovilNova 门店"
+  "localOtherStores": "📍 加利西亚其他 MovilNova 门店",
+  "promoNewUserTitle": "欢迎！首单立减5€",
+  "promoNewUserSub": "结账时使用优惠码 BIENVENIDO5"
 }

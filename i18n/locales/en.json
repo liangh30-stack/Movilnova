@@ -1301,5 +1301,7 @@
   "localShopOnlineDesc": "Cases, chargers, cables and accessories with fast delivery across Spain. You can also pick up in store in {{city}}.",
   "localShopOnlineCta": "Visit shop",
   "localFaqTitle": "❓ Frequently Asked Questions — {{city}}",
-  "localOtherStores": "📍 Other MovilNova stores in Galicia"
+  "localOtherStores": "📍 Other MovilNova stores in Galicia",
+  "promoNewUserTitle": "Welcome! €5 off your first order",
+  "promoNewUserSub": "Use code BIENVENIDO5 at checkout"
 }
