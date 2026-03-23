@@ -1303,5 +1303,8 @@
   "localFaqTitle": "❓ Frequently Asked Questions — {{city}}",
   "localOtherStores": "📍 Other MovilNova stores in Galicia",
   "promoNewUserTitle": "Welcome! €5 off your first order",
-  "promoNewUserSub": "Code BIENVENIDO5 · Min. €25 purchase"
+  "promoNewUserSub": "Code BIENVENIDO5 · Min. €25 purchase",
+  "promoAlreadyUsed": "You have already used this promo code",
+  "promoMaxUsesPerUser": "Max uses per account",
+  "promoMaxUsesPerUserHint": "0 = unlimited, 1 = once per user"
 }

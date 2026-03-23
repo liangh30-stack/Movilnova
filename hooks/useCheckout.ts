@@ -201,7 +201,7 @@ export const useCheckout = <TCartItem extends CheckoutCartItem>({
     setPromoError('');
     setIsValidatingPromo(true);
     try {
-      const promo = await validatePromoCode(code, subtotal);
+      const promo = await validatePromoCode(code, subtotal, customerUid ?? undefined);
       setAppliedPromo(promo);
     } catch (err: unknown) {
       setPromoError(err instanceof Error ? err.message : 'promoInvalid');
@@ -209,7 +209,7 @@ export const useCheckout = <TCartItem extends CheckoutCartItem>({
     } finally {
       setIsValidatingPromo(false);
     }
-  }, [subtotal]);
+  }, [subtotal, customerUid]);
 
   // Remove applied promo code
   const removePromoCode = useCallback(() => {
@@ -296,7 +296,7 @@ export const useCheckout = <TCartItem extends CheckoutCartItem>({
 
       // Increment promo usage after successful order
       if (appliedPromo) {
-        incrementPromoUsage(appliedPromo.id, appliedPromo.usedCount).catch(() => {});
+        incrementPromoUsage(appliedPromo.id, customerUid ?? undefined).catch(() => {});
       }
       setLastOrderNumber(newOrder.orderNumber);
       trackPurchase(newOrder.orderNumber, total, cart.length);

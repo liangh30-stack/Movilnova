@@ -1303,5 +1303,8 @@
   "localFaqTitle": "❓ Questions Fréquentes — {{city}}",
   "localOtherStores": "📍 Autres boutiques MovilNova en Galice",
   "promoNewUserTitle": "Bienvenue ! 5€ de réduction sur votre première commande",
-  "promoNewUserSub": "Code BIENVENIDO5 · Achat min. 25€"
+  "promoNewUserSub": "Code BIENVENIDO5 · Achat min. 25€",
+  "promoAlreadyUsed": "Vous avez déjà utilisé ce code promo",
+  "promoMaxUsesPerUser": "Utilisations max par compte",
+  "promoMaxUsesPerUserHint": "0 = illimité, 1 = une fois par utilisateur"
 }

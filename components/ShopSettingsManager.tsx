@@ -241,6 +241,7 @@ const ShopSettingsManager: React.FC<ShopSettingsManagerProps> = ({ user }) => {
     discountValue: 10,
     minPurchase: 0,
     maxUses: 0,
+    maxUsesPerUser: 0,
     isActive: true,
     expiresAt: null,
   };
@@ -879,6 +880,20 @@ const ShopSettingsManager: React.FC<ShopSettingsManagerProps> = ({ user }) => {
                   />
                   <p className="text-[10px] text-brand-text-tertiary mt-0.5">{t('promoMaxUsesHint')}</p>
                 </div>
+
+                {/* Max uses per user */}
+                <div>
+                  <label className="text-[10px] font-semibold text-brand-text-tertiary uppercase tracking-wide block mb-1">{t('promoMaxUsesPerUser', 'Uso máx. por cuenta')}</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    value={(promoForm as { maxUsesPerUser?: number }).maxUsesPerUser ?? 0}
+                    onChange={e => setPromoForm({ ...promoForm, maxUsesPerUser: parseInt(e.target.value) || 0 } as typeof promoForm)}
+                    className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm font-bold text-center focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
+                  />
+                  <p className="text-[10px] text-brand-text-tertiary mt-0.5">{t('promoMaxUsesPerUserHint', '0 = ilimitado, 1 = una vez por usuario')}</p>
+                </div>
               </div>
 
               {/* Expiry date */}
@@ -969,6 +984,7 @@ const ShopSettingsManager: React.FC<ShopSettingsManagerProps> = ({ user }) => {
                       discountValue: promo.discountValue,
                       minPurchase: promo.minPurchase,
                       maxUses: promo.maxUses,
+                      maxUsesPerUser: (promo as { maxUsesPerUser?: number }).maxUsesPerUser ?? 0,
                       isActive: promo.isActive,
                       expiresAt: promo.expiresAt,
                     });
