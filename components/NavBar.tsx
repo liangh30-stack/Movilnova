@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCart, User, Globe, Menu, Settings, ChevronDown, Sun, Moon } from 'lucide-react';
+import { ShoppingCart, User, Globe, Menu, Settings, ChevronDown, Sun, Moon, LayoutGrid } from 'lucide-react';
 import { Language } from '../types';
 import { ROUTES } from '../routes';
 import { LegacyLanguage } from '../i18n';
@@ -90,6 +90,20 @@ export const NavBar: React.FC<NavBarProps> = ({
 
           {/* Right Actions */}
           <div className="flex items-center gap-1">
+            {/* Catalog shortcut */}
+            <button
+              onClick={() => navigate(ROUTES.CATALOG)}
+              className={`p-2 rounded-lg transition-colors ${
+                location.pathname === ROUTES.CATALOG
+                  ? 'text-brand-primary bg-brand-primary-light'
+                  : 'text-brand-muted hover:text-brand-dark hover:bg-brand-light'
+              }`}
+              aria-label="Catálogo"
+              title="Catálogo"
+            >
+              <LayoutGrid size={20} />
+            </button>
+
             {/* Theme Toggle */}
             <button
               onClick={() => onThemeChange(isDark ? 'light' : 'dark')}
