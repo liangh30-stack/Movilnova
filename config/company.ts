@@ -1,11 +1,11 @@
 export const COMPANY = {
-  brandName: (import.meta.env.VITE_COMPANY_NAME || 'MovilNova S.L.').replace(/\s+S\.L\.?$/, ''),
-  name: import.meta.env.VITE_COMPANY_NAME || 'MovilNova S.L.',
-  nif: import.meta.env.VITE_COMPANY_NIF || 'B-12345678',
-  address: import.meta.env.VITE_COMPANY_ADDRESS || 'C/ Principal 123, 36400 Porriño, Pontevedra',
+  brandName: (import.meta.env.VITE_COMPANY_NAME || 'MovilNova').replace(/\s+S\.L\.?$/, ''),
+  name: import.meta.env.VITE_COMPANY_NAME || 'Liangbin Huang',
+  nif: import.meta.env.VITE_COMPANY_NIF || 'X9484897L',
+  address: import.meta.env.VITE_COMPANY_ADDRESS || 'Rúa Ramón González, 54, 36400 O Porriño, Pontevedra',
   email: import.meta.env.VITE_COMPANY_EMAIL || 'info@movilnova.es',
-  phone: import.meta.env.VITE_COMPANY_PHONE || '+34 986 123 456',
+  phone: import.meta.env.VITE_COMPANY_PHONE || '+34 603 93 69 78',
   dpoEmail: import.meta.env.VITE_COMPANY_DPO_EMAIL || 'info@movilnova.es',
-  registry: import.meta.env.VITE_COMPANY_REGISTRY || 'Registro Mercantil de Pontevedra, Tomo XXX, Folio XXX',
-  city: import.meta.env.VITE_COMPANY_CITY || 'Pontevedra',
+  registry: import.meta.env.VITE_COMPANY_REGISTRY || 'Autónomo — Actividad Económica en Régimen de Estimación Directa',
+  city: import.meta.env.VITE_COMPANY_CITY || 'O Porriño',
 };
