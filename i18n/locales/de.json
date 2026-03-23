@@ -1091,14 +1091,12 @@
   "salesPreviousPeriod": "Vorheriger Zeitraum",
   "salesNoData": "Keine Daten verfügbar",
   "salesMissingCostWarning": "Einige Produkte haben keinen Einkaufspreis. Die Margen können ungenau sein.",
-
   "salesTabOverview": "Übersicht",
   "salesTabRevenue": "Umsatz",
   "salesTabCustomers": "Kunden",
   "salesTabProducts": "Produkte",
   "salesTabGeography": "Geografie",
   "salesTabOperations": "Betrieb",
-
   "salesRepeatRate": "Wiederkaufrate",
   "salesUniqueCustomers": "Einzigartige Kunden",
   "salesStatusFunnel": "Bestelltrichter",
@@ -1106,7 +1104,6 @@
   "salesRecentActivity": "Letzte Aktivität",
   "salesOrderCount": "Bestellungen",
   "salesTimeAgo": "vor",
-
   "salesTaxCollected": "MwSt. Erhoben",
   "salesShippingRevenue": "Versandeinnahmen",
   "salesFreeShippingOrders": "Kostenloser Versand",
@@ -1117,7 +1114,6 @@
   "salesMargin": "Marge",
   "salesCategory": "Kategorie",
   "salesProduct": "Produkt",
-
   "salesNewCustomers30d": "Neu (30T)",
   "salesAvgOrdersPerCustomer": "Best./Kunde",
   "salesGuestVsRegistered": "Gäste vs Registrierte",
@@ -1134,7 +1130,6 @@
   "salesOneTimeCustomers": "Einmalig",
   "salesRepeatCustomers": "Wiederkehrend",
   "salesRevenueBySegment": "Umsatz nach Segment",
-
   "salesTotalSKUs": "Gesamt SKUs",
   "salesNeverSold": "Nie Verkauft",
   "salesLowStock": "Niedriger Bestand",
@@ -1151,12 +1146,10 @@
   "salesCustomRevenue": "Individuelle Einnahmen",
   "salesRevenuePerCategory": "Umsatz nach Kategorie",
   "salesSalesVelocity": "Verkaufsgeschw.",
-
   "salesRevenueByCountry": "Umsatz nach Land",
   "salesRevenueByCity": "Umsatz nach Stadt",
   "salesOrdersByCountry": "Bestellungen nach Land",
   "salesAOVByCountry": "AOV nach Land",
-
   "salesAvgFulfillmentTime": "Durchschn. Lieferzeit",
   "salesOrdersWithTracking": "Mit Sendungsverf.",
   "salesPendingOrders": "Ausstehende Bestellungen",
@@ -1179,7 +1172,6 @@
   "salesNoCancellations": "Keine Stornierungen",
   "pushNotifications": "Push-Benachrichtigungen",
   "pushNotificationsDesc": "Erhalten Sie Benachrichtigungen zu Ihren Bestellungen",
-
   "adminNavAuditLog": "Aktivitätsprotokoll",
   "auditTitle": "Aktivitätsprotokoll",
   "auditSubtitle": "Alle Administratoraktionen im System verfolgen",
@@ -1279,5 +1271,14 @@
   "editProduct": "Produkt bearbeiten",
   "settingsTabGeneral": "Allgemein",
   "settingsTabPromotions": "Aktionen",
-  "settingsTabCatalog": "Katalog"
+  "settingsTabCatalog": "Katalog",
+  "storesSectionTag": "Filialen",
+  "storesSectionTitle": "Besuchen Sie uns in Galicien",
+  "storesSectionSubtitle": "Kein Termin nötig · Reparatur während Sie warten",
+  "storesSectionFooter": "Wir reparieren iPhone · Samsung · Xiaomi · Alle Marken — 3 Monate Garantie",
+  "storesWhatsappCta": "Verfügbarkeit anfragen",
+  "storesMoreInfo": "Mehr Info",
+  "repairStartTitle": "Reparatur starten",
+  "repairStartSubtitle": "Wählen Sie Ihre nächste Filiale und fragen Sie uns auf WhatsApp — wir antworten sofort.",
+  "repairWhatsappCta": "Auf WhatsApp fragen"
 }

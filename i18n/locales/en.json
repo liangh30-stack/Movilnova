@@ -1091,14 +1091,12 @@
   "salesPreviousPeriod": "Previous Period",
   "salesNoData": "No data available",
   "salesMissingCostWarning": "Some products are missing cost price. Margins may be inaccurate.",
-
   "salesTabOverview": "Overview",
   "salesTabRevenue": "Revenue",
   "salesTabCustomers": "Customers",
   "salesTabProducts": "Products",
   "salesTabGeography": "Geography",
   "salesTabOperations": "Operations",
-
   "salesRepeatRate": "Repeat Rate",
   "salesUniqueCustomers": "Unique Customers",
   "salesStatusFunnel": "Order Funnel",
@@ -1106,7 +1104,6 @@
   "salesRecentActivity": "Recent Activity",
   "salesOrderCount": "Orders",
   "salesTimeAgo": "ago",
-
   "salesTaxCollected": "Tax Collected",
   "salesShippingRevenue": "Shipping Revenue",
   "salesFreeShippingOrders": "Free Shipping",
@@ -1117,7 +1114,6 @@
   "salesMargin": "Margin",
   "salesCategory": "Category",
   "salesProduct": "Product",
-
   "salesNewCustomers30d": "New (30d)",
   "salesAvgOrdersPerCustomer": "Orders/Customer",
   "salesGuestVsRegistered": "Guest vs Registered",
@@ -1134,7 +1130,6 @@
   "salesOneTimeCustomers": "One-time",
   "salesRepeatCustomers": "Repeat",
   "salesRevenueBySegment": "Revenue by Segment",
-
   "salesTotalSKUs": "Total SKUs",
   "salesNeverSold": "Never Sold",
   "salesLowStock": "Low Stock",
@@ -1151,12 +1146,10 @@
   "salesCustomRevenue": "Custom Revenue",
   "salesRevenuePerCategory": "Revenue by Category",
   "salesSalesVelocity": "Sales Velocity",
-
   "salesRevenueByCountry": "Revenue by Country",
   "salesRevenueByCity": "Revenue by City",
   "salesOrdersByCountry": "Orders by Country",
   "salesAOVByCountry": "AOV by Country",
-
   "salesAvgFulfillmentTime": "Avg. Fulfillment",
   "salesOrdersWithTracking": "With Tracking",
   "salesPendingOrders": "Pending Orders",
@@ -1179,7 +1172,6 @@
   "salesNoCancellations": "No cancellations",
   "pushNotifications": "Push notifications",
   "pushNotificationsDesc": "Get notified about your order status",
-
   "adminNavAuditLog": "Activity Log",
   "auditTitle": "Activity Log",
   "auditSubtitle": "Track all admin actions across the system",
@@ -1279,5 +1271,14 @@
   "editProduct": "Edit product",
   "settingsTabGeneral": "General",
   "settingsTabPromotions": "Promotions",
-  "settingsTabCatalog": "Catalog"
+  "settingsTabCatalog": "Catalog",
+  "storesSectionTag": "Physical stores",
+  "storesSectionTitle": "Visit us in Galicia",
+  "storesSectionSubtitle": "No appointment needed · We repair while you wait",
+  "storesSectionFooter": "We repair iPhone · Samsung · Xiaomi · All brands — 3-month warranty",
+  "storesWhatsappCta": "Check availability",
+  "storesMoreInfo": "More info",
+  "repairStartTitle": "Start a repair",
+  "repairStartSubtitle": "Choose your nearest store and ask us on WhatsApp — we'll reply right away.",
+  "repairWhatsappCta": "Ask on WhatsApp"
 }

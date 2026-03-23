@@ -1091,14 +1091,12 @@
   "salesPreviousPeriod": "上一期间",
   "salesNoData": "暂无数据",
   "salesMissingCostWarning": "部分产品缺少成本价，利润率数据可能不准确。",
-
   "salesTabOverview": "概览",
   "salesTabRevenue": "收入",
   "salesTabCustomers": "客户",
   "salesTabProducts": "产品",
   "salesTabGeography": "地理",
   "salesTabOperations": "运营",
-
   "salesRepeatRate": "复购率",
   "salesUniqueCustomers": "独立客户",
   "salesStatusFunnel": "订单漏斗",
@@ -1106,7 +1104,6 @@
   "salesRecentActivity": "最近活动",
   "salesOrderCount": "订单数",
   "salesTimeAgo": "前",
-
   "salesTaxCollected": "已征税额",
   "salesShippingRevenue": "运费收入",
   "salesFreeShippingOrders": "免运费",
@@ -1117,7 +1114,6 @@
   "salesMargin": "利润率",
   "salesCategory": "分类",
   "salesProduct": "产品",
-
   "salesNewCustomers30d": "新客户(30天)",
   "salesAvgOrdersPerCustomer": "订单/客户",
   "salesGuestVsRegistered": "游客 vs 注册用户",
@@ -1134,7 +1130,6 @@
   "salesOneTimeCustomers": "一次性",
   "salesRepeatCustomers": "回头客",
   "salesRevenueBySegment": "按类型收入",
-
   "salesTotalSKUs": "SKU总数",
   "salesNeverSold": "从未售出",
   "salesLowStock": "低库存",
@@ -1151,12 +1146,10 @@
   "salesCustomRevenue": "定制收入",
   "salesRevenuePerCategory": "按分类收入",
   "salesSalesVelocity": "销售速度",
-
   "salesRevenueByCountry": "按国家收入",
   "salesRevenueByCity": "按城市收入",
   "salesOrdersByCountry": "按国家订单",
   "salesAOVByCountry": "按国家客单价",
-
   "salesAvgFulfillmentTime": "平均发货时间",
   "salesOrdersWithTracking": "有物流追踪",
   "salesPendingOrders": "待处理订单",
@@ -1179,7 +1172,6 @@
   "salesNoCancellations": "暂无取消",
   "pushNotifications": "推送通知",
   "pushNotificationsDesc": "接收有关您订单的通知",
-
   "adminNavAuditLog": "活动日志",
   "auditTitle": "活动日志",
   "auditSubtitle": "跟踪系统中的所有管理员操作",
@@ -1279,5 +1271,14 @@
   "editProduct": "编辑产品",
   "settingsTabGeneral": "常规",
   "settingsTabPromotions": "促销",
-  "settingsTabCatalog": "目录"
+  "settingsTabCatalog": "目录",
+  "storesSectionTag": "实体门店",
+  "storesSectionTitle": "来加利西亚找我们",
+  "storesSectionSubtitle": "无需预约 · 现场等候维修",
+  "storesSectionFooter": "维修 iPhone · 三星 · 小米 · 所有品牌 — 3个月保修",
+  "storesWhatsappCta": "询问库存",
+  "storesMoreInfo": "更多信息",
+  "repairStartTitle": "开始维修",
+  "repairStartSubtitle": "选择离你最近的门店，通过 WhatsApp 咨询我们 — 我们马上回复。",
+  "repairWhatsappCta": "WhatsApp 咨询"
 }
