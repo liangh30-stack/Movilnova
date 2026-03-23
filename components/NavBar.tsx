@@ -47,7 +47,6 @@ export const NavBar: React.FC<NavBarProps> = ({
 
   const navItems = [
     { label: t('navShop'), path: ROUTES.HOME },
-    { label: t('navCatalog') || 'Productos', path: ROUTES.CATALOG },
     { label: t('navTrack'), path: ROUTES.REPAIR_LOOKUP },
   ];
 
@@ -63,8 +62,8 @@ export const NavBar: React.FC<NavBarProps> = ({
             onClick={() => navigate(ROUTES.HOME)}
             aria-label={t('ariaGoHome')}
           >
-            <div className="w-9 h-9 bg-brand-primary rounded-lg flex items-center justify-center shadow-sm group-hover:bg-brand-primary-dark transition-colors">
-              <span className="text-white font-bold text-sm">MN</span>
+            <div className="w-9 h-9 rounded-lg overflow-hidden shadow-sm flex-shrink-0">
+              <img src="/favicon.svg" alt="MovilNova" width={36} height={36} className="w-full h-full object-cover" />
             </div>
             <span className="hidden sm:inline text-xl font-bold text-brand-dark tracking-tight">{COMPANY.brandName}</span>
           </button>
