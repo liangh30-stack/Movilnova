@@ -12,8 +12,8 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 4.7,
     reviews: 55,
-    mapsUrl: 'https://maps.google.com/?q=Rúa+Ramón+González+54+O+Porriño',
-    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.6228,42.1620,-8.6148,42.1700&layer=mapnik&marker=42.1660,-8.6188',
+    mapsUrl: 'https://maps.google.com/?q=42.1606837,-8.6211395',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.6251,42.1567,-8.6171,42.1647&layer=mapnik&marker=42.1606837,-8.6211395',
     route: ROUTES.LOCAL_PORRINO,
   },
   {
@@ -24,8 +24,8 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 5.0,
     reviews: 23,
-    mapsUrl: 'https://maps.google.com/?q=Rúa+Carabela+a+Pinta+14+Baiona',
-    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.8573,42.1153,-8.8493,42.1233&layer=mapnik&marker=42.1193,-8.8533',
+    mapsUrl: 'https://maps.google.com/?q=42.1203563,-8.8509722',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.8550,42.1163,-8.8470,42.1243&layer=mapnik&marker=42.1203563,-8.8509722',
     route: ROUTES.LOCAL_BAIONA,
   },
   {
@@ -36,8 +36,8 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 4.7,
     reviews: 31,
-    mapsUrl: 'https://maps.google.com/?q=Rúa+Wenceslao+Calvo+Garra+10+Lalín',
-    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.1158,42.6550,-8.1078,42.6630&layer=mapnik&marker=42.6590,-8.1118',
+    mapsUrl: 'https://maps.google.com/?q=42.6616099,-8.1106365',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.1146,42.6576,-8.1066,42.6656&layer=mapnik&marker=42.6616099,-8.1106365',
     route: ROUTES.LOCAL_LALIN,
   },
 ];
