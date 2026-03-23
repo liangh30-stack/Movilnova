@@ -12,9 +12,9 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 4.7,
     reviews: 55,
-    mapsUrl: 'https://maps.google.com/?q=Galaxia+Phone+O+Porrino+Pontevedra',
+    mapsUrl: 'https://maps.google.com/?q=Rúa+Ramón+González+54+O+Porriño',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.6228,42.1620,-8.6148,42.1700&layer=mapnik&marker=42.1660,-8.6188',
     route: ROUTES.LOCAL_PORRINO,
-    tag: 'SEDE PRINCIPAL',
   },
   {
     city: 'Baiona',
@@ -24,9 +24,9 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 5.0,
     reviews: 23,
-    mapsUrl: 'https://maps.google.com/?q=Galaxia+Phone+Baiona+Pontevedra',
+    mapsUrl: 'https://maps.google.com/?q=Rúa+Carabela+a+Pinta+14+Baiona',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.8573,42.1153,-8.8493,42.1233&layer=mapnik&marker=42.1193,-8.8533',
     route: ROUTES.LOCAL_BAIONA,
-    tag: '5.0 PERFECTO',
   },
   {
     city: 'Lalín',
@@ -36,9 +36,9 @@ const STORES = [
     hours: 'Lun–Sáb 10:00–14:00 / 16:30–20:30',
     rating: 4.7,
     reviews: 31,
-    mapsUrl: 'https://maps.google.com/?q=Galaxia+Phone+Lalin+Pontevedra',
+    mapsUrl: 'https://maps.google.com/?q=Rúa+Wenceslao+Calvo+Garra+10+Lalín',
+    mapsEmbed: 'https://www.openstreetmap.org/export/embed.html?bbox=-8.1158,42.6550,-8.1078,42.6630&layer=mapnik&marker=42.6590,-8.1118',
     route: ROUTES.LOCAL_LALIN,
-    tag: 'COMARCA DEZA',
   },
 ];
 
@@ -69,16 +69,29 @@ export default function StoresSection() {
               key={store.city}
               className="group relative bg-white/80 backdrop-blur-xl rounded-[20px] border border-gray-200/60 overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-brand-primary/8 hover:border-brand-primary/20 hover:-translate-y-1 flex flex-col"
             >
-              {/* Top accent line */}
-              <div className="h-[3px] bg-gradient-to-r from-brand-primary/80 via-brand-primary to-brand-primary/80" />
+              {/* Google Maps preview */}
+              <a
+                href={store.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative h-36 overflow-hidden bg-gray-100"
+                aria-label={`Ver ${store.city} en Google Maps`}
+              >
+                <iframe
+                  src={store.mapsEmbed}
+                  width="100%"
+                  height="144"
+                  style={{ border: 0, pointerEvents: 'none' }}
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={`Mapa ${store.city}`}
+                  className="w-full h-full"
+                />
+                {/* Overlay to make whole area clickable */}
+                <div className="absolute inset-0" />
+              </a>
 
               {/* Header */}
-              <div className="px-5 pt-5 pb-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold tracking-[0.15em] text-brand-primary/70 uppercase">
-                    {store.tag}
-                  </span>
-                </div>
+              <div className="px-5 pt-4 pb-3">
                 <h3 className="text-xl font-bold text-gray-900 tracking-tight">
                   {store.city}
                 </h3>
