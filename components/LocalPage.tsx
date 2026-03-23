@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { MapPin, Phone, Clock, Star, Wrench, Shield, ArrowRight, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../routes';
 
 export type CitySlug = 'porrino' | 'baiona' | 'lalin';
@@ -113,6 +114,7 @@ interface LocalPageProps {
 
 export default function LocalPage({ city }: LocalPageProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const data = CITY_DATA[city];
 
   const jsonLd = {
@@ -168,25 +170,25 @@ export default function LocalPage({ city }: LocalPageProps) {
             <div className="flex items-center gap-2 text-brand-primary-light text-sm mb-3">
               <span className="cursor-pointer hover:underline" onClick={() => navigate(ROUTES.HOME)}>MovilNova</span>
               <ChevronRight size={14} />
-              <span>Tiendas</span>
+              <span>{t('localBreadcrumbStores')}</span>
               <ChevronRight size={14} />
               <span>{data.cityName}</span>
             </div>
-            <h1 className="text-4xl font-bold mb-3">Reparación de Móviles en {data.cityName}</h1>
+            <h1 className="text-4xl font-bold mb-3">{t('localHeroTitle', { city: data.cityName })}</h1>
             <p className="text-xl text-green-100 mb-6">{data.description}</p>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
                 <Star size={16} className="text-yellow-300 fill-yellow-300" />
                 <span className="font-bold">{data.rating}</span>
-                <span className="text-green-100">({data.reviews} reseñas)</span>
+                <span className="text-green-100">({data.reviews} {t('localReviews')})</span>
               </div>
               <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
                 <Clock size={16} />
-                <span>Reparación en 1 hora</span>
+                <span>{t('localRepairTime')}</span>
               </div>
               <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
                 <Shield size={16} />
-                <span>3 meses de garantía</span>
+                <span>{t('localWarranty')}</span>
               </div>
             </div>
           </div>
@@ -197,7 +199,7 @@ export default function LocalPage({ city }: LocalPageProps) {
           {/* Info + Mapa */}
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">📍 Cómo llegar</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('localHowToGet')}</h2>
               <div className="flex items-start gap-3">
                 <MapPin className="text-brand-primary mt-1 flex-shrink-0" size={20} />
                 <span className="text-gray-700">{data.address}</span>
@@ -216,35 +218,30 @@ export default function LocalPage({ city }: LocalPageProps) {
                 rel="noopener noreferrer"
                 className="block w-full bg-brand-primary text-white text-center py-3 rounded-lg font-semibold hover:bg-brand-primary-dark transition-colors"
               >
-                Ver en Google Maps →
+                {t('localViewGoogleMaps')}
               </a>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">⚡ Reparación urgente</h2>
-              <p className="text-gray-600 mb-4">¿Se te ha roto la pantalla o el móvil no carga? Tráelo ahora mismo a nuestra tienda en {data.cityName}. Sin cita previa.</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">{t('localUrgentTitle')}</h2>
+              <p className="text-gray-600 mb-4">{t('localUrgentDesc', { city: data.cityName })}</p>
               <div className="space-y-2">
-                {[
-                  '✅ Presupuesto gratuito en el momento',
-                  '✅ Reparación en 30-60 minutos',
-                  '✅ Piezas de calidad con garantía',
-                  '✅ Seguimiento online de tu reparación',
-                ].map((item, i) => (
-                  <p key={i} className="text-gray-700 text-sm">{item}</p>
+                {(['localUrgentCheck1','localUrgentCheck2','localUrgentCheck3','localUrgentCheck4'] as const).map((key) => (
+                  <p key={key} className="text-gray-700 text-sm">{t(key)}</p>
                 ))}
               </div>
               <button
                 onClick={() => navigate(ROUTES.REPAIR_LOOKUP)}
                 className="mt-4 w-full border-2 border-brand-primary text-brand-primary py-2 rounded-lg font-semibold hover:bg-brand-primary-light transition-colors"
               >
-                Ver estado de mi reparación
+                {t('localTrackRepair')}
               </button>
             </div>
           </div>
 
           {/* Servicios y precios */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">🔧 Servicios y Precios en {data.cityName}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('localServicesTitle', { city: data.cityName })}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.services.map((s, i) => (
                 <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition-shadow">
@@ -259,26 +256,26 @@ export default function LocalPage({ city }: LocalPageProps) {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-sm text-gray-500">* Precios orientativos. El precio final depende del modelo. Presupuesto gratuito sin compromiso.</p>
+            <p className="mt-4 text-sm text-gray-500">{t('localPricesDisclaimer')}</p>
           </div>
 
           {/* CTA Tienda Online */}
           <div className="bg-gradient-to-r from-brand-primary-light to-white rounded-xl border border-brand-primary/20 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">📦 Compra online, recibe en casa</h2>
-              <p className="text-gray-600">Fundas, cargadores, cables y accesorios con envío rápido a toda España. También puedes recoger en tienda en {data.cityName}.</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">{t('localShopOnlineTitle')}</h2>
+              <p className="text-gray-600">{t('localShopOnlineDesc', { city: data.cityName })}</p>
             </div>
             <button
               onClick={() => navigate(ROUTES.HOME)}
               className="flex-shrink-0 bg-brand-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-primary-dark transition-colors flex items-center gap-2"
             >
-              Ver tienda <ArrowRight size={18} />
+              {t('localShopOnlineCta')} <ArrowRight size={18} />
             </button>
           </div>
 
           {/* FAQ */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">❓ Preguntas Frecuentes — {data.cityName}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('localFaqTitle', { city: data.cityName })}</h2>
             <div className="space-y-4">
               {data.faq.map((item, i) => (
                 <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
@@ -291,7 +288,7 @@ export default function LocalPage({ city }: LocalPageProps) {
 
           {/* Otras tiendas */}
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">📍 Otras tiendas MovilNova en Galicia</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('localOtherStores')}</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {(Object.keys(CITY_DATA) as CitySlug[]).filter(c => c !== city).map(c => (
                 <button
@@ -305,7 +302,7 @@ export default function LocalPage({ city }: LocalPageProps) {
                   </div>
                   <div className="flex items-center gap-1">
                     <Star size={12} className="text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm text-gray-500">{CITY_DATA[c].rating} · {CITY_DATA[c].reviews} reseñas</span>
+                    <span className="text-sm text-gray-500">{CITY_DATA[c].rating} · {CITY_DATA[c].reviews} {t('localReviews')}</span>
                   </div>
                 </button>
               ))}
