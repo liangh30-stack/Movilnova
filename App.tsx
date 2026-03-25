@@ -10,11 +10,6 @@ import { onAuthChange, signOutUser, type AdminUser } from './services/authServic
 import { getAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } from './services/customerService';
 import { getCustomerOrders as getFirestoreCustomerOrders } from './services/orderService';
 import NavBar from './components/NavBar';
-import MobileMenu from './components/MobileMenu';
-import CartDrawer from './components/CartDrawer';
-import HomeCarousel from './components/HomeCarousel';
-import PromoBannerCarousel from './components/PromoBannerCarousel';
-import SiteFooter from './components/SiteFooter';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useCart } from './hooks/useCart';
@@ -28,6 +23,13 @@ import { Loader2, Wrench, AlertTriangle } from 'lucide-react';
 import { captureException } from './services/sentry';
 import { trackPageView, trackAddToCart } from './services/analytics';
 
+// Lazy load non-critical shell components
+const MobileMenu = lazy(() => import('./components/MobileMenu'));
+const CartDrawer = lazy(() => import('./components/CartDrawer'));
+const HomeCarousel = lazy(() => import('./components/HomeCarousel'));
+const PromoBannerCarousel = lazy(() => import('./components/PromoBannerCarousel'));
+const SiteFooter = lazy(() => import('./components/SiteFooter'));
+
 // Lazy load customer components
 const CustomerAuthModal = lazy(() => import('./components/CustomerAuthModal'));
 const MyAccountPage = lazy(() => import('./components/MyAccountPage'));
@@ -37,6 +39,8 @@ const Hero3D = lazy(() => import('./components/Hero3D'));
 const Storefront = lazy(() => import('./components/Storefront'));
 const NotFound = lazy(() => import('./components/NotFound'));
 const RepairLookup = lazy(() => import('./components/RepairLookup'));
+const RepairServices = lazy(() => import('./components/RepairServices'));
+const MailInRepair = lazy(() => import('./components/MailInRepair'));
 
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
@@ -336,18 +340,21 @@ const App: React.FC = () => {
       </Suspense>
 
       {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        customer={customer}
-        onCustomerAccountClick={() => navigate(ROUTES.CUSTOMER_ACCOUNT)}
-        onSignInClick={() => setIsCustomerAuthOpen(true)}
-        themeMode={themeMode}
-        onThemeChange={setThemeMode}
-        isDark={isDark}
-      />
+      <Suspense fallback={null}>
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          customer={customer}
+          onCustomerAccountClick={() => navigate(ROUTES.CUSTOMER_ACCOUNT)}
+          onSignInClick={() => setIsCustomerAuthOpen(true)}
+          themeMode={themeMode}
+          onThemeChange={setThemeMode}
+          isDark={isDark}
+        />
+      </Suspense>
 
-      <CartDrawer
+      <Suspense fallback={null}>
+        <CartDrawer
         isOpen={isCartOpen}
         cart={cart}
         cartTotal={cartTotal}
@@ -369,6 +376,7 @@ const App: React.FC = () => {
         shopSettings={shopSettings}
         products={products}
       />
+      </Suspense>
 
       {/* Main Content */}
       <main className="pt-20 flex-grow">
@@ -456,7 +464,9 @@ const App: React.FC = () => {
               />
             } />
 
-            <Route path={ROUTES.REPAIR_LOOKUP} element={
+            <Route path={ROUTES.REPAIR_LOOKUP} element={<RepairServices />} />
+            <Route path={ROUTES.REPAIR_SERVICES} element={<RepairServices />} />
+            <Route path={ROUTES.REPAIR_TRACK} element={
               <RepairLookup
                 onBrowseShop={() => navigate(ROUTES.HOME)}
                 lang={lang}
@@ -464,6 +474,7 @@ const App: React.FC = () => {
                 onClearSearch={() => setRepairSearchTerm('')}
               />
             } />
+            <Route path={ROUTES.MAIL_IN_REPAIR} element={<MailInRepair />} />
 
             {/* Checkout — requires authenticated customer */}
             <Route path={ROUTES.CHECKOUT} element={
@@ -590,11 +601,13 @@ const App: React.FC = () => {
 
 
       {!HIDE_FOOTER_PATHS.has(location.pathname) && (
-        <SiteFooter
-          customer={!!customer}
-          onCustomerAccountClick={() => navigate(ROUTES.CUSTOMER_ACCOUNT)}
-          onOpenCustomerAuth={() => { setPendingAccount(true); setIsCustomerAuthOpen(true); }}
-        />
+        <Suspense fallback={null}>
+          <SiteFooter
+            customer={!!customer}
+            onCustomerAccountClick={() => navigate(ROUTES.CUSTOMER_ACCOUNT)}
+            onOpenCustomerAuth={() => { setPendingAccount(true); setIsCustomerAuthOpen(true); }}
+          />
+        </Suspense>
       )}
 
       {/* Cookie Consent Banner */}

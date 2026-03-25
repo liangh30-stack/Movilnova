@@ -1050,3 +1050,123 @@ export const sendOrderNotification = functions.https.onCall(
     return { success: true, emailSent };
   },
 );
+
+// ─── Mail-in Repair Form ───────────────────────────────────────────────
+export const submitMailInRepair = functions.https.onCall(
+  async (request) => {
+    const { name, phone, email, model, problem, password, photos } = request.data as {
+      name: string;
+      phone: string;
+      email: string;
+      model: string;
+      problem: string;
+      password?: string;
+      photos?: string[];
+    };
+
+    if (!name || !phone || !model || !problem) {
+      throw new functions.https.HttpsError('invalid-argument', 'Faltan campos obligatorios');
+    }
+
+    const resend = getResend();
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+    const ticketId = `MR-${Date.now().toString(36).toUpperCase()}`;
+
+    const html = `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+        <h2 style="color:#2563eb;">📦 Nueva solicitud de reparación por correo</h2>
+        <p><strong>Ticket:</strong> ${ticketId}</p>
+        <hr/>
+        <p><strong>Nombre:</strong> ${name}</p>
+        <p><strong>Teléfono:</strong> ${phone}</p>
+        <p><strong>Email:</strong> ${email || 'No indicado'}</p>
+        <hr/>
+        <p><strong>Modelo:</strong> ${model}</p>
+        <p><strong>Problema:</strong></p>
+        <p style="background:#f3f4f6;padding:12px;border-radius:8px;">${problem}</p>
+        ${password ? `<p><strong>Contraseña del dispositivo:</strong> <code>${password}</code></p>` : ''}
+        <hr/>
+        <p style="color:#6b7280;font-size:13px;">Ticket generado automáticamente por movilnova.es</p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `MovilNova <${fromEmail}>`,
+      to: ['movilnovateam@gmail.com'],
+      subject: `[${ticketId}] Reparación correo — ${model} — ${name}`,
+      html,
+    });
+
+    // Save to Firestore
+    await admin.firestore().collection('mailInRepairs').add({
+      ticketId,
+      name, phone, email: email || null,
+      model, problem, password: password || null,
+      status: 'pending',
+      createdAt: admin.firestore.Timestamp.now(),
+    });
+
+    return { success: true, ticketId };
+  }
+);
+
+// ─── Assign Admin Role (one-time setup) ───────────────────────────────────
+export const assignAdminRole = functions.https.onRequest(async (req, res) => {
+  // Security: only callable with a secret key
+  if (req.query.secret !== 'galaxia-setup-2026') {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+  const uid = req.query.uid as string;
+  if (!uid) {
+    res.status(400).json({ error: 'Missing uid' });
+    return;
+  }
+  const db = admin.firestore();
+  await db.collection('users').doc(uid).set({
+    role: 'superadmin',
+    email: 'movilnovateam@gmail.com',
+    updatedAt: admin.firestore.Timestamp.now(),
+  }, { merge: true });
+  res.json({ success: true, uid, role: 'superadmin' });
+});
+
+// ─── Batch SEO Product Update ───────────────────────────────────────────────
+export const batchUpdateProductSEO = functions.https.onRequest(async (req, res) => {
+  if (req.query.secret !== 'galaxia-seo-2026') {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+  const db = admin.firestore();
+  const updates: Record<string, string> = {
+    "CbW3N6zG95jJczywbDHZ": "Convierte tu radio de fábrica en un sistema CarPlay totalmente inalámbrico. Conecta tu iPhone o Android al sistema de tu coche sin cables y disfruta de navegación, música, llamadas y aplicaciones en la pantalla de tu vehículo. Instalación en segundos mediante el puerto USB del coche. Compatible con la mayoría de coches con pantalla CarPlay de fábrica. Ideal para conductores que buscan comodidad y seguridad al volante.",
+    "5lfBEx08SSCzCz4tzUtm": "Cable de datos y carga rápida Micro USB de 1 metro con corriente de 3.4A. Compatible con Android, cámaras, altavoces Bluetooth y otros dispositivos con conector Micro USB. Fabricado en PVC resistente para mayor durabilidad. Ideal para cargar y sincronizar datos de forma rápida y eficiente.",
+    "7ADw3UgtrF0pOv7HViuf": "Cargador inalámbrico de 15W compatible con iPhone, Samsung y cualquier smartphone con carga Qi. Carga tu móvil simplemente colocándolo encima, sin cables ni conectores. Tecnología de carga rápida para recuperar batería en el menor tiempo posible. Diseño elegante y compacto, ideal para escritorio o mesita de noche.",
+    "8dQovVmmCwBUoO9lbO6g": "Cargador de pared USB-C de 36W con tecnología SuperCharge para smartphones Samsung, Xiaomi, OPPO y otros dispositivos Android. Carga tu móvil hasta 4 veces más rápido que los cargadores convencionales. Protección integrada contra sobrecarga, sobrecalentamiento y cortocircuitos. Compacto y ligero, perfecto para casa, oficina o viajes.",
+    "H2N0YAVsZlbmpJB8qKlU": "Cable HDMI de alta velocidad de 5 metros con soporte para resolución 4K Ultra HD. Compatible con televisores, monitores, proyectores, consolas de videojuegos y ordenadores. Transmisión de vídeo y audio digital sin pérdidas con ancho de banda de 18Gbps. Conectores bañados en oro para mejor conducción y mayor durabilidad.",
+    "HUiG2HP2yPrSoeSMjQ6O": "Cable Micro USB trenzado de nylon de 2 metros con carga de 2.4A. La malla de nylon trenzado garantiza mayor resistencia y durabilidad frente al uso diario. Compatible con Samsung, Huawei, LG y todos los dispositivos con puerto Micro USB. Ideal para cargar cómodamente desde el sofá o la cama sin quedarte sin cable.",
+    "MHtJol45l0aArXwYqDZw": "Cable USB-C trenzado de carga rápida 18W con corriente máxima de 3A. Longitud de 1 metro para máxima comodidad. Compatible con Samsung Galaxy, Xiaomi, OPPO, Huawei y todos los dispositivos con conector USB-C. La malla trenzada de alta resistencia protege el cable de roturas y dobleces repetidos.",
+    "QGXKT43jIiaa4EOq347d": "Cable de carga rápida de 3 metros en color blanco con 18W y 3A de corriente. Su longitud extra te da libertad para usar el móvil mientras carga, sin importar dónde esté el enchufe. Compatible con dispositivos USB-C. Ideal para dormitorio, salón o coche.",
+    "CaXz29WycvbCxXmBvcPJ": "Cable Lightning trenzado de nylon de 2 metros con carga de 2.4A. Compatible con iPhone 14, 13, 12, 11, XS, XR, X, SE y todos los modelos con conector Lightning, así como iPad y AirPods. La malla trenzada de nylon garantiza máxima resistencia frente al uso diario.",
+    "Qjx45kkap4bagZNvPWJe": "Cargador de pared con doble puerto: USB-A con Quick Charge 3.0 (18W) y USB-C con Power Delivery (20W). Carga simultáneamente dos dispositivos con máxima velocidad. Compatible con iPhone, Samsung, Xiaomi y cualquier dispositivo con USB-A o USB-C. Compacto y ligero para llevar a todas partes.",
+    "U9glhhSObZnGcP1ARpG1": "Cable de audio Jack 3.5mm macho a macho de 1 metro. Ideal para conectar tu smartphone, tablet u ordenador a altavoces, amplificadores o sistemas de audio. Transmisión de audio estéreo de alta calidad sin pérdidas. Compatible con todos los dispositivos que tengan conector Jack 3.5mm.",
+    "EyFi7NiHZT8WRZBINvHZ": "Cable reforzado de USB-C a Lightning de 1 metro con carga rápida de 30W y 2.5A. Compatible con iPhone 14, 13, 12, 11 y todos los modelos con Lightning, optimizado para carga rápida con adaptadores USB-C Power Delivery. La cubierta reforzada protege el cable en los puntos de mayor tensión.",
+    "E0y8YSZW5CvhbVRb7J4O": "Cargador de pared USB-C de 36W y 3A sin cable incluido. Compatible con smartphones Samsung, Xiaomi, iPhone 15 y todos los dispositivos con USB-C. Carga rápida con protocolo PD (Power Delivery). Diseño compacto y ligero con protecciones integradas contra sobrecarga y sobrecalentamiento.",
+    "XPl6FGlaf8LAf92AyCpH": "Cargador 2 en 1 inalámbrico para Apple Watch y conector Lightning para iPhone. Carga ambos dispositivos Apple simultáneamente con un solo cargador. Diseño compacto ideal para la mesita de noche. Compatible con todas las versiones de Apple Watch y todos los iPhone con conector Lightning.",
+    "FB5dpuOsPifU8xTLgPXL": "Auriculares deportivos Bluetooth de cuello con imán magnético que mantiene los cascos unidos cuando no los usas. Resistentes al sudor, perfectos para deporte, gimnasio o running. Sonido estéreo de alta calidad con bajos potentes. Conexión Bluetooth estable y batería de larga duración para sesiones de entrenamiento sin interrupciones.",
+    "7lUrAMTyWkIDfnv7tFYq": "Funda de acrílico transparente disponible en 5 colores para smartphone. Muestra el diseño original de tu móvil mientras lo proteges de golpes y arañazos. Material rígido de alta resistencia que no amarillea con el tiempo. Diseño ultrafino que mantiene el perfil elegante de tu dispositivo. Compatible con carga inalámbrica.",
+    "Pa47SlCVFCu4X9xinZLb": "Cordón muñequera brillante para móvil con diseños variados y llamativos. Sujeta tu smartphone a la muñeca de forma cómoda y segura para no perderlo en ningún momento. Añade un toque de personalidad y estilo a tu móvil. Compatible con la mayoría de fundas con ranura para cordón.",
+    "DNUlQ25HL0WVWfzpJ3lO": "Cargador de pared con cable USB-C integrado y potencia de 96W con tecnología Power Delivery. Diseño desmontable con certificación fireproof para máxima seguridad. Compatible con portátiles, tablets y smartphones que soporten carga USB-C PD. Perfecto para cargar múltiples dispositivos con una sola toma de corriente.",
+    "DesxZsX8WxCSbwBhrVaA": "Hub adaptador 4 en 2 con conector USB-C y USB 3.0 en color gris. Amplía tu conectividad con 3 puertos USB-C y 1 puerto USB 3.0 para conectar múltiples periféricos simultáneamente. Compatible con MacBook, iPad Pro, portátiles Windows y cualquier dispositivo con puerto USB-C. Transmisión de datos a alta velocidad.",
+    "7nUuq88URsy344MPBxrF": "Cargador de pared SuperCharge con cable Lightning incluido para iPhone. Potencia de 36W para una carga ultrarrápida con protocolo Power Delivery. Compatible con iPhone 14, 13, 12, 11 y todos los modelos con conector Lightning. Reduce el tiempo de carga a la mitad respecto a cargadores estándar.",
+  };
+
+  const batch = db.batch();
+  let count = 0;
+  for (const [id, description] of Object.entries(updates)) {
+    batch.update(db.collection('products').doc(id), { description });
+    count++;
+  }
+  await batch.commit();
+  res.json({ success: true, updated: count });
+});

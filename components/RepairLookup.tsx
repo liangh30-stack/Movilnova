@@ -110,21 +110,25 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
   const currentStep = result ? getStatusStep(result.status) : 0;
 
   return (
-    <div className="min-h-screen bg-brand-light" aria-label={t('trackTitle')}>
+    <div className="min-h-screen relative" aria-label={t('trackTitle')}>
 
-      {/* ── Hero with repair workshop background ── */}
+      {/* ── Full-page background image ── */}
+      <div
+        className="fixed inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1550041473-d296a3a8a18a?w=1920&q=80&auto=format&fit=crop')`,
+          filter: 'blur(3px)',
+          transform: 'scale(1.05)',
+        }}
+        aria-hidden="true"
+      />
+      {/* Dark overlay over full page */}
+      <div className="fixed inset-0 bg-gray-900/75" aria-hidden="true" />
+
+      {/* ── Hero section ── */}
       <div className="relative overflow-hidden">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&q=80&auto=format&fit=crop')`,
-            filter: 'blur(3px)',
-          }}
-          aria-hidden="true"
-        />
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90" aria-hidden="true" />
+        {/* Dark gradient overlay for hero */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/20 via-transparent to-transparent" aria-hidden="true" />
 
         {/* Hero content */}
         <div className="relative z-10 max-w-2xl mx-auto px-4 py-16 text-center">
@@ -152,24 +156,24 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 -mt-8 pb-12">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 -mt-8 pb-12">
         {/* Search Form Card — elevated over hero */}
 
         {/* Search Form Card */}
-        <div className="bg-brand-surface rounded-lg border border-brand-border shadow-sm p-8 mb-8">
+        <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-xl p-8 mb-8">
           <form onSubmit={handleSearch} className="space-y-5" aria-label={t('searchButton')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="repair-order-id" className="block text-sm font-semibold text-brand-dark mb-2">{t('orderLabel')}</label>
+                <label htmlFor="repair-order-id" className="block text-sm font-semibold text-white mb-2">{t('orderLabel')}</label>
                 <div className="relative">
-                  <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} aria-hidden="true" />
+                  <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60" size={18} aria-hidden="true" />
                   <input
                     id="repair-order-id"
                     type="text"
                     placeholder="WX-8888"
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value.toUpperCase())}
-                    className="w-full bg-brand-input border border-brand-border rounded-lg pl-12 pr-4 py-3.5 text-brand-dark font-medium focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all text-sm"
+                    className="w-full bg-white/15 border border-white/25 rounded-lg pl-12 pr-4 py-3.5 text-white placeholder-white/40 font-medium focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm"
                     required
                     aria-label={t('orderLabel')}
                   />
@@ -177,16 +181,16 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
               </div>
 
               <div>
-                <label htmlFor="repair-phone" className="block text-sm font-semibold text-brand-dark mb-2">{t('phoneLabel')}</label>
+                <label htmlFor="repair-phone" className="block text-sm font-semibold text-white mb-2">{t('phoneLabel')}</label>
                 <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} aria-hidden="true" />
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60" size={18} aria-hidden="true" />
                   <input
                     id="repair-phone"
                     type="tel"
                     placeholder="600 123 456"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-brand-input border border-brand-border rounded-lg pl-12 pr-4 py-3.5 text-brand-dark font-medium focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all text-sm"
+                    className="w-full bg-white/15 border border-white/25 rounded-lg pl-12 pr-4 py-3.5 text-white placeholder-white/40 font-medium focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm"
                     required
                     aria-label={t('phoneLabel')}
                   />
@@ -226,37 +230,37 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
           <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
 
             {/* Status Card */}
-            <div className="bg-brand-surface rounded-lg border border-brand-border shadow-sm overflow-hidden">
+            <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-xl overflow-hidden">
               {/* Order Header */}
-              <div className="p-6 border-b border-brand-border">
+              <div className="p-6 border-b border-white/15">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-medium text-brand-muted uppercase tracking-wider">{t('repairOrder')}</span>
+                    <span className="text-xs font-medium text-white/60 uppercase tracking-wider">{t('repairOrder')}</span>
                     <button
                       onClick={copyOrderId}
-                      className="flex items-center gap-2 bg-brand-light hover:bg-brand-light px-3 py-1.5 rounded-lg transition-colors border border-brand-border"
+                      className="flex items-center gap-2 bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-lg transition-colors border border-white/20"
                       aria-label={`Copy order ID ${enrichedResult.id}`}
                     >
-                      <span className="font-mono font-semibold text-brand-dark text-sm">{enrichedResult.id}</span>
+                      <span className="font-mono font-semibold text-white text-sm">{enrichedResult.id}</span>
                       {copied ? <Check size={14} className="text-brand-primary" /> : <Copy size={14} className="text-brand-muted" />}
                     </button>
                   </div>
                   <span className={`px-4 py-1.5 rounded-lg text-xs font-semibold ${
-                    currentStep >= 4 ? 'bg-brand-primary-light text-brand-primary' : 'bg-brand-light text-brand-primary'
+                    currentStep >= 4 ? 'bg-brand-primary/80 text-white' : 'bg-white/20 text-white'
                   }`} aria-label={currentStep >= 4 ? t('repairStatusReady') : t('repairStatusProgress')}>
                     {currentStep >= 4 ? t('repairStatusReady') : t('repairStatusProgress')}
                   </span>
                 </div>
 
-                <h2 className="text-xl font-bold text-brand-dark tracking-tight">{enrichedResult.device}</h2>
-                <p className="text-brand-muted text-sm mt-1">{enrichedResult.issue}</p>
+                <h2 className="text-xl font-bold text-white tracking-tight">{enrichedResult.device}</h2>
+                <p className="text-white/65 text-sm mt-1">{enrichedResult.issue}</p>
               </div>
 
               {/* Progress Steps */}
-              <div className="p-6 bg-brand-light" aria-label="Repair progress">
+              <div className="p-6 bg-white/5" aria-label="Repair progress">
                 <div className="flex items-center justify-between relative">
                   {/* Progress line background */}
-                  <div className="absolute top-5 left-0 right-0 h-0.5 bg-brand-border mx-8" aria-hidden="true" />
+                  <div className="absolute top-5 left-0 right-0 h-0.5 bg-white/20 mx-8" aria-hidden="true" />
                   {/* Progress line filled */}
                   <div
                     className="absolute top-5 left-0 h-0.5 bg-brand-primary mx-8 transition-all duration-500"
@@ -273,13 +277,13 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
                       <div key={idx} className="flex flex-col items-center flex-1 relative z-10" aria-label={`${step.label}: ${isCompleted ? 'completed' : isCurrent ? 'current' : 'pending'}`}>
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
                           isCompleted ? 'bg-brand-primary text-white shadow-sm' :
-                          isCurrent ? 'bg-brand-surface text-brand-primary ring-2 ring-brand-primary shadow-sm' :
-                          'bg-brand-surface text-brand-muted border border-brand-border'
+                          isCurrent ? 'bg-white/20 text-brand-primary ring-2 ring-brand-primary shadow-sm' :
+                          'bg-white/10 text-white/40 border border-white/20'
                         }`}>
                           {isCompleted ? <CheckCircle size={20} /> : <Icon size={18} />}
                         </div>
                         <span className={`text-[11px] mt-2.5 text-center font-medium leading-tight max-w-[60px] ${
-                          isCompleted || isCurrent ? 'text-brand-dark' : 'text-brand-muted'
+                          isCompleted || isCurrent ? 'text-white' : 'text-white/50'
                         }`}>
                           {step.label}
                         </span>
@@ -293,28 +297,28 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
             {/* Details Grid - responsive */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Device Info */}
-              <div className="bg-brand-surface rounded-lg p-5 border border-brand-border shadow-sm" aria-label={t('repairDeviceInfo')}>
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-5 border border-white/20 shadow-sm" aria-label={t('repairDeviceInfo')}>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 bg-brand-primary-light rounded-lg flex items-center justify-center" aria-hidden="true">
-                    <Smartphone size={16} className="text-brand-primary" />
+                  <div className="w-8 h-8 bg-brand-primary/80 rounded-lg flex items-center justify-center" aria-hidden="true">
+                    <Smartphone size={16} className="text-white" />
                   </div>
-                  <h4 className="text-sm font-semibold text-brand-dark">{t('repairDeviceInfo')}</h4>
+                  <h4 className="text-sm font-semibold text-white">{t('repairDeviceInfo')}</h4>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-brand-muted">IMEI</span>
-                    <span className="font-mono font-medium text-brand-dark">{enrichedResult.imei}</span>
+                    <span className="text-white/60">IMEI</span>
+                    <span className="font-mono font-medium text-white">{enrichedResult.imei}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-brand-muted">{t('repairTechnician')}</span>
-                    <span className="font-medium text-brand-dark flex items-center gap-1.5">
+                    <span className="text-white/60">{t('repairTechnician')}</span>
+                    <span className="font-medium text-white flex items-center gap-1.5">
                       <User size={12} />
                       {enrichedResult.technicianName}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-brand-muted">{t('repairWarranty')}</span>
-                    <span className="font-medium text-brand-primary flex items-center gap-1.5">
+                    <span className="text-white/60">{t('repairWarranty')}</span>
+                    <span className="font-medium text-emerald-300 flex items-center gap-1.5">
                       <Shield size={12} />
                       {enrichedResult.warranty}
                     </span>
@@ -323,24 +327,24 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
               </div>
 
               {/* Payment Info */}
-              <div className="bg-brand-surface rounded-lg p-5 border border-brand-border shadow-sm" aria-label={t('repairPayment')}>
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-5 border border-white/20 shadow-sm" aria-label={t('repairPayment')}>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 bg-brand-primary-light rounded-lg flex items-center justify-center" aria-hidden="true">
-                    <FileText size={16} className="text-brand-primary" />
+                  <div className="w-8 h-8 bg-brand-primary/80 rounded-lg flex items-center justify-center" aria-hidden="true">
+                    <FileText size={16} className="text-white" />
                   </div>
-                  <h4 className="text-sm font-semibold text-brand-dark">{t('repairPayment')}</h4>
+                  <h4 className="text-sm font-semibold text-white">{t('repairPayment')}</h4>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-brand-muted">{t('repairTotal')}</span>
-                    <span className="font-semibold text-brand-dark">&euro;{enrichedResult.total.toFixed(2)}</span>
+                    <span className="text-white/60">{t('repairTotal')}</span>
+                    <span className="font-semibold text-white">&euro;{enrichedResult.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-brand-muted">{t('repairDeposit')}</span>
-                    <span className="font-medium text-brand-primary">-&euro;{enrichedResult.deposit.toFixed(2)}</span>
+                    <span className="text-white/60">{t('repairDeposit')}</span>
+                    <span className="font-medium text-emerald-300">-&euro;{enrichedResult.deposit.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-sm pt-3 border-t border-brand-border">
-                    <span className="font-semibold text-brand-dark">{t('repairBalance')}</span>
+                  <div className="flex justify-between text-sm pt-3 border-t border-white/15">
+                    <span className="font-semibold text-white">{t('repairBalance')}</span>
                     <span className="font-bold text-brand-primary text-lg">&euro;{(enrichedResult.total - enrichedResult.deposit).toFixed(2)}</span>
                   </div>
                 </div>
@@ -361,7 +365,7 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
               </a>
               <button
                 onClick={onBrowseShop}
-                className="flex-1 bg-brand-surface hover:bg-brand-light text-brand-dark font-semibold py-3.5 rounded-lg transition-all flex items-center justify-center gap-2.5 text-sm border border-brand-border shadow-sm"
+                className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 rounded-lg transition-all flex items-center justify-center gap-2.5 text-sm border border-white/20 shadow-sm"
                 aria-label={t('repairBackToShop')}
               >
                 <ArrowLeft size={18} />
@@ -371,7 +375,7 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
 
             {/* Store Info */}
             <div className="text-center py-4">
-              <p className="text-sm text-brand-muted">
+              <p className="text-sm text-white/60">
                 {enrichedResult.storeName} &middot; {enrichedResult.storePhone}
               </p>
             </div>
@@ -381,21 +385,21 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
         {/* Empty State Hint */}
         {result === undefined && (
           <div className="text-center py-12" aria-label={t('repairHint')}>
-            <div className="w-20 h-20 bg-brand-light rounded-lg flex items-center justify-center mx-auto mb-5 border border-brand-border" aria-hidden="true">
-              <CircleDot size={40} className="text-brand-text-tertiary" />
+            <div className="w-20 h-20 bg-white/10 rounded-lg flex items-center justify-center mx-auto mb-5 border border-white/20" aria-hidden="true">
+              <CircleDot size={40} className="text-white/40" />
             </div>
-            <p className="text-brand-muted">{t('repairHint')}</p>
+            <p className="text-white/60">{t('repairHint')}</p>
           </div>
         )}
 
         {/* ── Iniciar una reparación ── */}
         <div className="mt-12">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-primary/10 rounded-xl mb-4">
-              <Wrench size={24} className="text-brand-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-primary/80 rounded-xl mb-4">
+              <Wrench size={24} className="text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-brand-dark tracking-tight">{t('repairStartTitle')}</h2>
-            <p className="text-brand-muted mt-2 text-sm max-w-sm mx-auto">
+            <h2 className="text-2xl font-bold text-white tracking-tight">{t('repairStartTitle')}</h2>
+            <p className="text-white/65 mt-2 text-sm max-w-sm mx-auto">
               {t('repairStartSubtitle')}
             </p>
           </div>
@@ -421,12 +425,12 @@ const RepairLookup: React.FC<RepairLookupProps> = ({ onBrowseShop, initialSearch
                 wa: 'https://wa.me/34611321267?text=Hola%2C%20quiero%20iniciar%20una%20reparaci%C3%B3n%20en%20vuestra%20tienda%20de%20Lal%C3%ADn.%20%C2%BFPod%C3%A9is%20ayudarme%3F%20%F0%9F%93%B1',
               },
             ].map((store) => (
-              <div key={store.city} className="bg-brand-surface rounded-2xl border border-brand-border p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div key={store.city} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
                 {/* Store info */}
                 <div>
-                  <h3 className="font-bold text-brand-dark text-lg">{store.city}</h3>
-                  <p className="text-brand-muted text-xs mt-1">{store.address}</p>
-                  <a href={`tel:${store.phone.replace(/\s/g,'')}`} className="text-xs text-brand-primary font-medium mt-0.5 inline-block hover:underline">
+                  <h3 className="font-bold text-white text-lg">{store.city}</h3>
+                  <p className="text-white/60 text-xs mt-1">{store.address}</p>
+                  <a href={`tel:${store.phone.replace(/\s/g,'')}`} className="text-xs text-emerald-300 font-medium mt-0.5 inline-block hover:underline">
                     {store.phone}
                   </a>
                 </div>

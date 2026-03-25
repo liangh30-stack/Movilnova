@@ -47,7 +47,7 @@ export const NavBar: React.FC<NavBarProps> = ({
 
   const navItems = [
     { label: t('navShop'), path: ROUTES.HOME },
-    { label: t('navTrack'), path: ROUTES.REPAIR_LOOKUP },
+    { label: 'Reparaciones', path: ROUTES.REPAIR_LOOKUP },
   ];
 
   const themeLabel = isDark ? t('themeLight') : t('themeDark');

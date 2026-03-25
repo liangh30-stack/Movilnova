@@ -1,9 +1,11 @@
 User-agent: *
 Allow: /
 
-# No indexar panel de administración
+# No indexar páginas internas
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api/
+Disallow: /miperfil
+Disallow: /pagar
 
 Sitemap: https://movilnova.es/sitemap.xml

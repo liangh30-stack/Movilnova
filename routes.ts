@@ -3,6 +3,9 @@ export const ROUTES = {
   CATALOG: '/productos',
   PRODUCT: '/producto/:id',
   REPAIR_LOOKUP: '/reparaciones',
+  REPAIR_SERVICES: '/servicios',
+  MAIL_IN_REPAIR: '/envio-reparacion',
+  REPAIR_TRACK: '/seguimiento',
 
   // Local landing pages
   LOCAL_PORRINO: '/tienda/porrino',
