@@ -1,70 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
+  <!-- Página principal -->
   <url>
     <loc>https://movilnova.es/</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://movilnova.es/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://movilnova.es/?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://movilnova.es/?lang=de" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://movilnova.es/?lang=zh" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/" />
+    <image:image>
+      <image:loc>https://movilnova.es/og-image.png</image:loc>
+      <image:title>MovilNova - Reparación de móviles y accesorios</image:title>
+    </image:image>
   </url>
 
   <!-- Páginas locales por ciudad -->
   <url>
     <loc>https://movilnova.es/tienda/porrino</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/tienda/porrino" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/tienda/porrino" />
   </url>
   <url>
     <loc>https://movilnova.es/tienda/baiona</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/tienda/baiona" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/tienda/baiona" />
   </url>
   <url>
     <loc>https://movilnova.es/tienda/lalin</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/tienda/lalin" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/tienda/lalin" />
   </url>
 
   <!-- Catálogo y servicios -->
   <url>
     <loc>https://movilnova.es/productos</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/productos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://movilnova.es/productos?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/productos" />
   </url>
   <url>
     <loc>https://movilnova.es/reparaciones</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/reparaciones" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://movilnova.es/reparaciones?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/reparaciones" />
   </url>
   <url>
     <loc>https://movilnova.es/servicios</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/servicios" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://movilnova.es/servicios?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/servicios" />
   </url>
   <url>
     <loc>https://movilnova.es/seguimiento</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/seguimiento" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/seguimiento" />
   </url>
   <url>
     <loc>https://movilnova.es/envio-reparacion</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://movilnova.es/envio-reparacion" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://movilnova.es/envio-reparacion" />
   </url>
   <url>
     <loc>https://movilnova.es/devoluciones</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-03-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

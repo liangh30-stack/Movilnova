@@ -1,11 +1,43 @@
+# MovilNova - robots.txt
+# https://movilnova.es/
+
 User-agent: *
 Allow: /
 
-# No indexar páginas internas
+# Páginas públicas indexables
+Allow: /productos
+Allow: /reparaciones
+Allow: /servicios
+Allow: /seguimiento
+Allow: /envio-reparacion
+Allow: /tienda/
+
+# No indexar páginas internas / privadas
 Disallow: /admin
+Disallow: /admin/*
 Disallow: /dashboard
+Disallow: /dashboard/*
 Disallow: /api/
 Disallow: /miperfil
+Disallow: /miperfil/*
 Disallow: /pagar
+Disallow: /pagar/*
 
+# No indexar recursos técnicos
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /__/
+Disallow: /assets/
+
+# Crawl-delay para bots agresivos
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+# Sitemap
 Sitemap: https://movilnova.es/sitemap.xml

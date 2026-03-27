@@ -11,6 +11,7 @@ import { getAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddre
 import { getCustomerOrders as getFirestoreCustomerOrders } from './services/orderService';
 import NavBar from './components/NavBar';
 import ScrollToTop from './components/ScrollToTop';
+import SEOHead from './components/SEOHead';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useCart } from './hooks/useCart';
 import { useCheckout } from './hooks/useCheckout';
@@ -50,6 +51,8 @@ const LocalPage = lazy(() => import('./components/LocalPage'));
 const StoresSection = lazy(() => import('./components/StoresSection'));
 const FeaturedProducts = lazy(() => import('./components/FeaturedProducts'));
 const CheckoutPage = lazy(() => import('./components/CheckoutPage'));
+const FloatingCTA = lazy(() => import('./components/FloatingCTA'));
+const TrustBanner = lazy(() => import('./components/TrustBanner'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -311,12 +314,18 @@ const App: React.FC = () => {
           }
         }}
         onMobileMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        onSearchClick={() => { navigate(ROUTES.CATALOG); setTimeout(() => document.querySelector<HTMLInputElement>('[data-search-input]')?.focus(), 300); }}
         adminUser={adminUser}
         customer={customer}
         themeMode={themeMode}
         onThemeChange={setThemeMode}
         isDark={isDark}
       />
+
+      {/* Trust Banner — debajo del navbar */}
+      <Suspense fallback={null}>
+        <TrustBanner />
+      </Suspense>
 
       {/* Customer Auth Modal */}
       <Suspense fallback={null}>
@@ -379,11 +388,16 @@ const App: React.FC = () => {
       </Suspense>
 
       {/* Main Content */}
-      <main className="pt-20 flex-grow">
+      <main className="pt-28 flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path={ROUTES.HOME} element={
               <>
+                <SEOHead
+                  title="Reparación de móviles y accesorios"
+                  description="MovilNova: reparación de móviles con garantía, fundas, cargadores y accesorios al mejor precio. Reserva online y seguimiento en tiempo real. Tiendas en Pontevedra."
+                  path="/"
+                />
                 <PromoBannerCarousel
                   shopBannerEnabled={shopSettings.bannerEnabled}
                   shopBannerText={shopSettings.bannerText}
@@ -445,6 +459,12 @@ const App: React.FC = () => {
             } />
 
             <Route path={ROUTES.CATALOG} element={
+              <>
+              <SEOHead
+                title="Accesorios para móvil - Fundas, Cargadores, Cables"
+                description="Compra fundas, cargadores, cables y accesorios para iPhone, Samsung, Xiaomi y más marcas. Envío rápido en España. Mejores precios garantizados."
+                path="/productos"
+              />
               <Storefront
                 products={products}
                 onAddToCart={handleAddToCart}
@@ -462,6 +482,7 @@ const App: React.FC = () => {
                 showOffersOnly={showOffersOnly}
                 onClearOffersFilter={() => setShowOffersOnly(false)}
               />
+              </>
             } />
 
             <Route path={ROUTES.REPAIR_LOOKUP} element={<RepairServices />} />
@@ -613,6 +634,11 @@ const App: React.FC = () => {
       {/* Cookie Consent Banner */}
       <Suspense fallback={null}>
         <CookieConsentBanner onViewCookiePolicy={() => navigate(ROUTES.LEGAL_COOKIES)} />
+      </Suspense>
+
+      {/* Floating WhatsApp + Repair CTA */}
+      <Suspense fallback={null}>
+        <FloatingCTA />
       </Suspense>
     </div>
   );

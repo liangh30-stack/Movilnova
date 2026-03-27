@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import { initSentry } from './services/sentry';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -41,11 +42,13 @@ const root = ReactDOM.createRoot(rootElement);
 i18nReady.then(() => {
   root.render(
     <React.StrictMode>
-      <ErrorBoundary>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ErrorBoundary>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ErrorBoundary>
+      </HelmetProvider>
     </React.StrictMode>
   );
 });

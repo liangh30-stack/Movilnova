@@ -45,10 +45,22 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
 
+    <!-- Hreflang: idiomas alternativos -->
+    <link rel="alternate" hreflang="es" href="https://movilnova.es/" />
+    <link rel="alternate" hreflang="en" href="https://movilnova.es/?lang=en" />
+    <link rel="alternate" hreflang="fr" href="https://movilnova.es/?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://movilnova.es/?lang=de" />
+    <link rel="alternate" hreflang="zh" href="https://movilnova.es/?lang=zh" />
+    <link rel="alternate" hreflang="x-default" href="https://movilnova.es/" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Precargar recursos críticos -->
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRH3Z2WJS6"></script>
@@ -101,7 +113,7 @@
       "department": [
         {
           "@type": "LocalBusiness",
-          "name": "Galaxia Phone Baiona",
+          "name": "MovilNova Baiona",
           "telephone": "+34 623 97 93 19",
           "url": "https://movilnova.es/tienda/baiona",
           "address": {
@@ -121,7 +133,7 @@
         },
         {
           "@type": "LocalBusiness",
-          "name": "Galaxia Phone Lalín",
+          "name": "MovilNova Lalín",
           "telephone": "+34 611 32 12 67",
           "url": "https://movilnova.es/tienda/lalin",
           "address": {
@@ -171,7 +183,9 @@
         ]
       },
       "sameAs": [
-        "https://movilnova.es/"
+        "https://www.instagram.com/movilnova",
+        "https://www.facebook.com/movilnova",
+        "https://maps.google.com/?cid=GOOGLE_CID_HERE"
       ]
     }
     </script>
@@ -204,10 +218,61 @@
         { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://movilnova.es/" },
         { "@type": "ListItem", "position": 2, "name": "Productos", "item": "https://movilnova.es/productos" },
         { "@type": "ListItem", "position": 3, "name": "Reparaciones", "item": "https://movilnova.es/reparaciones" },
-        { "@type": "ListItem", "position": 4, "name": "Seguimiento de reparación", "item": "https://movilnova.es/seguimiento" },
-        { "@type": "ListItem", "position": 5, "name": "Tienda O Porriño", "item": "https://movilnova.es/tienda/porrino" },
-        { "@type": "ListItem", "position": 6, "name": "Tienda Baiona", "item": "https://movilnova.es/tienda/baiona" },
-        { "@type": "ListItem", "position": 7, "name": "Tienda Lalín", "item": "https://movilnova.es/tienda/lalin" }
+        { "@type": "ListItem", "position": 4, "name": "Servicios", "item": "https://movilnova.es/servicios" },
+        { "@type": "ListItem", "position": 5, "name": "Seguimiento", "item": "https://movilnova.es/seguimiento" },
+        { "@type": "ListItem", "position": 6, "name": "Tienda O Porriño", "item": "https://movilnova.es/tienda/porrino" },
+        { "@type": "ListItem", "position": 7, "name": "Tienda Baiona", "item": "https://movilnova.es/tienda/baiona" },
+        { "@type": "ListItem", "position": 8, "name": "Tienda Lalín", "item": "https://movilnova.es/tienda/lalin" }
+      ]
+    }
+    </script>
+
+    <!-- JSON-LD: FAQPage (mejora visibilidad en resultados de Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuánto cuesta reparar la pantalla de un móvil?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El precio depende del modelo. En MovilNova ofrecemos presupuesto sin compromiso. Las reparaciones de pantalla empiezan desde 39€ para modelos básicos. Puedes reservar online y recibir un presupuesto en minutos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto tiempo tarda una reparación?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La mayoría de reparaciones se realizan en el mismo día, entre 30 minutos y 2 horas dependiendo del tipo de avería. Puedes hacer seguimiento en tiempo real desde nuestra web."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Ofrecen garantía en las reparaciones?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, todas nuestras reparaciones incluyen garantía. Utilizamos piezas de alta calidad y nuestros técnicos están especializados en todas las marcas: iPhone, Samsung, Xiaomi, Huawei y más."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo enviar mi móvil por correo para repararlo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, ofrecemos servicio de envío de reparación para toda España. Solicita tu envío desde nuestra web en movilnova.es/envio-reparacion y te enviamos una etiqueta de envío prepagada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Dónde están las tiendas de MovilNova?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tenemos tiendas en O Porriño (Rúa Ramón González, 54), Baiona (Rúa Carabela a Pinta, 14) y Lalín (Rúa Wenceslao Calvo Garra, 10), todas en la provincia de Pontevedra, Galicia."
+          }
+        }
       ]
     }
     </script>

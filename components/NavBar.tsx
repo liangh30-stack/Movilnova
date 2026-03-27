@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCart, User, Globe, Menu, Settings, ChevronDown, Sun, Moon, LayoutGrid } from 'lucide-react';
+import { ShoppingCart, User, Globe, Menu, Settings, ChevronDown, Sun, Moon, LayoutGrid, Search } from 'lucide-react';
 import { Language } from '../types';
 import { ROUTES } from '../routes';
 import { LegacyLanguage } from '../i18n';
@@ -18,6 +18,7 @@ interface NavBarProps {
   onCartClick: () => void;
   onUserClick: () => void;
   onMobileMenuClick: () => void;
+  onSearchClick?: () => void;
   adminUser: AdminUser | null;
   customer: { displayName: string } | null;
   themeMode: ThemeMode;
@@ -35,6 +36,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   onCartClick,
   onUserClick,
   onMobileMenuClick,
+  onSearchClick,
   adminUser,
   customer,
   themeMode,
@@ -106,6 +108,18 @@ export const NavBar: React.FC<NavBarProps> = ({
 
           {/* Right Actions */}
           <div className="flex items-center gap-1">
+            {/* Search */}
+            {onSearchClick && (
+              <button
+                onClick={onSearchClick}
+                className="p-2 text-brand-muted hover:text-brand-dark transition-colors rounded-lg hover:bg-brand-light"
+                aria-label={t('ariaSearch', 'Buscar productos')}
+                title={t('ariaSearch', 'Buscar')}
+              >
+                <Search size={18} />
+              </button>
+            )}
+
             {/* Theme Toggle */}
             <button
               onClick={() => onThemeChange(isDark ? 'light' : 'dark')}

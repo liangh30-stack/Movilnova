@@ -19,9 +19,10 @@ export default defineConfig(({ mode }) => {
           registerType: 'autoUpdate',
           includeAssets: ['favicon.svg', 'apple-touch-icon.svg'],
           manifest: {
-            name: 'MovilNova - 维修店智能管理平台',
+            name: 'MovilNova - Reparación de móviles y accesorios',
             short_name: 'MovilNova',
-            description: '在线预约·进度追踪·配件商城 | AI 辅助诊断',
+            description: 'Reserva online · Seguimiento en tiempo real · Accesorios al mejor precio | Diagnóstico asistido por IA',
+            lang: 'es-ES',
             theme_color: '#1D3557',
             background_color: '#ffffff',
             display: 'standalone',

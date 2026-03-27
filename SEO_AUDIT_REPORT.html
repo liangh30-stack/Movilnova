@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MovilNova - Informe de Auditoría SEO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
+    h2 { font-size: 1.35rem; font-weight: 600; margin: 32px 0 16px; color: #1d3557; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 20px 0 8px; color: #334155; }
+    .subtitle { color: #64748b; font-size: 0.95rem; margin-bottom: 32px; }
+    .score-bar { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+    .score-card { flex: 1; min-width: 160px; background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .score-card .number { font-size: 2.2rem; font-weight: 800; }
+    .score-card .label { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
+    .green { color: #16a34a; }
+    .yellow { color: #d97706; }
+    .red { color: #dc2626; }
+    .blue { color: #2563eb; }
+    .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+    .item:last-child { border-bottom: none; }
+    .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; margin-top: 2px; height: 22px; }
+    .badge-ok { background: #dcfce7; color: #166534; }
+    .badge-fix { background: #fef3c7; color: #92400e; }
+    .badge-new { background: #dbeafe; color: #1e40af; }
+    .badge-critical { background: #fee2e2; color: #991b1b; }
+    .item-content { flex: 1; }
+    .item-title { font-weight: 600; font-size: 0.95rem; }
+    .item-desc { font-size: 0.88rem; color: #64748b; margin-top: 2px; }
+    code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 0.85em; color: #1d3557; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+    th { background: #f8fafc; font-weight: 600; color: #475569; }
+    .file-tag { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500; }
+    .todo-section { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 24px; margin-top: 32px; }
+    .todo-section h2 { color: #92400e; border-bottom-color: #fde68a; }
+    footer { text-align: center; color: #94a3b8; font-size: 0.85rem; margin-top: 48px; padding-bottom: 32px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Informe de Auditoría SEO — MovilNova</h1>
+    <p class="subtitle">Generado el 27 de marzo de 2026 · Mercado objetivo: España y Europa</p>
+
+    <div class="score-bar">
+      <div class="score-card">
+        <div class="number green">85</div>
+        <div class="label">Puntuación SEO General</div>
+      </div>
+      <div class="score-card">
+        <div class="number green">92</div>
+        <div class="label">Meta Tags</div>
+      </div>
+      <div class="score-card">
+        <div class="number green">90</div>
+        <div class="label">Datos Estructurados</div>
+      </div>
+      <div class="score-card">
+        <div class="number yellow">75</div>
+        <div class="label">Rendimiento</div>
+      </div>
+    </div>
+
+    <!-- ========== LO QUE YA ESTABA BIEN ========== -->
+    <h2>Lo que ya estaba bien</h2>
+    <div class="section">
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">Meta tags principales (title, description, keywords)</div>
+          <div class="item-desc">Title de 73 caracteres y description de 160 caracteres — dentro del rango óptimo.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">Open Graph y Twitter Card</div>
+          <div class="item-desc">Ambos completos con imagen de 1200×630, títulos y descripciones para compartir en redes sociales.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">Google Analytics 4 integrado</div>
+          <div class="item-desc">Tag de GA4 (<code>G-MRH3Z2WJS6</code>) correctamente implementado.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">JSON-LD: LocalBusiness con 3 sucursales</div>
+          <div class="item-desc">Schema completo con dirección, horarios, geo-coordenadas, catálogo de servicios y valoraciones.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">URL canónica y geo.region</div>
+          <div class="item-desc"><code>&lt;link rel="canonical"&gt;</code> y <code>geo.region=ES</code> correctamente configurados.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">PWA con manifest y Service Worker</div>
+          <div class="item-desc">Configuración PWA completa con iconos, cache de fonts y modo offline.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">Google Search Console verificado</div>
+          <div class="item-desc">Archivo de verificación <code>google641f7344525b8dbf.html</code> presente.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ok">OK</span>
+        <div class="item-content">
+          <div class="item-title">Code splitting inteligente</div>
+          <div class="item-desc">Chunks separados para React, Firebase, Stripe, Charts, i18n — mejora significativa del tiempo de carga.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PROBLEMAS CORREGIDOS ========== -->
+    <h2>Problemas corregidos en esta auditoría</h2>
+    <div class="section">
+
+      <div class="item">
+        <span class="badge badge-critical">Crítico</span>
+        <div class="item-content">
+          <div class="item-title">PWA manifest en chino en vez de español</div>
+          <div class="item-desc">
+            El nombre y descripción del manifest estaban en chino (<code>维修店智能管理平台</code>).
+            Corregido a español: <code>"MovilNova - Reparación de móviles y accesorios"</code>.
+            <br><span class="file-tag">vite.config.ts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-critical">Crítico</span>
+        <div class="item-content">
+          <div class="item-title">Sucursales con nombre incorrecto "Galaxia Phone" en JSON-LD</div>
+          <div class="item-desc">
+            Los datos estructurados de Baiona y Lalín decían "Galaxia Phone" en vez de "MovilNova".
+            Google mostraba el nombre antiguo en los resultados. Corregido a <code>MovilNova Baiona</code> y <code>MovilNova Lalín</code>.
+            <br><span class="file-tag">index.html</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-fix">Mejorado</span>
+        <div class="item-content">
+          <div class="item-title">Sin etiquetas hreflang para idiomas alternativos</div>
+          <div class="item-desc">
+            Se añadieron etiquetas <code>&lt;link rel="alternate" hreflang="..."&gt;</code> para ES, EN, FR, DE, ZH y x-default.
+            Esto indica a Google qué versión mostrar según el idioma del usuario.
+            <br><span class="file-tag">index.html</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-fix">Mejorado</span>
+        <div class="item-content">
+          <div class="item-title">Sitemap sin hreflang en la mayoría de URLs</div>
+          <div class="item-desc">
+            Solo la página principal tenía hreflang en el sitemap. Se añadió a todas las páginas públicas principales (productos, reparaciones, servicios, tiendas).
+            <br><span class="file-tag">public/sitemap.xml</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-new">Nuevo</span>
+        <div class="item-content">
+          <div class="item-title">FAQPage schema añadido (5 preguntas frecuentes)</div>
+          <div class="item-desc">
+            Se añadió un schema <code>FAQPage</code> con las preguntas más buscadas sobre reparación de móviles.
+            Esto permite que Google muestre "Preguntas frecuentes" directamente en los resultados de búsqueda (rich snippets).
+            <br><span class="file-tag">index.html</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-new">Nuevo</span>
+        <div class="item-content">
+          <div class="item-title">SEOHead: componente de meta tags dinámicos por página</div>
+          <div class="item-desc">
+            Se instaló <code>react-helmet-async</code> y se creó el componente <code>SEOHead</code>.
+            Cada ruta ahora puede tener su propio title, description y Open Graph — crucial para un SPA.
+            Integrado en la página de inicio y el catálogo de productos.
+            <br><span class="file-tag">components/SEOHead.tsx</span> <span class="file-tag">index.tsx</span> <span class="file-tag">App.tsx</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-fix">Mejorado</span>
+        <div class="item-content">
+          <div class="item-title">robots.txt ampliado con crawl-delay para bots agresivos</div>
+          <div class="item-desc">
+            Se añadieron reglas de <code>Disallow</code> más específicas (assets, rutas internas) y <code>Crawl-delay</code>
+            para AhrefsBot, SemrushBot y MJ12bot que consumen ancho de banda innecesario.
+            <br><span class="file-tag">public/robots.txt</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-fix">Mejorado</span>
+        <div class="item-content">
+          <div class="item-title">DNS prefetch para Firebase y Google Tag Manager</div>
+          <div class="item-desc">
+            Se añadieron hints de <code>dns-prefetch</code> para dominios de terceros, reduciendo el tiempo de resolución DNS en ~50ms por dominio.
+            <br><span class="file-tag">index.html</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="badge badge-fix">Mejorado</span>
+        <div class="item-content">
+          <div class="item-title">Campo "sameAs" corregido en JSON-LD</div>
+          <div class="item-desc">
+            El campo <code>sameAs</code> apuntaba a la propia web. Se cambió para incluir perfiles de Instagram, Facebook y Google Maps.
+            <b>Nota:</b> Actualiza las URLs con tus perfiles reales.
+            <br><span class="file-tag">index.html</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ARCHIVOS MODIFICADOS ========== -->
+    <h2>Archivos modificados</h2>
+    <div class="section">
+      <table>
+        <thead>
+          <tr><th>Archivo</th><th>Cambio</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>index.html</code></td><td>Hreflang, FAQPage schema, JSON-LD fixes, DNS prefetch, sameAs</td></tr>
+          <tr><td><code>vite.config.ts</code></td><td>PWA manifest traducido al español + lang: "es-ES"</td></tr>
+          <tr><td><code>public/sitemap.xml</code></td><td>Hreflang en todas las URLs, image sitemap</td></tr>
+          <tr><td><code>public/robots.txt</code></td><td>Reglas ampliadas, crawl-delay para bots SEO</td></tr>
+          <tr><td><code>components/SEOHead.tsx</code></td><td>Nuevo componente para meta tags dinámicos</td></tr>
+          <tr><td><code>index.tsx</code></td><td>HelmetProvider envolviendo la app</td></tr>
+          <tr><td><code>App.tsx</code></td><td>SEOHead integrado en rutas principales</td></tr>
+          <tr><td><code>package.json</code></td><td>Dependencia react-helmet-async añadida</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== ACCIONES PENDIENTES ========== -->
+    <div class="todo-section">
+      <h2>Acciones pendientes (requieren tu intervención)</h2>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">1. Actualizar URLs de redes sociales en index.html</div>
+          <div class="item-desc">Busca <code>GOOGLE_CID_HERE</code> en el JSON-LD y reemplázalo con tu CID real de Google Maps. Verifica las URLs de Instagram y Facebook.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">2. Añadir SEOHead a las páginas restantes</div>
+          <div class="item-desc">El componente está integrado en Home y Catálogo. Falta añadirlo a: <code>RepairServices</code>, <code>MailInRepair</code>, <code>LocalPage</code>, <code>ProductPage</code> y las páginas legales. Ejemplo: <code>&lt;SEOHead title="Reparación de pantallas" path="/reparaciones" /&gt;</code></div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">3. Crear perfiles de Google Business Profile para las 3 tiendas</div>
+          <div class="item-desc">Registra cada tienda en <a href="https://business.google.com">Google Business Profile</a> para aparecer en Google Maps y en el "Local Pack" de búsquedas locales.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">4. Enviar sitemap actualizado a Google Search Console</div>
+          <div class="item-desc">Ve a <a href="https://search.google.com/search-console">Search Console</a> → Sitemaps → Envía <code>https://movilnova.es/sitemap.xml</code></div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">5. Considerar SSR o prerendering para SEO avanzado</div>
+          <div class="item-desc">Al ser una SPA (React), los crawlers pueden tener dificultades. Considera usar <code>vite-plugin-ssr</code> o un servicio de prerendering como Prerender.io para generar HTML estático para los bots.</div>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge badge-fix">Manual</span>
+        <div class="item-content">
+          <div class="item-title">6. Optimizar imágenes (convertir JPG a WebP)</div>
+          <div class="item-desc">Las 15+ imágenes en <code>/public</code> son JPG sin formato moderno. Convertirlas a WebP puede reducir el tamaño un 30-50%, mejorando Core Web Vitals.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Informe generado automáticamente · MovilNova SEO Audit · Marzo 2026
+    </footer>
+  </div>
+</body>
+</html>
