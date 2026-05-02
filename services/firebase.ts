@@ -33,13 +33,22 @@ const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 if (recaptchaSiteKey) {
   // Allow debug token in non-production environments
   if (import.meta.env.DEV) {
-    // @ts-ignore — self is available in browser context
+    // @ts-expect-error — self is available in browser context
     self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN || true;
   }
   appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(recaptchaSiteKey),
     isTokenAutoRefreshEnabled: true,
   });
+} else if (import.meta.env.PROD) {
+  // Loud warning in production — without App Check, Firebase config is publicly
+  // readable from the JS bundle and anyone can hit Firestore/Functions directly.
+  // Once VITE_RECAPTCHA_SITE_KEY is set AND enforcement is enabled in the Firebase
+  // Console, unauthorized requests will start being rejected.
+  console.warn(
+    '[firebase] App Check is NOT initialized in production. Set VITE_RECAPTCHA_SITE_KEY ' +
+    'and enable App Check enforcement in Firebase Console (Firestore, Functions, Storage).',
+  );
 }
 
 export const db: Firestore = getFirestore(app);

@@ -26,11 +26,17 @@ const RepairServices: React.FC = () => {
     setSubmitting(true);
     setFormError('');
     try {
-      const functions = getFunctions(getApp(), 'europe-west1');
-      const submit = httpsCallable(functions, 'submitMailInRepair');
-      const result = await submit(form) as any;
+      // BUGFIX: was hardcoded to 'europe-west1' but the Cloud Function is
+      // deployed in the default region. Mismatch caused 404 on every submit.
+      const functions = getFunctions(getApp());
+      const submit = httpsCallable<typeof form, { success: boolean; ticketId: string }>(
+        functions,
+        'submitMailInRepair',
+      );
+      const result = await submit(form);
       setTicketId(result.data.ticketId);
-    } catch {
+    } catch (err) {
+      console.error('submitMailInRepair failed', err);
       setFormError('Error al enviar. Escríbenos por WhatsApp: +34 603 93 69 78');
     } finally {
       setSubmitting(false);

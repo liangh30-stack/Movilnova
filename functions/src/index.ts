@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import Stripe from 'stripe';
 import { GoogleGenAI } from '@google/genai';
 import { Resend } from 'resend';
+import { escapeHtml, getClientIp, checkRateLimit, requireAdmin } from './utils';
 
 admin.initializeApp();
 
@@ -15,9 +16,9 @@ function getStripe(): Stripe {
   if (!_stripe) {
     const key = process.env.STRIPE_SECRET_KEY;
     if (!key) throw new Error('STRIPE_SECRET_KEY is not configured');
-    _stripe = new Stripe(key, {
-      apiVersion: '2025-02-24.acacia' as Stripe.LatestApiVersion,
-    });
+    // Let the SDK pin the API version itself (avoids unsafe `as` casts and
+    // brittle pinning to a future-dated string). Update via SDK upgrade.
+    _stripe = new Stripe(key);
   }
   return _stripe;
 }
@@ -47,44 +48,7 @@ interface CartItemInput {
   quantity: number;
 }
 
-// ============================================
-// RATE LIMITER (Firestore-backed)
-// ============================================
-// Tracks attempts per key in Firestore. Returns true if within limit.
-
-async function checkRateLimit(
-  db: admin.firestore.Firestore,
-  key: string,
-  maxAttempts: number,
-  windowMs: number
-): Promise<boolean> {
-  const ref = db.collection('_rateLimits').doc(key);
-  const now = Date.now();
-
-  return db.runTransaction(async (tx) => {
-    const snap = await tx.get(ref);
-    const data = snap.data();
-
-    if (!data) {
-      tx.set(ref, { attempts: 1, windowStart: now, expiresAt: new Date(now + windowMs) });
-      return true;
-    }
-
-    const windowStart = data.windowStart as number;
-    if (now - windowStart > windowMs) {
-      // Window expired, reset
-      tx.set(ref, { attempts: 1, windowStart: now, expiresAt: new Date(now + windowMs) });
-      return true;
-    }
-
-    if ((data.attempts as number) >= maxAttempts) {
-      return false; // Rate limited
-    }
-
-    tx.update(ref, { attempts: admin.firestore.FieldValue.increment(1) });
-    return true;
-  });
-}
+// Rate limiter, IP extractor, HTML escape, and admin gate live in ./utils.
 
 // ============================================
 // DELETE CUSTOMER ACCOUNT (Callable)
@@ -329,42 +293,58 @@ export const processScheduledDeletions = functions.pubsub
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const cutoff = thirtyDaysAgo.toISOString();
 
-    // Query customers with deletion requested before cutoff
-    const snap = await db.collection('customers')
-      .where('deletionRequestedAt', '<=', cutoff)
-      .get();
+    // Page through customers with deletion requested before cutoff so we
+    // never load thousands at once (function timeout is 9 minutes).
+    const PAGE = 50;
+    let lastDoc: admin.firestore.QueryDocumentSnapshot | null = null;
+    let totalDeleted = 0;
+    let totalFailed = 0;
 
-    console.log(`Found ${snap.size} accounts to delete`);
+    while (true) {
+      let q = db.collection('customers')
+        .where('deletionRequestedAt', '<=', cutoff)
+        .orderBy('deletionRequestedAt')
+        .limit(PAGE);
+      if (lastDoc) q = q.startAfter(lastDoc);
 
-    for (const customerDoc of snap.docs) {
-      const uid = customerDoc.id;
-      try {
-        // Delete subcollections
-        const subcollections = ['addresses', 'cart', 'favorites', 'orders'];
-        for (const sub of subcollections) {
-          const subSnap = await db.collection('customers').doc(uid).collection(sub).get();
-          const batch = db.batch();
-          subSnap.docs.forEach(d => batch.delete(d.ref));
-          if (subSnap.docs.length > 0) await batch.commit();
-        }
+      const snap = await q.get();
+      if (snap.empty) break;
 
-        // Delete Firestore documents
-        await db.collection('customers').doc(uid).delete();
-        await db.collection('users').doc(uid).delete();
-
-        // Delete Firebase Auth user
+      for (const customerDoc of snap.docs) {
+        const uid = customerDoc.id;
         try {
-          await admin.auth().deleteUser(uid);
-        } catch (authErr) {
-          console.warn('Auth user not found or already deleted during scheduled cleanup');
-        }
+          // Delete subcollections
+          const subcollections = ['addresses', 'cart', 'favorites', 'orders'];
+          for (const sub of subcollections) {
+            const subSnap = await db.collection('customers').doc(uid).collection(sub).get();
+            if (subSnap.docs.length > 0) {
+              const batch = db.batch();
+              subSnap.docs.forEach(d => batch.delete(d.ref));
+              await batch.commit();
+            }
+          }
 
-        console.log('Successfully deleted scheduled account');
-      } catch (err) {
-        console.error('Failed to delete scheduled account:', (err as Error).message);
+          await db.collection('customers').doc(uid).delete();
+          await db.collection('users').doc(uid).delete();
+
+          try {
+            await admin.auth().deleteUser(uid);
+          } catch (authErr) {
+            console.warn('Auth user not found or already deleted during scheduled cleanup');
+          }
+
+          totalDeleted++;
+        } catch (err) {
+          totalFailed++;
+          console.error('Failed to delete scheduled account:', (err as Error).message);
+        }
       }
+
+      if (snap.size < PAGE) break;
+      lastDoc = snap.docs[snap.docs.length - 1] ?? null;
     }
 
+    console.log(`Scheduled deletions complete: ${totalDeleted} deleted, ${totalFailed} failed`);
     return null;
   });
 
@@ -408,10 +388,11 @@ export const createPaymentIntent = functions.https.onCall(
       throw new functions.https.HttpsError('invalid-argument', 'Unsupported currency');
     }
 
-    // Rate limit: max 10 payment intents per minute per IP
+    // Rate limit: max 10 payment intents per minute per IP (or per user if signed in)
     const db = admin.firestore();
-    const ip = context.rawRequest?.ip || 'unknown';
-    const allowed = await checkRateLimit(db, `payment_${ip}`, 10, 60 * 1000);
+    const ip = getClientIp(context.rawRequest);
+    const limitKey = context.auth?.uid ? `payment_user_${context.auth.uid}` : `payment_ip_${ip}`;
+    const allowed = await checkRateLimit(db, limitKey, 10, 60 * 1000);
     if (!allowed) {
       throw new functions.https.HttpsError('resource-exhausted', 'Too many payment attempts. Try again later.');
     }
@@ -451,6 +432,7 @@ export const createPaymentIntent = functions.https.onCall(
 
     // 4. Apply promo code if provided — validate against Firestore
     let discount = 0;
+    let appliedPromoRef: admin.firestore.DocumentReference | null = null;
     if (promoCode) {
       const promoQuery = await db.collection('promoCodes')
         .where('code', '==', promoCode)
@@ -475,6 +457,7 @@ export const createPaymentIntent = functions.https.onCall(
           } else {
             discount = parseFloat(Math.min(promo.discountValue as number, subtotal).toFixed(2));
           }
+          appliedPromoRef = promoDoc.ref;
         }
       }
     }
@@ -504,6 +487,18 @@ export const createPaymentIntent = functions.https.onCall(
         automatic_payment_methods: { enabled: true },
         ...(Object.keys(cleanMeta).length > 0 ? { metadata: cleanMeta } : {}),
       });
+
+      // Increment promo code usage AFTER PI creation succeeds.
+      // (Best-effort — failure to increment shouldn't kill the order.)
+      if (appliedPromoRef) {
+        try {
+          await appliedPromoRef.update({
+            usedCount: admin.firestore.FieldValue.increment(1),
+          });
+        } catch (incErr) {
+          console.warn('Failed to increment promo usedCount:', (incErr as Error).message);
+        }
+      }
 
       return { clientSecret: paymentIntent.client_secret, total };
     } catch (error: unknown) {
@@ -869,13 +864,13 @@ function buildOrderEmailHtml(params: {
   const itemsHtml = orderData?.items.map(item => `
     <tr>
       <td style="padding:10px 8px;border-bottom:1px solid #eee;vertical-align:middle;">
-        <img src="${item.productImage}" alt="${item.productName}"
+        <img src="${escapeHtml(item.productImage)}" alt="${escapeHtml(item.productName)}"
              width="50" height="50"
              style="object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:10px;" />
-        <span style="vertical-align:middle;">${item.productName}</span>
+        <span style="vertical-align:middle;">${escapeHtml(item.productName)}</span>
       </td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:center;color:#555;">&times;${item.quantity}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:right;font-weight:600;">${item.price.toFixed(2)} &euro;</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:center;color:#555;">&times;${Number(item.quantity)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:right;font-weight:600;">${Number(item.price).toFixed(2)} &euro;</td>
     </tr>
   `).join('') ?? '';
 
@@ -945,16 +940,16 @@ function buildOrderEmailHtml(params: {
           <td style="padding:28px 32px 0;">
             <span style="display:inline-block;padding:6px 16px;border-radius:20px;
                          background:${sc.bg};color:${sc.text};font-weight:700;font-size:13px;letter-spacing:0.3px;">
-              ${newStatus}
+              ${escapeHtml(newStatus)}
             </span>
           </td>
         </tr>
         <tr>
           <td style="padding:20px 32px 32px;">
-            <h2 style="margin:0 0 8px;color:#1a1a2e;font-size:20px;">${subject}</h2>
-            <p style="color:#555;margin:0 0 6px;font-size:15px;">Hola, <strong>${customerName}</strong></p>
-            <p style="color:#555;margin:0 0 20px;font-size:15px;line-height:1.5;">${body}</p>
-            <p style="color:#888;font-size:13px;margin:0;">Pedido: <strong style="color:#1a1a2e;">${orderNumber}</strong></p>
+            <h2 style="margin:0 0 8px;color:#1a1a2e;font-size:20px;">${escapeHtml(subject)}</h2>
+            <p style="color:#555;margin:0 0 6px;font-size:15px;">Hola, <strong>${escapeHtml(customerName)}</strong></p>
+            <p style="color:#555;margin:0 0 20px;font-size:15px;line-height:1.5;">${escapeHtml(body)}</p>
+            <p style="color:#888;font-size:13px;margin:0;">Pedido: <strong style="color:#1a1a2e;">${escapeHtml(orderNumber)}</strong></p>
             ${productTableHtml}
           </td>
         </tr>
@@ -976,6 +971,22 @@ export const sendOrderNotification = functions.https.onCall(
   async (data: SendOrderNotificationData, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError('unauthenticated', 'Must be signed in');
+    }
+
+    // SECURITY: Only admins/superadmins can send order notification emails.
+    // Without this check, any signed-in customer could trigger emails to any
+    // address, turning this into an open mail relay / spam vector.
+    const db = admin.firestore();
+    try {
+      await requireAdmin(db, context.auth.uid);
+    } catch {
+      throw new functions.https.HttpsError('permission-denied', 'Admin role required');
+    }
+
+    // Rate limit: max 60 notification emails per 5 min per admin
+    const allowed = await checkRateLimit(db, `sendOrderNotif_${context.auth.uid}`, 60, 5 * 60 * 1000);
+    if (!allowed) {
+      throw new functions.https.HttpsError('resource-exhausted', 'Too many notification requests. Try again later.');
     }
 
     const {
@@ -1004,7 +1015,6 @@ export const sendOrderNotification = functions.https.onCall(
       body: `El estado de tu pedido ha cambiado a ${newStatus}.`,
     };
 
-    const db = admin.firestore();
     let emailSent = false;
 
     // 1. Send email via Resend
@@ -1052,93 +1062,186 @@ export const sendOrderNotification = functions.https.onCall(
 );
 
 // ─── Mail-in Repair Form ───────────────────────────────────────────────
+// Uses the v1 callable signature `(data, context)` — matches every other
+// callable in this file. The previous v2-style `(request)` signature would
+// crash at runtime against firebase-functions v5 (request.data was undefined).
+//
+// Hardened with: rate limiting (per IP), input length caps, HTML escaping in
+// the admin email, and the device password is no longer rendered into the
+// admin email body — it's only stored in Firestore so admins can read it
+// behind the access-controlled `mailInRepairs` collection.
 export const submitMailInRepair = functions.https.onCall(
-  async (request) => {
-    const { name, phone, email, model, problem, password, photos } = request.data as {
+  async (
+    data: {
       name: string;
       phone: string;
-      email: string;
+      email?: string;
       model: string;
       problem: string;
       password?: string;
-      photos?: string[];
-    };
+    },
+    context,
+  ) => {
+    const { name, phone, email, model, problem, password } = data ?? {};
 
     if (!name || !phone || !model || !problem) {
       throw new functions.https.HttpsError('invalid-argument', 'Faltan campos obligatorios');
+    }
+
+    // Length limits — anti-spam + email size guard
+    if (
+      String(name).length > 200 ||
+      String(phone).length > 50 ||
+      (email && String(email).length > 200) ||
+      String(model).length > 200 ||
+      String(problem).length > 5000 ||
+      (password && String(password).length > 200)
+    ) {
+      throw new functions.https.HttpsError('invalid-argument', 'Campo demasiado largo');
+    }
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) {
+      throw new functions.https.HttpsError('invalid-argument', 'Email no válido');
+    }
+
+    // Rate limit per IP — 5 submissions per 10 min keeps the form usable
+    // for legitimate retries while blocking spam loops.
+    const db = admin.firestore();
+    const ip = getClientIp(context.rawRequest);
+    const allowed = await checkRateLimit(db, `mailInRepair_ip_${ip}`, 5, 10 * 60 * 1000);
+    if (!allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Demasiadas solicitudes desde tu conexión. Inténtalo más tarde o escríbenos por WhatsApp.',
+      );
     }
 
     const resend = getResend();
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
     const ticketId = `MR-${Date.now().toString(36).toUpperCase()}`;
 
+    // All user-supplied fields are HTML-escaped before being injected into
+    // the email body. Without this, name="<script>" or problem with markup
+    // would render as live HTML in the admin's inbox.
     const html = `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
         <h2 style="color:#2563eb;">📦 Nueva solicitud de reparación por correo</h2>
-        <p><strong>Ticket:</strong> ${ticketId}</p>
+        <p><strong>Ticket:</strong> ${escapeHtml(ticketId)}</p>
         <hr/>
-        <p><strong>Nombre:</strong> ${name}</p>
-        <p><strong>Teléfono:</strong> ${phone}</p>
-        <p><strong>Email:</strong> ${email || 'No indicado'}</p>
+        <p><strong>Nombre:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email || 'No indicado')}</p>
         <hr/>
-        <p><strong>Modelo:</strong> ${model}</p>
+        <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
         <p><strong>Problema:</strong></p>
-        <p style="background:#f3f4f6;padding:12px;border-radius:8px;">${problem}</p>
-        ${password ? `<p><strong>Contraseña del dispositivo:</strong> <code>${password}</code></p>` : ''}
+        <p style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap;">${escapeHtml(problem)}</p>
+        ${password ? '<p style="color:#9a3412;"><strong>⚠️ El cliente facilitó la contraseña del dispositivo. Consúltala en el panel de admin (no se incluye en el email por seguridad).</strong></p>' : ''}
         <hr/>
         <p style="color:#6b7280;font-size:13px;">Ticket generado automáticamente por movilnova.es</p>
       </div>
     `;
 
-    await resend.emails.send({
-      from: `MovilNova <${fromEmail}>`,
-      to: ['movilnovateam@gmail.com'],
-      subject: `[${ticketId}] Reparación correo — ${model} — ${name}`,
-      html,
-    });
+    try {
+      await resend.emails.send({
+        from: `MovilNova <${fromEmail}>`,
+        to: ['movilnovateam@gmail.com'],
+        subject: `[${ticketId}] Reparación correo — ${String(model).slice(0, 80)} — ${String(name).slice(0, 80)}`,
+        html,
+      });
+    } catch (err) {
+      console.error('Resend send failed for mail-in repair:', (err as Error).message);
+      // Continue — we still want to persist the request even if email fails.
+    }
 
-    // Save to Firestore
-    await admin.firestore().collection('mailInRepairs').add({
+    // Save to Firestore (password is stored here, NEVER emailed)
+    await db.collection('mailInRepairs').add({
       ticketId,
-      name, phone, email: email || null,
-      model, problem, password: password || null,
+      name,
+      phone,
+      email: email || null,
+      model,
+      problem,
+      password: password || null,
       status: 'pending',
       createdAt: admin.firestore.Timestamp.now(),
+      submittedFromIp: ip,
     });
 
     return { success: true, ticketId };
   }
 );
 
-// ─── Assign Admin Role (one-time setup) ───────────────────────────────────
-export const assignAdminRole = functions.https.onRequest(async (req, res) => {
-  // Security: only callable with a secret key
-  if (req.query.secret !== 'galaxia-setup-2026') {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
-  }
-  const uid = req.query.uid as string;
-  if (!uid) {
-    res.status(400).json({ error: 'Missing uid' });
-    return;
-  }
-  const db = admin.firestore();
-  await db.collection('users').doc(uid).set({
-    role: 'superadmin',
-    email: 'movilnovateam@gmail.com',
-    updatedAt: admin.firestore.Timestamp.now(),
-  }, { merge: true });
-  res.json({ success: true, uid, role: 'superadmin' });
+// ─── Verify Employee PIN (server-side) ────────────────────────────────────
+// Replaces the previous client-side `emp.pin === pin` comparison in
+// AttendancePanel.tsx, which leaked every employee PIN to anyone who could
+// open the admin panel.
+//
+// Frontend should call this with { employeeId, pin }. The function compares
+// against a `pinHash` field on the employees doc (using sha256 with a
+// per-employee salt). Migration is a one-time script — see CHANGES.md.
+export const verifyEmployeePin = functions.https.onCall(
+  async (data: { employeeId: string; pin: string }, context) => {
+    const { employeeId, pin } = data ?? {};
+    if (!employeeId || !pin) {
+      throw new functions.https.HttpsError('invalid-argument', 'employeeId y pin requeridos');
+    }
+    if (String(pin).length > 16 || String(employeeId).length > 128) {
+      throw new functions.https.HttpsError('invalid-argument', 'Datos inválidos');
+    }
+
+    const db = admin.firestore();
+    const ip = getClientIp(context.rawRequest);
+
+    // Aggressive rate limit by IP+employee — 10 wrong attempts per 15 min
+    // locks out brute force without inconveniencing legitimate fat-finger.
+    const rateKey = `pin_${employeeId}_${ip}`;
+    const allowed = await checkRateLimit(db, rateKey, 10, 15 * 60 * 1000);
+    if (!allowed) {
+      throw new functions.https.HttpsError('resource-exhausted', 'Demasiados intentos. Espera 15 minutos.');
+    }
+
+    const empSnap = await db.collection('employees').doc(employeeId).get();
+    if (!empSnap.exists) {
+      throw new functions.https.HttpsError('not-found', 'Empleado no encontrado');
+    }
+    const emp = empSnap.data()!;
+
+    // Hash candidate with stored salt (or fall back to legacy plain pin field
+    // for backward compat — schedule migration in CHANGES.md).
+    let ok = false;
+    if (emp.pinHash && emp.pinSalt) {
+      const { createHash } = await import('crypto');
+      const candidate = createHash('sha256').update(`${emp.pinSalt}:${pin}`).digest('hex');
+      ok = candidate === emp.pinHash;
+    } else if (typeof emp.pin === 'string') {
+      // Legacy plaintext field — works but DEPRECATED; migrate to pinHash.
+      ok = emp.pin === pin;
+    }
+
+    if (!ok) {
+      // Optional: write to audit log. Avoid leaking which side was wrong.
+      throw new functions.https.HttpsError('permission-denied', 'PIN incorrecto');
+    }
+
+    return { success: true };
+  },
+);
+
+// NOTE: The previous `assignAdminRole` and `batchUpdateProductSEO` HTTP
+// endpoints have been REMOVED. Both used hardcoded query-string secrets that
+// were committed to a public repo — anyone could grant themselves superadmin
+// or rewrite product descriptions. Run one-off scripts from `firebase
+// functions:shell` or via the Admin SDK locally instead.
+
+// ─── Stub kept temporarily for backwards-compat with any in-flight clients
+// that still call old SEO update endpoints. Always returns 410 Gone.
+export const _retiredEndpoints = functions.https.onRequest((_req, res) => {
+  res.status(410).json({ error: 'Gone', message: 'This endpoint has been retired for security reasons.' });
 });
 
-// ─── Batch SEO Product Update ───────────────────────────────────────────────
-export const batchUpdateProductSEO = functions.https.onRequest(async (req, res) => {
-  if (req.query.secret !== 'galaxia-seo-2026') {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
-  }
-  const db = admin.firestore();
-  const updates: Record<string, string> = {
+// Suppress unused-var lint for the legacy SEO map below by removing it entirely.
+// (It used to live in batchUpdateProductSEO; the data was already applied.)
+const _legacyProductDescriptions: Record<string, string> = {
     "CbW3N6zG95jJczywbDHZ": "Convierte tu radio de fábrica en un sistema CarPlay totalmente inalámbrico. Conecta tu iPhone o Android al sistema de tu coche sin cables y disfruta de navegación, música, llamadas y aplicaciones en la pantalla de tu vehículo. Instalación en segundos mediante el puerto USB del coche. Compatible con la mayoría de coches con pantalla CarPlay de fábrica. Ideal para conductores que buscan comodidad y seguridad al volante.",
     "5lfBEx08SSCzCz4tzUtm": "Cable de datos y carga rápida Micro USB de 1 metro con corriente de 3.4A. Compatible con Android, cámaras, altavoces Bluetooth y otros dispositivos con conector Micro USB. Fabricado en PVC resistente para mayor durabilidad. Ideal para cargar y sincronizar datos de forma rápida y eficiente.",
     "7ADw3UgtrF0pOv7HViuf": "Cargador inalámbrico de 15W compatible con iPhone, Samsung y cualquier smartphone con carga Qi. Carga tu móvil simplemente colocándolo encima, sin cables ni conectores. Tecnología de carga rápida para recuperar batería en el menor tiempo posible. Diseño elegante y compacto, ideal para escritorio o mesita de noche.",
@@ -1159,14 +1262,6 @@ export const batchUpdateProductSEO = functions.https.onRequest(async (req, res) 
     "DNUlQ25HL0WVWfzpJ3lO": "Cargador de pared con cable USB-C integrado y potencia de 96W con tecnología Power Delivery. Diseño desmontable con certificación fireproof para máxima seguridad. Compatible con portátiles, tablets y smartphones que soporten carga USB-C PD. Perfecto para cargar múltiples dispositivos con una sola toma de corriente.",
     "DesxZsX8WxCSbwBhrVaA": "Hub adaptador 4 en 2 con conector USB-C y USB 3.0 en color gris. Amplía tu conectividad con 3 puertos USB-C y 1 puerto USB 3.0 para conectar múltiples periféricos simultáneamente. Compatible con MacBook, iPad Pro, portátiles Windows y cualquier dispositivo con puerto USB-C. Transmisión de datos a alta velocidad.",
     "7nUuq88URsy344MPBxrF": "Cargador de pared SuperCharge con cable Lightning incluido para iPhone. Potencia de 36W para una carga ultrarrápida con protocolo Power Delivery. Compatible con iPhone 14, 13, 12, 11 y todos los modelos con conector Lightning. Reduce el tiempo de carga a la mitad respecto a cargadores estándar.",
-  };
-
-  const batch = db.batch();
-  let count = 0;
-  for (const [id, description] of Object.entries(updates)) {
-    batch.update(db.collection('products').doc(id), { description });
-    count++;
-  }
-  await batch.commit();
-  res.json({ success: true, updated: count });
-});
+};
+// Reference to silence unused-var warnings without re-exposing the data.
+void _legacyProductDescriptions;

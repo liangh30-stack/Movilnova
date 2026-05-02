@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { Package, CheckCircle, Clock, Truck, CreditCard, Wrench, Send, Upload } from 'lucide-react';
+import { Package, CheckCircle, Clock, Truck, CreditCard, Wrench, Send } from 'lucide-react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getApp } from 'firebase/app';
 
+interface SubmitResponse {
+  success: boolean;
+  ticketId: string;
+}
+
 const MailInRepair: React.FC = () => {
-  const [step, setStep] = useState(0);
+  // `step` was declared but never used downstream; kept the form-state setter
+  // pattern only.
   const [form, setForm] = useState({ name: '', phone: '', email: '', model: '', problem: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [ticketId, setTicketId] = useState('');
@@ -19,11 +25,15 @@ const MailInRepair: React.FC = () => {
     setSubmitting(true);
     setError('');
     try {
-      const functions = getFunctions(getApp(), 'europe-west1');
-      const submit = httpsCallable(functions, 'submitMailInRepair');
-      const result = await submit(form) as any;
+      // BUGFIX: previously hardcoded 'europe-west1' but the function is
+      // deployed to the default region (us-central1), causing every call to
+      // 404. Use the default region — same as paymentService.ts and friends.
+      const functions = getFunctions(getApp());
+      const submit = httpsCallable<typeof form, SubmitResponse>(functions, 'submitMailInRepair');
+      const result = await submit(form);
       setTicketId(result.data.ticketId);
-    } catch (err: any) {
+    } catch (err) {
+      console.error('submitMailInRepair failed', err);
       setError('Error al enviar. Escríbenos por WhatsApp: +34 603 93 69 78');
     } finally {
       setSubmitting(false);

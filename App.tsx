@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { useTranslation } from 'react-i18next';
 import { Product, Language, Order, CustomerAddress, CustomerOrder } from './types';
 import { ROUTES } from './routes';
-import { MOCK_PRODUCTS, HOT_BUNDLE } from './constants';
 import { toLegacyLang, toI18nLang, loadLocale, LegacyLanguage } from './i18n';
 import { subscribeToProducts } from './services/productService';
 import { onAuthChange, signOutUser, type AdminUser } from './services/authService';
@@ -147,20 +146,23 @@ const App: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Subscribe to real-time product updates from Firestore
+  // Subscribe to real-time product updates from Firestore.
+  // Removed the MOCK_PRODUCTS fallback: it caused the storefront to display
+  // fake products with IDs that don't exist in Firestore. When the user then
+  // tried to checkout, createPaymentIntent on the server failed with
+  // "Product not found" — leaving them with a broken cart and no clear cause.
+  // Empty/error states show an empty grid; the skeleton handles the loading
+  // visual.
   useEffect(() => {
     setIsLoadingProducts(true);
     const unsubscribe = subscribeToProducts(
       (firestoreProducts) => {
-        if (firestoreProducts.length > 0) {
-          setProducts(firestoreProducts);
-        } else {
-          setProducts([HOT_BUNDLE, ...MOCK_PRODUCTS]);
-        }
+        setProducts(firestoreProducts);
         setIsLoadingProducts(false);
       },
-      () => {
-        setProducts([HOT_BUNDLE, ...MOCK_PRODUCTS]);
+      (err) => {
+        captureException(err instanceof Error ? err : new Error(String(err)), { context: 'subscribeToProducts' });
+        setProducts([]);
         setIsLoadingProducts(false);
       }
     );
@@ -220,15 +222,21 @@ const App: React.FC = () => {
     shopSettings,
   });
 
-  // Auto-fill checkout with customer data when entering checkout
+  // Auto-fill checkout with customer data when entering checkout.
+  // Note: `checkout` and `customerAddresses` intentionally omitted from deps
+  // to avoid re-firing on every render. We capture them via refs to avoid
+  // stale-closure bugs while keeping the effect tied to route+customer change.
+  const checkoutRef = React.useRef(checkout);
+  const addressesRef = React.useRef(customerAddresses);
+  checkoutRef.current = checkout;
+  addressesRef.current = customerAddresses;
   useEffect(() => {
     if (location.pathname === ROUTES.CHECKOUT && customer) {
-      checkout.fillFromCustomer(customer);
-      // Auto-fill default address if available
-      const defaultAddr = customerAddresses.find(a => a.isDefault);
-      if (defaultAddr) checkout.fillFromAddress(defaultAddr);
+      checkoutRef.current.fillFromCustomer(customer);
+      const defaultAddr = addressesRef.current.find(a => a.isDefault);
+      if (defaultAddr) checkoutRef.current.fillFromAddress(defaultAddr);
     }
-  }, [location.pathname, customer?.uid]);
+  }, [location.pathname, customer]);
 
   // Track page views on route change
   useEffect(() => {
@@ -250,7 +258,7 @@ const App: React.FC = () => {
       setCustomerAddresses([]);
       setCustomerOrders([]);
     }
-  }, [customer?.uid, checkout.lastOrderNumber]);
+  }, [customer?.uid, customer?.email, checkout.lastOrderNumber]);
 
   const handleAddToCart = (product: Product) => {
     if (!product.isCustom && product.stock !== undefined && product.stock <= 0) return;
