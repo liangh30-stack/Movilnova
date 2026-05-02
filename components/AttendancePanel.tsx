@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Employee } from '../types';
-import { Clock, MapPin, UserCheck, AlertTriangle } from 'lucide-react';
+import { Clock, AlertTriangle } from 'lucide-react';
+import { getFunctions, httpsCallable, FunctionsError } from 'firebase/functions';
+import { getApp } from 'firebase/app';
 
 interface AttendancePanelProps {
   employees: Employee[];
@@ -9,31 +11,66 @@ interface AttendancePanelProps {
   onUpdateSchedule: (id: string, start: string, end: string) => void;
 }
 
-const AttendancePanel: React.FC<AttendancePanelProps> = ({ employees, onClockIn, currentUser, onUpdateSchedule }) => {
+// SECURITY: PIN verification runs server-side via the verifyEmployeePin
+// Cloud Function. The previous version compared `emp.pin === pin` client-side,
+// which exposed every employee's PIN to anyone able to open the admin panel
+// (PINs were transmitted as part of the Employee object). The function:
+//   - reads the pinHash + pinSalt from Firestore (or legacy plain `pin` field)
+//   - rate-limits to 10 attempts per IP+employee per 15 min
+//   - never tells the client which side was wrong
+async function verifyPinOnServer(employeeId: string, pin: string): Promise<boolean> {
+  const fns = getFunctions(getApp());
+  const verify = httpsCallable<{ employeeId: string; pin: string }, { success: boolean }>(
+    fns,
+    'verifyEmployeePin',
+  );
+  try {
+    const res = await verify({ employeeId, pin });
+    return res.data.success === true;
+  } catch (err) {
+    // FunctionsError code is prefixed with "functions/" e.g. "functions/permission-denied"
+    const code = (err as FunctionsError)?.code;
+    if (code === 'functions/permission-denied') return false;
+    if (code === 'functions/resource-exhausted') {
+      alert('Demasiados intentos fallidos. Inténtalo de nuevo en 15 minutos.');
+      return false;
+    }
+    console.error('verifyEmployeePin failed', err);
+    alert('No se pudo verificar el PIN. Comprueba tu conexión.');
+    return false;
+  }
+}
+
+const AttendancePanel: React.FC<AttendancePanelProps> = ({ employees, onClockIn, currentUser }) => {
   const [selectedEmp, setSelectedEmp] = useState<string>('');
   const [pin, setPin] = useState('');
-  
-  const handleAction = (type: 'IN' | 'OUT' | 'BREAK_START' | 'BREAK_END') => {
+  const [verifying, setVerifying] = useState(false);
+
+  const handleAction = async (type: 'IN' | 'OUT' | 'BREAK_START' | 'BREAK_END') => {
     if (!selectedEmp) return;
     const emp = employees.find(e => e.id === selectedEmp);
     if (!emp) return;
-    
-    if (emp.pin !== pin) {
-      alert("PIN Incorrecto");
+    if (verifying) return;
+
+    setVerifying(true);
+    const ok = await verifyPinOnServer(selectedEmp, pin);
+    setVerifying(false);
+    if (!ok) {
+      alert('PIN Incorrecto');
       return;
     }
 
-    // Mock Geo
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         onClockIn(selectedEmp, type, pos.coords.latitude, pos.coords.longitude);
         setPin('');
-        alert("Fichaje registrado con éxito");
+        alert('Fichaje registrado con éxito');
       },
       (err) => {
-        alert("Error de ubicación: " + err.message);
-        // Fallback for dev without https
-        onClockIn(selectedEmp, type, 42.1611, -8.6133); 
+        alert('Error de ubicación: ' + err.message);
+        // Fallback location only for dev/HTTP
+        onClockIn(selectedEmp, type, 42.1611, -8.6133);
+        setPin('');
       }
     );
   };

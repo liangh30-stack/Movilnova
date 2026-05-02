@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
-import { initSentry } from './services/sentry';
+import { initSentry, captureException } from './services/sentry';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Styles (Tailwind + custom theme)
@@ -23,12 +23,11 @@ for (const key of requiredEnvVars) {
 // Initialize Sentry before rendering
 initSentry();
 
-// Global handler for unhandled promise rejections
+// Global handler for unhandled promise rejections.
+// (Use the static import from above — no need for a dynamic import per event.)
 window.addEventListener('unhandledrejection', (event) => {
   const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
-  import('./services/sentry').then(({ captureException }) => {
-    captureException(error, { source: 'unhandledrejection' });
-  });
+  captureException(error, { source: 'unhandledrejection' });
 });
 
 const rootElement = document.getElementById('root');

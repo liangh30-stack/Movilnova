@@ -107,11 +107,15 @@ service cloud.firestore {
     match /customers/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       // Granular write rules: customers can create & update their own profile
-      // but only modify safe fields. Only admins can delete profiles.
+      // but only modify safe fields. Only admins can update arbitrary fields
+      // or delete profiles.
       allow create: if isOwner(userId);
-      allow update: if isOwner(userId) &&
-                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['deletionRequestedAt', 'createdAt', 'role']);
-      allow update, delete: if isAdmin();
+      // Customers can update their own profile, but cannot touch
+      // deletionRequestedAt / createdAt / role themselves. Admins bypass.
+      allow update: if (isOwner(userId) &&
+                          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['deletionRequestedAt', 'createdAt', 'role']))
+                       || isAdmin();
+      allow delete: if isAdmin();
 
       // Customer addresses subcollection
       match /addresses/{addressId} {
@@ -242,6 +246,40 @@ service cloud.firestore {
     match /shopSettings/{settingId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // ============================================
+    // EMPLOYEES COLLECTION
+    // ============================================
+    // Used by AdminPanel + AttendancePanel. PIN/pinHash fields must NEVER
+    // be exposed to non-admins. Only admins can read; PIN verification
+    // happens server-side via the verifyEmployeePin Cloud Function.
+
+    match /employees/{employeeId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ============================================
+    // MAIL-IN REPAIRS COLLECTION
+    // ============================================
+    // Written by the submitMailInRepair Cloud Function (Admin SDK bypasses
+    // these rules). No client should read or write these directly — repair
+    // submissions contain device passwords.
+
+    match /mailInRepairs/{repairId} {
+      allow read: if isAdmin();
+      allow write: if false; // server-side only
+    }
+
+    // ============================================
+    // RATE LIMITS COLLECTION (server-only)
+    // ============================================
+    // Written exclusively by Cloud Functions via Admin SDK. Block all client
+    // access so a malicious client can't reset their own counter.
+
+    match /_rateLimits/{key} {
+      allow read, write: if false;
     }
 
     // ============================================
