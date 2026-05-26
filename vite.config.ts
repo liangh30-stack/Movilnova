@@ -4,6 +4,14 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { visualizer } from 'rollup-plugin-visualizer';
+// Prerender plugin loaded conditionally below to avoid requiring puppeteer
+// in environments that don't have Chromium available (e.g. CI on small runners).
+// Enable with: `npm run build:prerender`
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const prerender = process.env.PRERENDER === 'true'
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  ? require('@prerenderer/rollup-plugin')
+  : null;
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
@@ -101,6 +109,43 @@ export default defineConfig(({ mode }) => {
           },
         }),
         ...(process.env.ANALYZE === 'true' ? [visualizer({ open: true, filename: 'dist/bundle-stats.html', gzipSize: true })] : []),
+        // Prerender critical routes to static HTML so Googlebot, social
+        // crawlers and slow connections get real content on first paint.
+        // App.tsx fires window.dispatchEvent(new Event('render-event'))
+        // once initial data is settled — that signals the renderer to
+        // capture the DOM.
+        ...(prerender ? [prerender({
+          routes: [
+            '/',
+            '/productos',
+            '/servicios',
+            '/reparaciones',
+            '/envio-reparacion',
+            '/seguimiento',
+            '/tienda/porrino',
+            '/tienda/baiona',
+            '/tienda/lalin',
+          ],
+          renderer: '@prerenderer/renderer-puppeteer',
+          rendererOptions: {
+            renderAfterDocumentEvent: 'render-event',
+            // Allow up to 12s for Firestore subscriptions, lazy chunks, etc.
+            maxConcurrentRoutes: 2,
+            timeout: 12000,
+            headless: 'new',
+            // Inline-styles flag avoids losing Tailwind on the prerendered HTML
+            inject: { isPrerender: true },
+          },
+          postProcess(route: { html: string }) {
+            // Strip the analytics+gtag script from the prerendered HTML so we
+            // don't double-fire page_view when the SPA hydrates.
+            route.html = route.html.replace(
+              /<script[^>]*googletagmanager\.com[^<]*<\/script>/g,
+              ''
+            );
+            return route;
+          },
+        })] : []),
       ],
       define: {},
       resolve: {

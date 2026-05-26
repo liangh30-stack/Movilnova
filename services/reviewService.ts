@@ -8,11 +8,45 @@ import {
   deleteDoc,
   query,
   where,
+  runTransaction,
+  increment,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { ProductReview } from '../types';
 
 const REVIEWS_COLLECTION = 'productReviews';
+const PRODUCTS_COLLECTION = 'products';
+
+/**
+ * Recompute and write the aggregate rating fields on the product document.
+ * Uses a transaction so concurrent review writes can't corrupt the average.
+ *
+ * Caller passes the delta (in stars added / removed) and count delta (+1/-1/0).
+ */
+async function updateProductRatingAggregate(
+  productId: string,
+  starsDelta: number,
+  countDelta: number
+): Promise<void> {
+  const productRef = doc(db, PRODUCTS_COLLECTION, productId);
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(productRef);
+    if (!snap.exists()) {
+      // Some reviews reference legacy / mock products that aren't in
+      // Firestore — skip silently instead of failing the user's write.
+      return;
+    }
+    const data = snap.data();
+    const newSum = (data.ratingSum ?? 0) + starsDelta;
+    const newCount = (data.ratingCount ?? 0) + countDelta;
+    const newAvg = newCount > 0 ? Math.round((newSum / newCount) * 10) / 10 : 0;
+    tx.update(productRef, {
+      ratingSum: newSum,
+      ratingCount: newCount,
+      ratingAvg: newAvg,
+    });
+  });
+}
 
 // Obtener todas las reseñas de un producto (ordenadas por fecha desc en cliente)
 export const getProductReviews = async (productId: string): Promise<ProductReview[]> => {
@@ -38,6 +72,13 @@ export const addReview = async (
     editCount: 0,
     createdAt: now,
   });
+  // Keep product aggregate in sync (best-effort — log on failure but don't
+  // surface, since the review itself was written successfully).
+  try {
+    await updateProductRatingAggregate(review.productId, review.rating, 1);
+  } catch (err) {
+    console.warn('Could not update product rating aggregate', err);
+  }
   return {
     id: docRef.id,
     ...review,
@@ -58,6 +99,8 @@ export const updateReview = async (
 
   const current = snap.data();
   const currentEditCount = current.editCount ?? 0;
+  const previousRating = current.rating ?? 0;
+  const productId = current.productId as string | undefined;
 
   if (currentEditCount >= 2) {
     throw new Error('Maximum edit limit reached');
@@ -69,11 +112,37 @@ export const updateReview = async (
     editCount: currentEditCount + 1,
     updatedAt: new Date().toISOString(),
   });
+
+  // Sync aggregate: count unchanged, sum shifts by the rating delta.
+  if (productId && data.rating !== previousRating) {
+    try {
+      await updateProductRatingAggregate(productId, data.rating - previousRating, 0);
+    } catch (err) {
+      console.warn('Could not update product rating aggregate', err);
+    }
+  }
 };
 
 // Eliminar una reseña (admin o propio usuario)
 export const deleteReview = async (reviewId: string): Promise<void> => {
-  await deleteDoc(doc(db, REVIEWS_COLLECTION, reviewId));
+  // Read the review first to know which product / rating to subtract
+  const docRef = doc(db, REVIEWS_COLLECTION, reviewId);
+  const snap = await getDoc(docRef);
+  const productId = snap.exists() ? (snap.data().productId as string | undefined) : undefined;
+  const rating = snap.exists() ? (snap.data().rating as number | undefined) ?? 0 : 0;
+
+  await deleteDoc(docRef);
+
+  if (productId) {
+    try {
+      await updateProductRatingAggregate(productId, -rating, -1);
+    } catch (err) {
+      console.warn('Could not update product rating aggregate', err);
+    }
+  }
+
+  // Silence unused-import lint if increment becomes unused after a refactor
+  void increment;
 };
 
 // Calcular media de valoraciones

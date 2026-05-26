@@ -2,8 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Shield, Zap, Star, TrendingUp, Package } from 'lucide-react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../services/firebase';
 import { Product } from '../types';
 import { productPath } from '../routes';
 
@@ -19,27 +17,6 @@ const Hero3D: React.FC<Hero3DProps> = ({ onViewOffers, products = [] }) => {
   const [productIndex, setProductIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0); // 0=shop, 1=repair
-  const [ratingsMap, setRatingsMap] = useState<Record<string, number>>({});
-
-  // Fetch average ratings for all products once
-  useEffect(() => {
-    getDocs(collection(db, 'productReviews')).then(snap => {
-      const buckets: Record<string, { sum: number; count: number }> = {};
-      snap.docs.forEach(d => {
-        const data = d.data();
-        const pid = data.productId as string;
-        if (!buckets[pid]) buckets[pid] = { sum: 0, count: 0 };
-        buckets[pid].sum += (data.rating as number) || 0;
-        buckets[pid].count += 1;
-      });
-      const map: Record<string, number> = {};
-      for (const [pid, b] of Object.entries(buckets)) {
-        map[pid] = Math.round((b.sum / b.count) * 10) / 10;
-      }
-      setRatingsMap(map);
-    }).catch(() => {});
-  }, []);
-
   const scrollToProducts = () => {
     document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -63,7 +40,8 @@ const Hero3D: React.FC<Hero3DProps> = ({ onViewOffers, products = [] }) => {
   }, [products]);
 
   const currentProduct = shuffledProducts.length > 0 ? shuffledProducts[productIndex % shuffledProducts.length] : null;
-  const currentRating = currentProduct ? (ratingsMap[String(currentProduct.id)] ?? 0) : 0;
+  // Read aggregate maintained by reviewService — no N+1 fetch on every page load.
+  const currentRating = currentProduct?.ratingAvg ?? 0;
 
   const features = [
     { icon: Shield, title: t('heroWarranty'), desc: t('heroProtection') || '24-month guarantee' },

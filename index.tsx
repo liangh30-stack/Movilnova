@@ -38,17 +38,21 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement);
 
-// Wait for i18n locale to load before first render (avoids flash of wrong language)
-i18nReady.then(() => {
-  root.render(
-    <React.StrictMode>
-      <HelmetProvider>
-        <ErrorBoundary>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ErrorBoundary>
-      </HelmetProvider>
-    </React.StrictMode>
-  );
-});
+// Render immediately — i18next is configured with a synchronous fallback (es),
+// so the first paint never blocks. Non-default locales pre-load asynchronously
+// via the languageChanged hook in i18n/index.ts.
+//
+// We still kick off i18nReady so the promise settles, but do not await it.
+void i18nReady;
+
+root.render(
+  <React.StrictMode>
+    <HelmetProvider>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </HelmetProvider>
+  </React.StrictMode>
+);
