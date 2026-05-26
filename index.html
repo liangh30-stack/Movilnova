@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#008060" />
+    <!-- LCP preload: hero images (browser picks best supported type) -->
+    <link rel="preload" as="image" href="/repair-hero-final.avif" type="image/avif" fetchpriority="high" />
+    <link rel="preload" as="image" href="/shop-hero.avif" type="image/avif" fetchpriority="high" />
+
 
     <!-- SEO Principal -->
     <title>MovilNova - Reparación de móviles y accesorios | Envío rápido en España</title>
@@ -28,11 +32,6 @@
     <meta property="og:image:alt" content="MovilNova - Reparación de móviles y tienda de accesorios" />
     <meta property="og:site_name" content="MovilNova" />
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:locale:alternate" content="en_US" />
-    <meta property="og:locale:alternate" content="fr_FR" />
-    <meta property="og:locale:alternate" content="de_DE" />
-    <meta property="og:locale:alternate" content="zh_CN" />
-
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://movilnova.es/" />
@@ -47,10 +46,6 @@
 
     <!-- Hreflang: idiomas alternativos -->
     <link rel="alternate" hreflang="es" href="https://movilnova.es/" />
-    <link rel="alternate" hreflang="en" href="https://movilnova.es/?lang=en" />
-    <link rel="alternate" hreflang="fr" href="https://movilnova.es/?lang=fr" />
-    <link rel="alternate" hreflang="de" href="https://movilnova.es/?lang=de" />
-    <link rel="alternate" hreflang="zh" href="https://movilnova.es/?lang=zh" />
     <link rel="alternate" hreflang="x-default" href="https://movilnova.es/" />
 
     <!-- Fonts -->
@@ -62,14 +57,27 @@
     <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRH3Z2WJS6"></script>
+    <!-- Google Analytics 4 with Consent Mode v2 (RGPD / LSSI-CE compliant) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-MRH3Z2WJS6');
+
+      // Default: deny everything until user explicitly consents via CookieConsentBanner.
+      // useCookieConsent will call gtag('consent', 'update', ...) once the user opts in.
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'granted',
+        'security_storage': 'granted',
+        'wait_for_update': 500
+      });
+
+      gtag('config', 'G-MRH3Z2WJS6', { 'anonymize_ip': true });
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRH3Z2WJS6"></script>
 
     <!-- JSON-LD: LocalBusiness -->
     <script type="application/ld+json">

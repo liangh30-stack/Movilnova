@@ -12,13 +12,14 @@ export const initSentry = () => {
     dsn,
     integrations: [
       Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
+      // NOTE: replayIntegration removed deliberately. It added ~80KB gzipped
+      // to the main bundle and records user interactions (input values,
+      // navigation) which is a PII concern under RGPD. If you re-enable it,
+      // pass { maskAllInputs: true, maskAllText: true, blockAllMedia: true }
+      // and disclose it in the Política de Privacidad / cookie banner.
     ],
     // Performance monitoring
     tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
-    // Session replay
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
     // Environment
     environment: import.meta.env.MODE,
     // Only enable in production by default

@@ -20,6 +20,11 @@ export interface Product {
   colors?: string[];
   colorImages?: Record<string, number>;
   selectedColor?: string;
+  // Aggregate review fields — maintained by reviewService write paths so the
+  // Storefront / Hero3D / product card can show stars without N+1 lookups.
+  ratingAvg?: number;
+  ratingCount?: number;
+  ratingSum?: number; // internal — used for incremental updates
 }
 
 export interface ProductReview {

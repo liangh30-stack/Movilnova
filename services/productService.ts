@@ -46,6 +46,10 @@ export interface FirestoreProduct {
   isBundle?: boolean;
   colors?: string[];
   colorImages?: Record<string, number>;
+  // Aggregate review fields, maintained by reviewService write paths.
+  ratingAvg?: number;
+  ratingCount?: number;
+  ratingSum?: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -67,6 +71,9 @@ const docToProduct = (id: string, data: FirestoreProduct): Product => ({
   isBundle: data.isBundle,
   colors: data.colors,
   colorImages: data.colorImages,
+  ratingAvg: data.ratingAvg,
+  ratingCount: data.ratingCount,
+  ratingSum: data.ratingSum,
 });
 
 // Get all products (one-time fetch)

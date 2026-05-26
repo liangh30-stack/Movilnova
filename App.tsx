@@ -167,6 +167,20 @@ const App: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // Signal to @prerenderer/rollup-plugin that the initial route content is
+  // ready to be captured. Fires once products have loaded (or fallback ran)
+  // and the next paint settles, so the DOM the renderer sees is the real
+  // first-paint DOM. No-op outside the prerender build.
+  useEffect(() => {
+    if (isLoadingProducts) return;
+    const handle = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try { window.dispatchEvent(new Event('render-event')); } catch { /* SSR-safe */ }
+      });
+    });
+    return () => cancelAnimationFrame(handle);
+  }, [isLoadingProducts]);
+
   // Listen for admin auth state changes
   useEffect(() => {
     const unsubscribe = onAuthChange((user) => {
