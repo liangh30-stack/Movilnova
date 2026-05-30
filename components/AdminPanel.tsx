@@ -16,6 +16,7 @@ import {
   BarChart3,
   Loader2,
   ClipboardList,
+  Printer,
 } from 'lucide-react';
 import ProductManager from './ProductManager';
 import OrdersManager from './OrdersManager';
@@ -26,6 +27,7 @@ import { COMPANY } from '../config/company';
 const UserRolesManager = lazy(() => import('./UserRolesManager'));
 const SalesAnalyticsManager = lazy(() => import('./SalesAnalyticsManager'));
 const AuditLogViewer = lazy(() => import('./AuditLogViewer'));
+const LabelPrinter = lazy(() => import('./LabelPrinter'));
 
 interface AdminPanelProps {
   user: AppUser;
@@ -33,16 +35,24 @@ interface AdminPanelProps {
   onBack: () => void;
 }
 
-type TabId = 'products' | 'orders' | 'users' | 'settings' | 'userRoles' | 'salesAnalytics' | 'auditLog';
+type TabId = 'products' | 'orders' | 'labels' | 'users' | 'settings' | 'userRoles' | 'salesAnalytics' | 'auditLog';
 
-const NAV_ITEMS: { id: TabId; labelKey: string; icon: React.FC<{ size?: number; className?: string }> }[] = [
+interface NavItem {
+  id: TabId;
+  labelKey: string;
+  labelDefault?: string;
+  icon: React.FC<{ size?: number; className?: string }>;
+}
+
+const NAV_ITEMS: NavItem[] = [
   { id: 'products', labelKey: 'adminNavProducts', icon: Package },
   { id: 'orders', labelKey: 'adminNavOrders', icon: ShoppingCart },
+  { id: 'labels', labelKey: 'adminNavLabels', labelDefault: 'Etiquetas', icon: Printer },
   { id: 'users', labelKey: 'adminNavCustomers', icon: Users },
   { id: 'settings', labelKey: 'adminNavSettings', icon: Settings },
 ];
 
-const SUPERADMIN_NAV_ITEMS: typeof NAV_ITEMS = [
+const SUPERADMIN_NAV_ITEMS: NavItem[] = [
   { id: 'userRoles', labelKey: 'adminNavUserRoles', icon: UserCog },
   { id: 'salesAnalytics', labelKey: 'adminNavSalesAnalytics', icon: BarChart3 },
   { id: 'auditLog', labelKey: 'adminNavAuditLog', icon: ClipboardList },
@@ -74,11 +84,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout, onBack }) => {
   const isSuperadmin = user.role === 'superadmin';
   const visibleNavItems = isSuperadmin ? [...NAV_ITEMS, ...SUPERADMIN_NAV_ITEMS] : NAV_ITEMS;
   const initials = (user.email || 'A').charAt(0).toUpperCase();
+  const activeItem = visibleNavItems.find((n) => n.id === activeTab);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'products': return <ProductManager user={user} onLogout={onLogout} onBack={onBack} editProductId={editProductId} />;
       case 'orders': return <OrdersManager user={user} />;
+      case 'labels': return <Suspense fallback={<LazyLoader />}><LabelPrinter /></Suspense>;
       case 'users': return <UsersManager user={user} />;
       case 'settings': return <ShopSettingsManager user={user} />;
       case 'userRoles': return <Suspense fallback={<LazyLoader />}><UserRolesManager user={user} /></Suspense>;
@@ -144,7 +156,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout, onBack }) => {
                   }`}
                 >
                   <item.icon size={18} className={isActive ? 'text-brand-primary' : ''} />
-                  <span>{t(item.labelKey)}</span>
+                  <span>{t(item.labelKey, item.labelDefault)}</span>
                   {isActive && <ChevronRight size={14} className="ml-auto text-white/20" />}
                 </button>
               </React.Fragment>
@@ -196,7 +208,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout, onBack }) => {
               <span className="text-white font-bold text-[10px]">T</span>
             </div>
             <span className="font-semibold text-sm text-brand-dark">
-              {t(visibleNavItems.find(n => n.id === activeTab)?.labelKey || '')}
+              {t(activeItem?.labelKey || '', activeItem?.labelDefault)}
             </span>
           </div>
         </header>
