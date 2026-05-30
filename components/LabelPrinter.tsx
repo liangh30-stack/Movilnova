@@ -347,7 +347,7 @@ const LabelPrinter: React.FC = () => {
         <div className="lp-card">
           <h3>Vista previa</h3>
           <div className="lp-preview">
-            <span className="lp-rule">↔ 80 mm　↕ 40 mm</span>
+            <span className="lp-rule">80 mm (ancho) x 40 mm (alto)</span>
             <div className="lp-shell">
               <div className={`lp-label fs-${fs} ls-${ls}`}>
                 {!selected ? (
